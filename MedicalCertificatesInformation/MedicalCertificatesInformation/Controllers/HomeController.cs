@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MedicalCertificatesInformation.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +11,8 @@ namespace MedicalCertificatesInformation.Controllers
     {
         public ActionResult Index()
         {
+            MedicalCertificatesContext context = new MedicalCertificatesContext();
+            context.Departments.Add(new Models.Database.Models.Department() { Name = "So?" });
             return View();
         }
 

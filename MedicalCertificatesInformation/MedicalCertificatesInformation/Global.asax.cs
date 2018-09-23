@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MedicalCertificatesInformation.Models;
+using MedicalCertificatesInformation.Models.Database.Shared;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,6 +19,7 @@ namespace MedicalCertificatesInformation
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            Database.SetInitializer<MedicalCertificatesContext>(new MedicalCertificatesInitializer());
         }
     }
 }

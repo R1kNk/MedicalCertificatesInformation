@@ -50,6 +50,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -210,6 +211,8 @@
     <Compile Include="Models\Database\Models\MedicalCertificate.cs" />
     <Compile Include="Models\Database\Models\PhysicalEducation.cs" />
     <Compile Include="Models\Database\Models\Student.cs" />
+    <Compile Include="Models\Database\Shared\DropCreateIfEmpty.cs" />
+    <Compile Include="Models\Database\Shared\MedicalCertificatesInitializer.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MedicalCertificatesContext.cs" />
