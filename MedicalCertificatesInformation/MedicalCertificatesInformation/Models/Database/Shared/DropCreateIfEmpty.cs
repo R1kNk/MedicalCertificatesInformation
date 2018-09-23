@@ -24,11 +24,11 @@ namespace MedicalCertificatesInformation.Models.Database.Shared
                 Int64 RowsResult = context.Database.SqlQuery<Int64>(isDatabaseEmptyQuery).FirstOrDefault();
                 if (RowsResult == 0)
                 {
-                    string l = "while(exists(select 1 from INFORMATION_SCHEMA.TABLE_CONSTRAINTS where CONSTRAINT_TYPE='FOREIGN KEY')) begin declare @sql nvarchar(2000) SELECT TOP 1 @sql=('ALTER TABLE ' + TABLE_SCHEMA + '.[' + TABLE_NAME + '] DROP CONSTRAINT [' + CONSTRAINT_NAME + ']') FROM information_schema.table_constraints WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' exec (@sql) end";
-                    context.Database.ExecuteSqlCommand(l);
-                    context.Database.ExecuteSqlCommand("EXEC sp_MSforeachtable @command1 = \"DROP TABLE ?\"");
-                    var dbCreationScript = ((IObjectContextAdapter)context).ObjectContext.CreateDatabaseScript();
-                    context.Database.ExecuteSqlCommand(dbCreationScript);
+                    //string l = "while(exists(select 1 from INFORMATION_SCHEMA.TABLE_CONSTRAINTS where CONSTRAINT_TYPE='FOREIGN KEY')) begin declare @sql nvarchar(2000) SELECT TOP 1 @sql=('ALTER TABLE ' + TABLE_SCHEMA + '.[' + TABLE_NAME + '] DROP CONSTRAINT [' + CONSTRAINT_NAME + ']') FROM information_schema.table_constraints WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' exec (@sql) end";
+                    //context.Database.ExecuteSqlCommand(l);
+                    //context.Database.ExecuteSqlCommand("EXEC sp_MSforeachtable @command1 = \"DROP TABLE ?\"");
+                    //var dbCreationScript = ((IObjectContextAdapter)context).ObjectContext.CreateDatabaseScript();
+                    //context.Database.ExecuteSqlCommand(dbCreationScript);
                     Seed(context);
                     context.SaveChanges();
                 }         

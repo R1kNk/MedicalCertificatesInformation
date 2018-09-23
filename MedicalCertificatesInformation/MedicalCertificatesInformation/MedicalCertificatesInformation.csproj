@@ -211,6 +211,7 @@
     <Compile Include="Models\Database\Models\MedicalCertificate.cs" />
     <Compile Include="Models\Database\Models\PhysicalEducation.cs" />
     <Compile Include="Models\Database\Models\Student.cs" />
+    <Compile Include="Models\Database\Shared\ContextConfigurations.cs" />
     <Compile Include="Models\Database\Shared\DropCreateIfEmpty.cs" />
     <Compile Include="Models\Database\Shared\MedicalCertificatesInitializer.cs" />
     <Compile Include="Models\IdentityModels.cs" />

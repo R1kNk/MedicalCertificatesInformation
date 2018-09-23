@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Data.Entity;
 using MedicalCertificatesInformation.Models.Database.Models;
+using static MedicalCertificatesInformation.Models.Database.Shared.ContextConfigurations;
 
 namespace MedicalCertificatesInformation.Models
 {
@@ -11,6 +8,7 @@ namespace MedicalCertificatesInformation.Models
     {
         public MedicalCertificatesContext() : base("name=MedicalCertificatesDB")
         {
+            Configuration.LazyLoadingEnabled = false;
         }
 
 
@@ -23,7 +21,17 @@ namespace MedicalCertificatesInformation.Models
         public DbSet<Course> Courses { get; set; }
         public DbSet<Department> Departments { get; set; }
 
-
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Configurations.Add(new HealthGroupConfiguration());
+            modelBuilder.Configurations.Add(new PhysicalEducationConfiguration());
+            modelBuilder.Configurations.Add(new HospitalConfiguration());
+            modelBuilder.Configurations.Add(new StudentConfiguration());
+            modelBuilder.Configurations.Add(new MedicalCertificateConfiguration());
+            modelBuilder.Configurations.Add(new GroupConfiguration());
+            modelBuilder.Configurations.Add(new CourseConfiguration());
+            modelBuilder.Configurations.Add(new DepartmentConfiguration());
+        }
 
 
     }
