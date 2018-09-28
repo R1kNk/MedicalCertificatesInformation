@@ -8,6 +8,8 @@ namespace MedicalCertificatesInformation.Models.Database.Models
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
         public TimeSpan SertificateTerm { get; set; }
+        public string GoogleDriveImageId { get; set; }
+
 
         public int StudentId { get; set; }
         public Student Student { get; set; }

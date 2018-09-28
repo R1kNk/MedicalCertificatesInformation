@@ -8,6 +8,7 @@ namespace MedicalCertificatesInformation.Models.Database.Models
         public string DepartmentLetter { get; set; }
         public int Number { get; set; }
         public string CuratorId { get; set; }
+        public string GoogleDriveFolderId { get; set; }
 
         public int CourseId { get; set; }
         public Course Course { get; set; }

@@ -35,6 +35,7 @@ namespace MedicalCertificatesInformation.Models.Database.Shared
             {
                 Property(p => p.Name).IsRequired().HasMaxLength(50);
                 Property(p => p.Surname).IsRequired().HasMaxLength(60);
+                Property(p => p.GoogleDriveFolderId).IsRequired();
             }
         }
 
@@ -43,6 +44,7 @@ namespace MedicalCertificatesInformation.Models.Database.Shared
             public MedicalCertificateConfiguration()
             {
                 Property(p => p.StartDate).IsRequired();
+                Property(p => p.GoogleDriveImageId).IsOptional();
             }
         }
 
@@ -53,6 +55,7 @@ namespace MedicalCertificatesInformation.Models.Database.Shared
                 Property(p => p.DepartmentLetter).IsRequired().HasMaxLength(1);
                 Property(p => p.Number).IsRequired();
                 Property(p => p.CuratorId).IsOptional();
+                Property(p => p.GoogleDriveFolderId).IsRequired();
 
             }
         }
