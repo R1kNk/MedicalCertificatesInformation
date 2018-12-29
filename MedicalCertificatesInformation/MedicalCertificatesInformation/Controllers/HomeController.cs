@@ -13,7 +13,8 @@ namespace MedicalCertificatesInformation.Controllers
         public ActionResult Index()
         {
             MedicalCertificatesContext context = new MedicalCertificatesContext();
-            context.Departments.Add(new Models.Database.Models.Department() { Name = "So?" });
+            //context.Departments.Add(new Models.Database.Models.Department() { Name = "So?" });
+            var collection = context.Departments.Count();
             return View();
         }
 

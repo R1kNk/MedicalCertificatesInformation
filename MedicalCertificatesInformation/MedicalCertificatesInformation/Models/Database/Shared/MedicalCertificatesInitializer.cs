@@ -14,7 +14,7 @@ namespace MedicalCertificatesInformation.Models.Database.Shared
                 new Department() { Name="Коммерческая деятельность"},
                 new Department() { Name="Правоведение"},
                 new Department(){ Name="Программное обеспечение информационных технологий"},
-                new Department(){ Name="Экономическая и оргазация производства"}
+                new Department(){ Name="Экономика и организация производства"}
             };
         }
     }
