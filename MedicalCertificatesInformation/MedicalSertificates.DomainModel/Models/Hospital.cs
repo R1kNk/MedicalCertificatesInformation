@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MedicalCertificatesInformation.Models.Database.Models
+namespace MedicalSertificates.DomainModel.Models
 {
     public class Hospital
     {

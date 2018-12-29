@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MedicalCertificatesInformation.Models.Database.Models
+namespace MedicalSertificates.DomainModel.Models
 {
     public class Student
     {

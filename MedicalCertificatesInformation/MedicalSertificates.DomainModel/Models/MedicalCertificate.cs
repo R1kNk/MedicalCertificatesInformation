@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MedicalCertificatesInformation.Models.Database.Models
+namespace MedicalSertificates.DomainModel.Models
 {
     public class MedicalCertificate
     {

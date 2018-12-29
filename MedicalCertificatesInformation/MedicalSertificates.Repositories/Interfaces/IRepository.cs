@@ -18,5 +18,7 @@ namespace MedicalSertificates.Repositories.Interfaces
         Task<IReadOnlyCollection<TEntity>> GetAllASync();
 
         Task<TEntity> GetSingleOrDefaultAsync(Expression<Func<TEntity, bool>> filterExpression);
+
+        Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterexpression);
     }
 }

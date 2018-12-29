@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,11 @@ namespace MedicalSertificates.Repositories
         public async Task<IReadOnlyCollection<TEntity>> GetAllASync()
         {
             return await dbSet.ToListAsync();
+        }
+
+        public async Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterexpression)
+        {
+           return await dbSet.Where(filterexpression).ToListAsync();
         }
 
         public async Task<TEntity> GetByIdAsync(int id)
