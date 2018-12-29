@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace MedicalSertificates.Repositories.Interfaces
 {
-    interface IRepository<TEntity> :IDisposable where TEntity : class
+    interface IRepository<TEntity> where TEntity : class
     {
         void Update(TEntity entity);
 
-        bool Delete(TEntity entity);
+        void Delete(TEntity entity);
 
         TEntity Create(TEntity entity);
 
