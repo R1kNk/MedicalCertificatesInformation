@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalSertificates.DomainM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalSertificates.Repositories", "MedicalSertificates.Repositories\MedicalSertificates.Repositories.csproj", "{DC7B3C34-7F87-4FF6-8D60-C9F034ECD4D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalSertificates.Common", "MedicalSertificates.Common\MedicalSertificates.Common.csproj", "{3062B8D8-B3DA-414D-BB07-4D7F3B44954B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DC7B3C34-7F87-4FF6-8D60-C9F034ECD4D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC7B3C34-7F87-4FF6-8D60-C9F034ECD4D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC7B3C34-7F87-4FF6-8D60-C9F034ECD4D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3062B8D8-B3DA-414D-BB07-4D7F3B44954B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3062B8D8-B3DA-414D-BB07-4D7F3B44954B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3062B8D8-B3DA-414D-BB07-4D7F3B44954B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3062B8D8-B3DA-414D-BB07-4D7F3B44954B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

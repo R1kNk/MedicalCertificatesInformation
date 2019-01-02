@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MedicalSertificates.Common\MedicalSertificates.Common.csproj" />
     <ProjectReference Include="..\MedicalSertificates.Repositories\MedicalSertificates.Repositories.csproj" />
   </ItemGroup>
 

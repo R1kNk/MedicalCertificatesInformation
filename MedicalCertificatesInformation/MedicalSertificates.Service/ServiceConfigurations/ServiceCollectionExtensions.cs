@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using MedicalSertificates.DomainModel.Models;
 using Microsoft.AspNetCore.Identity;
+using MedicalSertificates.Service.Auth;
 
 namespace MedicalSertificates.Service
 {
@@ -19,6 +20,7 @@ namespace MedicalSertificates.Service
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<MedicalSertificatesDbContext>()
+                .AddErrorDescriber<CustomIdentityErrorDescriber>()
                 .AddDefaultTokenProviders();
             return services;
 
