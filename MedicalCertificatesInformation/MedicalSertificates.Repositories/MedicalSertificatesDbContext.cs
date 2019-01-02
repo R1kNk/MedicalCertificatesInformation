@@ -1,11 +1,12 @@
 ﻿using MedicalSertificates.DomainModel.Models;
+using MedicalSertificates.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using static MedicalSertificates.Repositories.Configurations.MedicalSertificatesConfiguration;
 
 namespace MedicalSertificates.Repositories
 {
-    public class MedicalSertificatesDbContext : IdentityDbContext<ApplicationUser>
+    public class MedicalSertificatesDbContext : IdentityDbContext<ApplicationUser>, IDbContext
     {
 
         public MedicalSertificatesDbContext(DbContextOptions<MedicalSertificatesDbContext> options)

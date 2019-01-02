@@ -24,9 +24,9 @@ namespace MedicalSertificates.Repositories
             return _repositoryProvider.GetRepository<TEntity>();   
         }
 
-        public Task SaveAsync()
+        public async Task SaveAsync()
         {
-            throw new NotImplementedException();
+            await Context.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)

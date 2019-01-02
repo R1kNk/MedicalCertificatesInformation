@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MedicalSertificates.Repositories.Interfaces
@@ -11,6 +12,7 @@ namespace MedicalSertificates.Repositories.Interfaces
 
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
 
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+
     }
 }
