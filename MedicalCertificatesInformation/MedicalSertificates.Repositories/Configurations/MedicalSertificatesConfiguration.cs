@@ -15,6 +15,7 @@ namespace MedicalSertificates.Repositories.Configurations
             public void Configure(EntityTypeBuilder<HealthGroup> builder)
             {
                 builder.Property(p => p.Name).IsRequired().HasMaxLength(50);
+                builder.HasIndex(p => p.Name).IsUnique();
             }
         }
 
@@ -23,6 +24,7 @@ namespace MedicalSertificates.Repositories.Configurations
             public void Configure(EntityTypeBuilder<PhysicalEducation> builder)
             {
                 builder.Property(p => p.Name).IsRequired().HasMaxLength(50);
+                builder.HasIndex(p => p.Name).IsUnique();
             }
         }
 
@@ -31,6 +33,8 @@ namespace MedicalSertificates.Repositories.Configurations
             public void Configure(EntityTypeBuilder<Hospital> builder)
             {
                 builder.Property(p => p.Name).IsRequired().HasMaxLength(50);
+                builder.HasIndex(p => p.Name).IsUnique();
+
             }
         }
 
@@ -41,6 +45,8 @@ namespace MedicalSertificates.Repositories.Configurations
                 builder.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 builder.Property(p => p.Surname).IsRequired().HasMaxLength(60);
                 builder.Property(p => p.GoogleDriveFolderId).IsRequired();
+                builder.HasMany(b => b.MedicalCertificates).WithOne(p => p.Student).HasForeignKey(p => p.StudentId).OnDelete(DeleteBehavior.Cascade);
+
             }
         }
 
@@ -57,8 +63,10 @@ namespace MedicalSertificates.Repositories.Configurations
             public void Configure(EntityTypeBuilder<Group> builder)
             {
                 builder.Property(p => p.Name).IsRequired().HasMaxLength(5);
-               // builder.HasIndex(p => p.Name).IsUnique();
+                builder.HasIndex(p => p.Name).IsUnique();
                 builder.Property(p => p.GoogleDriveFolderId).IsRequired();
+                builder.HasMany(b => b.Students).WithOne(p => p.Group).HasForeignKey(p => p.GroupId).OnDelete(DeleteBehavior.Cascade);
+
             }
         }
 
@@ -68,6 +76,7 @@ namespace MedicalSertificates.Repositories.Configurations
             public void Configure(EntityTypeBuilder<Course> builder)
             {
                 builder.Property(p => p.Number).IsRequired();
+                builder.HasMany(b => b.Groups).WithOne(p => p.Course).HasForeignKey(p => p.CourseId).OnDelete(DeleteBehavior.Cascade);
             }
         }
 
@@ -77,6 +86,8 @@ namespace MedicalSertificates.Repositories.Configurations
             public void Configure(EntityTypeBuilder<Department> builder)
             {
                 builder.Property(p => p.Name).IsRequired().HasMaxLength(60);
+                builder.HasMany(b => b.Courses).WithOne(p => p.Department).HasForeignKey(p => p.DepartmentId).OnDelete(DeleteBehavior.Cascade);
+
             }
         }
     }
