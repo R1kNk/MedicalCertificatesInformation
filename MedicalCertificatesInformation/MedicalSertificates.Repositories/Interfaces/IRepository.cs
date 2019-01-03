@@ -15,7 +15,9 @@ namespace MedicalSertificates.Repositories.Interfaces
 
         Task<TEntity> GetByIdAsync(int id);
 
-        Task<IReadOnlyCollection<TEntity>> GetAllASync();
+        Task<TEntity> GetByIdAsync(string id);
+
+        Task<IReadOnlyCollection<TEntity>> GetAllAsync();
 
         Task<TEntity> GetSingleOrDefaultAsync(Expression<Func<TEntity, bool>> filterExpression);
 

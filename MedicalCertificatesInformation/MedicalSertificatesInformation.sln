@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalCertificatesInformation", "MedicalCertificatesInformation\MedicalCertificatesInformation.csproj", "{8DD4ED7C-F8EC-4582-8548-701EFE8B60BB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalSertificates.Service", "MedicalSertificates.Service\MedicalSertificates.Service.csproj", "{F300478B-E2DF-4DB6-9905-5D65E7D861BF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalSertificates.Web", "MedicalSertificates.Web\MedicalSertificates.Web.csproj", "{4A0EF551-7300-4E4D-973B-01813D3DC7D4}"
@@ -13,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalSertificates.DomainM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalSertificates.Repositories", "MedicalSertificates.Repositories\MedicalSertificates.Repositories.csproj", "{DC7B3C34-7F87-4FF6-8D60-C9F034ECD4D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalSertificates.Common", "MedicalSertificates.Common\MedicalSertificates.Common.csproj", "{3062B8D8-B3DA-414D-BB07-4D7F3B44954B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalSertificates.Common", "MedicalSertificates.Common\MedicalSertificates.Common.csproj", "{3062B8D8-B3DA-414D-BB07-4D7F3B44954B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8DD4ED7C-F8EC-4582-8548-701EFE8B60BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DD4ED7C-F8EC-4582-8548-701EFE8B60BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DD4ED7C-F8EC-4582-8548-701EFE8B60BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DD4ED7C-F8EC-4582-8548-701EFE8B60BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F300478B-E2DF-4DB6-9905-5D65E7D861BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F300478B-E2DF-4DB6-9905-5D65E7D861BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F300478B-E2DF-4DB6-9905-5D65E7D861BF}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -36,7 +36,7 @@ namespace MedicalSertificates.Repositories
             dbSet.Remove(entity);
         }
 
-        public async Task<IReadOnlyCollection<TEntity>> GetAllASync()
+        public async Task<IReadOnlyCollection<TEntity>> GetAllAsync()
         {
             return await dbSet.ToListAsync();
         }
@@ -47,6 +47,11 @@ namespace MedicalSertificates.Repositories
         }
 
         public async Task<TEntity> GetByIdAsync(int id)
+        {
+            return await dbSet.FindAsync(id);
+        }
+
+        public async Task<TEntity> GetByIdAsync(string id)
         {
             return await dbSet.FindAsync(id);
         }

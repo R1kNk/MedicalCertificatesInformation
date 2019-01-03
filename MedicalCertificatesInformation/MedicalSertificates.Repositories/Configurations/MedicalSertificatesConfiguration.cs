@@ -56,8 +56,8 @@ namespace MedicalSertificates.Repositories.Configurations
         {
             public void Configure(EntityTypeBuilder<Group> builder)
             {
-                builder.Property(p => p.DepartmentLetter).IsRequired().HasMaxLength(1);
-                builder.Property(p => p.Number).IsRequired();
+                builder.Property(p => p.Name).IsRequired().HasMaxLength(5);
+               // builder.HasIndex(p => p.Name).IsUnique();
                 builder.Property(p => p.GoogleDriveFolderId).IsRequired();
             }
         }
