@@ -37,13 +37,13 @@ namespace MedicalSertificates.Repositories
         }
 
         public async Task<IReadOnlyCollection<TEntity>> GetAllAsync()
-        {
+        {            
             return await dbSet.ToListAsync();
         }
 
-        public async Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterexpression)
+        public async Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterExpression)
         {
-           return await dbSet.Where(filterexpression).ToListAsync();
+           return await dbSet.Where(filterExpression).ToListAsync();
         }
 
         public async Task<TEntity> GetByIdAsync(int id)
@@ -69,5 +69,47 @@ namespace MedicalSertificates.Repositories
             }
         }
 
+        public IOrderedQueryable<TEntity> OrderBy<TOrderBy>(IQueryable<TEntity> entities, Expression<Func<TEntity, TOrderBy>> orderBy, bool ascending)
+        {
+            if (ascending)
+            {
+                var result = entities.OrderBy(orderBy);
+                return result;
+            }
+            else
+            {
+                var result = entities.OrderByDescending(orderBy);
+                return result;
+            }
+        }
+
+        public IOrderedQueryable<TEntity> ThenOrderBy<TOrderBy>(IOrderedQueryable<TEntity> entities, Expression<Func<TEntity, TOrderBy>> thenOrderBy, bool ascending)
+        {
+            if (ascending)
+            {
+                var result = entities.ThenBy(thenOrderBy);
+                return result;
+            }
+            else
+            {
+                var result = entities.OrderByDescending(thenOrderBy);
+                return result;
+            }
+        }
+
+        public IQueryable<TEntity> GetIQueryable()
+        {
+            return dbSet;
+        }
+
+        public async Task<IReadOnlyCollection<TEntity>> GetAllAsync(IQueryable<TEntity> entities)
+        {
+            return await entities.ToListAsync();
+        }
+
+        public IQueryable<TEntity> FilterAsync(IQueryable<TEntity> entities, Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return entities.Where(filterExpression);
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace MedicalSertificates.DomainModel.Models
 
         public List<Student> Students { get; set; }
 
-        public List<ApplicationUser> Users { get; set; }
+        public int CuratorId { get; set; }
+        public ApplicationUser Curator { get; set; }
     }
 }

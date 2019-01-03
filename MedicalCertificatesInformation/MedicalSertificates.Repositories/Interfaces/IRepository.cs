@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -19,8 +20,18 @@ namespace MedicalSertificates.Repositories.Interfaces
 
         Task<IReadOnlyCollection<TEntity>> GetAllAsync();
 
+        Task<IReadOnlyCollection<TEntity>> GetAllAsync(IQueryable<TEntity> entities);
+
         Task<TEntity> GetSingleOrDefaultAsync(Expression<Func<TEntity, bool>> filterExpression);
 
-        Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterexpression);
+        Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterExpression);
+
+        IQueryable<TEntity> GetIQueryable();
+
+        IQueryable<TEntity> FilterAsync(IQueryable<TEntity> entities, Expression<Func<TEntity, bool>> filterExpression);
+
+        IOrderedQueryable<TEntity> OrderBy<TOrderBy>(IQueryable<TEntity> entities, Expression<Func<TEntity, TOrderBy>> orderBy, bool ascending);
+
+        IOrderedQueryable<TEntity> ThenOrderBy<TOrderBy>(IOrderedQueryable<TEntity> entities, Expression<Func<TEntity, TOrderBy>> thenOrderBy, bool ascending);
     }
 }

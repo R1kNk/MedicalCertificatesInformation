@@ -66,7 +66,6 @@ namespace MedicalSertificates.Repositories.Configurations
                 builder.HasIndex(p => p.Name).IsUnique();
                 builder.Property(p => p.GoogleDriveFolderId).IsRequired();
                 builder.HasMany(b => b.Students).WithOne(p => p.Group).HasForeignKey(p => p.GroupId).OnDelete(DeleteBehavior.Cascade);
-
             }
         }
 
