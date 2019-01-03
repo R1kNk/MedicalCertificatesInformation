@@ -1,12 +1,9 @@
 ﻿using MedicalSertificates.Common;
-using MedicalSertificates.DomainModel.Models;
 using MedicalSertificates.Service.Auth.ErrorsFetch;
-using MedicalSertificates.Service.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using System;
+using MedicalSertificates.Service.Interfaces.Auth;
+using MedicalSertificates.Service.Interfaces.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalSertificates.Service.Auth

@@ -20,7 +20,7 @@ namespace MedicalSertificates.Service
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<MedicalSertificatesDbContext>()
-                .AddErrorDescriber<CustomIdentityErrorDescriber>()
+                //.AddErrorDescriber<CustomIdentityErrorDescriber>()
                 .AddDefaultTokenProviders();
             return services;
 

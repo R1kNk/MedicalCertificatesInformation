@@ -1,13 +1,10 @@
 ﻿using MedicalSertificates.DomainModel.Models;
-using MedicalSertificates.Service.Interfaces;
+using MedicalSertificates.Service.Interfaces.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MedicalSertificates.Service.Auth
 {
