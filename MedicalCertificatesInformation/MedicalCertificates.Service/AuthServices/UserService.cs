@@ -1,6 +1,6 @@
 ﻿using MedicalCertificates.Common;
 using MedicalCertificates.DomainModel.Models;
-using MedicalCertificates.Service.AuthServices.ErrorsFetch;
+using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Auth;
 using MedicalCertificates.Service.Interfaces.Models;
 using System.Collections.Generic;
@@ -17,6 +17,14 @@ namespace MedicalCertificates.Service.AuthServices
         public UserService(IUserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
+        }
+
+        public async Task<OperationResult<string>> AddGroupAsync(ApplicationUser user, Group group)
+        {
+            var entity = await _userManager.FindByIdAsync(user.Id);
+            group.Curator = user;
+            entity.Groups.Add(group);
+            return OperationResult<string>.CreateSuccessfulResult();
         }
 
         public async Task<OperationResult<IdentityResultError>> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)

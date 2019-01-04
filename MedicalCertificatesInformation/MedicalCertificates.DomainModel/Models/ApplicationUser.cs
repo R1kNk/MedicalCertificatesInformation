@@ -5,6 +5,6 @@ namespace MedicalCertificates.DomainModel.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public List<Group> Groups { get; set; }
+        public virtual List<Group> Groups { get; set; }
     }
 }

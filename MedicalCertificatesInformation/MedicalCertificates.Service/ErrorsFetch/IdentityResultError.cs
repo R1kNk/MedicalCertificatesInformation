@@ -1,4 +1,4 @@
-﻿namespace MedicalCertificates.Service.AuthServices.ErrorsFetch
+﻿namespace MedicalCertificates.Service.ErrorsFetch
 {
     enum IdentityResultError
     {

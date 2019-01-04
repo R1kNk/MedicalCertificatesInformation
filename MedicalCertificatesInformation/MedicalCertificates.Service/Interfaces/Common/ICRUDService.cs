@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Common
 {
-    interface CRUDService<TEntity> where TEntity : class
+    interface ICRUDService<TEntity> where TEntity : class
     {
-        OperationResult<string> Update(TEntity entity);
+        Task<OperationResult<string>> UpdateAsync(TEntity entity);
 
-        OperationResult<string> Delete(TEntity entity);
+        Task<OperationResult<string>> DeleteAsync(TEntity entity);
 
-        TEntity Create(TEntity entity);
+        Task<TEntity> CreateAsync(TEntity entity);
 
         Task<TEntity> GetByIdAsync(int id);
 

@@ -3,7 +3,7 @@ using MedicalCertificates.Service.Interfaces.Common;
 
 namespace MedicaCertificates.Service.Interfaces.Models
 {
-    interface IHealthGroupService : CRUDService<HealthGroup>
+    interface IHealthGroupService : ICRUDService<HealthGroup>
     {
     }
 }

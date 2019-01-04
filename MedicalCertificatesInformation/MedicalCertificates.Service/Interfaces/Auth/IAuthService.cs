@@ -1,6 +1,6 @@
 ﻿using MedicalCertificates.Common;
 using MedicalCertificates.DomainModel.Models;
-using MedicalCertificates.Service.AuthServices.ErrorsFetch;
+using MedicalCertificates.Service.ErrorsFetch;
 using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Auth

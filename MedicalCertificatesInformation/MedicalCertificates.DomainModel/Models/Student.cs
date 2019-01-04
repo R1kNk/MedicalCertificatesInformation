@@ -10,8 +10,8 @@ namespace MedicalCertificates.DomainModel.Models
         public string GoogleDriveFolderId { get; set; }
 
         public int GroupId { get; set; }
-        public Group Group { get; set; }
+        public virtual Group Group { get; set; }
 
-        public List<MedicalCertificate> MedicalCertificates { get; set; }
+        public virtual List<MedicalCertificate> MedicalCertificates { get; set; }
     }
 }

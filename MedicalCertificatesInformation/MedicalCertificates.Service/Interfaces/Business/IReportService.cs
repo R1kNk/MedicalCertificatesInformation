@@ -8,12 +8,16 @@ namespace MedicalCertificates.Service.Interfaces.Business
     {
         Task<IReadOnlyCollection<TEntity>> GetAllFrom(TContainer container);
 
-        Task<IReadOnlyCollection<TEntity>> GetAllValidFrom(TContainer container);
+        Task<IReadOnlyCollection<TEntity>> GetValidFrom(TContainer container);
 
-        Task<IReadOnlyCollection<TEntity>> GetAllInvalidFrom(TContainer container);
+        Task<IReadOnlyCollection<TEntity>> GetInvalidFrom(TContainer container);
 
-        Task<IReadOnlyCollection<TEntity>> GetAllInvalidOnDateFrom(TContainer container, DateTime dateTime);
+        Task<IReadOnlyCollection<TEntity>> GetInvalidOnDateFrom(TContainer container, DateTime dateTime);
 
+        Task<IReadOnlyCollection<TEntity>> GetValidOnDateFrom(TContainer container, DateTime dateTime);
 
+        Task<IReadOnlyCollection<TEntity>> GetInvalidOnDateIntervalFrom(TContainer container, DateTime dateTime);
+
+        Task<IReadOnlyCollection<TEntity>> GetValidOnDateIntervalFrom(TContainer container, DateTime dateTime);
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.CommonServices
 {
-    public class CRUDService<TEntity> : Interfaces.Common.CRUDService<TEntity> where TEntity : class
+    public class CRUDService<TEntity> : ICRUDService<TEntity> where TEntity : class
     {
 
         protected readonly IMedicalCertificatesUnitOfWork _unitOfWork;
@@ -22,16 +22,25 @@ namespace MedicalCertificates.Service.CommonServices
 
         }
 
-        public TEntity Create(TEntity entity)
+        public async Task<TEntity> CreateAsync(TEntity entity)
         {
             var result = _tEntityRepository.Create(entity);
+            await _unitOfWork.SaveAsync();
             return result;
         }
 
-        public OperationResult<string> Delete(TEntity entity)
+        public async Task<OperationResult<string>> DeleteAsync(TEntity entity)
         {
+            //try
+            //{
             _tEntityRepository.Delete(entity);
+            await _unitOfWork.SaveAsync();
             return OperationResult<string>.CreateSuccessfulResult();
+            //}
+            //catch (Exception ex)
+            //{
+            //    return OperationResult<string>.CreateUnsuccessfulResult(new List<string> { "Something went wrong. " + ex.Message });
+            //}
         }
 
         public async Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterexpression)
@@ -64,11 +73,20 @@ namespace MedicalCertificates.Service.CommonServices
             return result;
         }
 
-        public OperationResult<string> Update(TEntity entity)
+        public async Task<OperationResult<string>> UpdateAsync(TEntity entity)
         {
-            _tEntityRepository.Update(entity);
-            return OperationResult<string>.CreateSuccessfulResult();
+            //try
+            //{
+                _tEntityRepository.Update(entity);
+                await _unitOfWork.SaveAsync();
+                return OperationResult<string>.CreateSuccessfulResult();
+            //}
+            //catch (Exception ex)
+            //{
+            //    return OperationResult<string>.CreateUnsuccessfulResult(new List<string> { "Something went wrong. " + ex.Message });
+            //}
         }
+
 
     }
 }

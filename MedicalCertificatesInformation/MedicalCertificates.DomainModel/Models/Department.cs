@@ -7,6 +7,6 @@ namespace MedicalCertificates.DomainModel.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<Course> Courses { get; set; }
+        public virtual List<Course> Courses { get; set; }
     }
 }

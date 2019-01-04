@@ -52,6 +52,10 @@ namespace MedicalCertificates.Repositories.Configurations
             public void Configure(EntityTypeBuilder<MedicalCertificate> builder)
             {
                builder.Property(p => p.StartDate).IsRequired();
+               builder.Property(p => p.CertificateTerm).IsRequired();
+               builder.Property(p => p.FinishDate).IsRequired();
+               builder.Property(p => p.HealthGroup).IsRequired();
+               builder.Property(p => p.PhysicalEducation).IsRequired();
             }
         }
 
@@ -63,6 +67,7 @@ namespace MedicalCertificates.Repositories.Configurations
                 builder.HasIndex(p => p.Name).IsUnique();
                 builder.Property(p => p.GoogleDriveFolderId).IsRequired();
                 builder.HasMany(b => b.Students).WithOne(p => p.Group).HasForeignKey(p => p.GroupId).OnDelete(DeleteBehavior.Cascade);
+                builder.HasOne(p => p.Curator).WithMany(p => p.Groups).HasForeignKey(p => p.CuratorId);
             }
         }
 

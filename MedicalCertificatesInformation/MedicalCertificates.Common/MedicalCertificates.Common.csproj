@@ -4,4 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MedicalCertificates.DomainModel\MedicalCertificates.DomainModel.csproj" />
+  </ItemGroup>
+
 </Project>
