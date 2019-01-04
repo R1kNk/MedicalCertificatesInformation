@@ -5,9 +5,9 @@ using MedicalCertificates.Service.Interfaces.Models;
 
 namespace MedicalCertificates.Service.Models
 {
-    public class CourseService : CRUDService<Course>, ICourseService
+    class HospitalService : CRUDService<Hospital>, IHospitalService
     {
-        public CourseService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
+        public HospitalService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
     }

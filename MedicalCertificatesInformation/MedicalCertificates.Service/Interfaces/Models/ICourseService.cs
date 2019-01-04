@@ -3,7 +3,7 @@ using MedicalCertificates.Service.Interfaces.Common;
 
 namespace MedicalCertificates.Service.Interfaces.Models
 {
-    interface ICourseService : ICRUDService<Course>
+    interface ICourseService : CRUDService<Course>
     {
     }
 }

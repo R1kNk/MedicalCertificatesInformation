@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Common
 {
-    interface ICRUDService<TEntity> where TEntity : class
+    interface CRUDService<TEntity> where TEntity : class
     {
         OperationResult<string> Update(TEntity entity);
 

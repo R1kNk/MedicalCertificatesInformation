@@ -2,12 +2,15 @@
 using MedicalCertificates.Repositories.Interfaces;
 using MedicalCertificates.Service.Common;
 using MedicalCertificates.Service.Interfaces.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace MedicalCertificates.Service.Models
 {
-    public class CourseService : CRUDService<Course>, ICourseService
+    class DepartmentService : CRUDService<Department>, IDepartmentService
     {
-        public CourseService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
+        public DepartmentService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
     }
