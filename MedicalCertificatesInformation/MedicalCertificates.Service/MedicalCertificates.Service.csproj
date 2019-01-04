@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MedicalCertificates.Common\MedicalCertificates.Common.csproj" />
+    <ProjectReference Include="..\MedicalCertificates.Repositories\MedicalSertificates.Repositories.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Web.Services">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Web.Services.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

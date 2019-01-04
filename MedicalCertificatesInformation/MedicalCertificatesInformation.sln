@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalCertificates.Common", "MedicalCertificates.Common\MedicalCertificates.Common.csproj", "{9173505E-2E6E-44F5-873B-D36D18407D82}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalCertificates.DomainModel", "MedicalCertificates.DomainModel\MedicalCertificates.DomainModel.csproj", "{04CB3E37-F212-44F1-9912-5172DB912436}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalSertificates.Repositories", "MedicalCertificates.Repositories\MedicalSertificates.Repositories.csproj", "{06CB532E-8EFE-4B9B-AF1E-7F4DC2EACBF8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalCertificates.Service", "MedicalCertificates.Service\MedicalCertificates.Service.csproj", "{2F9DB154-5D0A-454C-BC1C-3B0EE7B7BDBE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalCertificates.Web", "MedicalCertificates.Web\MedicalCertificates.Web.csproj", "{B5ABE2B5-7F2B-499E-B25C-C2F067975813}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9173505E-2E6E-44F5-873B-D36D18407D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9173505E-2E6E-44F5-873B-D36D18407D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9173505E-2E6E-44F5-873B-D36D18407D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9173505E-2E6E-44F5-873B-D36D18407D82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04CB3E37-F212-44F1-9912-5172DB912436}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04CB3E37-F212-44F1-9912-5172DB912436}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04CB3E37-F212-44F1-9912-5172DB912436}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04CB3E37-F212-44F1-9912-5172DB912436}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06CB532E-8EFE-4B9B-AF1E-7F4DC2EACBF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06CB532E-8EFE-4B9B-AF1E-7F4DC2EACBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06CB532E-8EFE-4B9B-AF1E-7F4DC2EACBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06CB532E-8EFE-4B9B-AF1E-7F4DC2EACBF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F9DB154-5D0A-454C-BC1C-3B0EE7B7BDBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F9DB154-5D0A-454C-BC1C-3B0EE7B7BDBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F9DB154-5D0A-454C-BC1C-3B0EE7B7BDBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F9DB154-5D0A-454C-BC1C-3B0EE7B7BDBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5ABE2B5-7F2B-499E-B25C-C2F067975813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5ABE2B5-7F2B-499E-B25C-C2F067975813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5ABE2B5-7F2B-499E-B25C-C2F067975813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5ABE2B5-7F2B-499E-B25C-C2F067975813}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2A49EFB6-EA3D-4A0C-9C8A-2E7EA5481BE2}
+	EndGlobalSection
+EndGlobal
