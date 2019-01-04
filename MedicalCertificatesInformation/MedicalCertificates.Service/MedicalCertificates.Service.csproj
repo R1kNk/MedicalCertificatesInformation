@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MedicalCertificates.Common\MedicalCertificates.Common.csproj" />
-    <ProjectReference Include="..\MedicalCertificates.Repositories\MedicalSertificates.Repositories.csproj" />
+    <ProjectReference Include="..\MedicalCertificates.Repositories\MedicalCertificates.Repositories.csproj" />
   </ItemGroup>
 
   <ItemGroup>

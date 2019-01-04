@@ -1,13 +1,13 @@
 ﻿using MedicalCertificates.Common;
 using MedicalCertificates.DomainModel.Models;
-using MedicalCertificates.Service.Auth.ErrorsFetch;
+using MedicalCertificates.Service.AuthServices.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Auth;
 using MedicalCertificates.Service.Interfaces.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace MedicalCertificates.Service.Auth
+namespace MedicalCertificates.Service.AuthServices
 {
     class UserService: IUserService<ApplicationUser>
     {

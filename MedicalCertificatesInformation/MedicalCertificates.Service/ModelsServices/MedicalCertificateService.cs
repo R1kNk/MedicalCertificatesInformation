@@ -1,6 +1,6 @@
 ﻿using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Repositories.Interfaces;
-using MedicalCertificates.Service.Common;
+using MedicalCertificates.Service.CommonServices;
 using MedicalCertificates.Service.Interfaces.Models;
 
 namespace MedicalCertificates.Service.Models

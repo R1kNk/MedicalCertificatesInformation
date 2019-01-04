@@ -1,12 +1,9 @@
 ﻿using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Repositories.Interfaces;
-using MedicalCertificates.Service.Common;
+using MedicalCertificates.Service.CommonServices;
 using MedicalCertificates.Service.Interfaces.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MedicalCertificates.Service.Models
+namespace MedicalCertificates.Service.ModelsServices
 {
     class DepartmentService : CRUDService<Department>, IDepartmentService
     {

@@ -1,5 +1,5 @@
 ﻿using MedicalCertificates.Common;
-using MedicalCertificates.Service.Auth.ErrorsFetch;
+using MedicalCertificates.Service.AuthServices.ErrorsFetch;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;

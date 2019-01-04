@@ -1,7 +1,7 @@
 ﻿using MedicaCertificates.Service.Interfaces.Models;
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Repositories.Interfaces;
-using MedicalCertificates.Service.Common;
+using MedicalCertificates.Service.CommonServices;
 
 namespace MedicalCertificates.Service.Models
 {

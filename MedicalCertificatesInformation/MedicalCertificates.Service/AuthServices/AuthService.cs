@@ -1,10 +1,10 @@
 ﻿using MedicalCertificates.Common;
 using MedicalCertificates.DomainModel.Models;
-using MedicalCertificates.Service.Auth.ErrorsFetch;
+using MedicalCertificates.Service.AuthServices.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Auth;
 using System.Threading.Tasks;
 
-namespace MedicalCertificates.Service.Auth
+namespace MedicalCertificates.Service.AuthServices
 {
     class AuthService : IAuthService
     {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace MedicalCertificates.Service.Common
+namespace MedicalCertificates.Service.CommonServices
 {
     public class CRUDService<TEntity> : Interfaces.Common.CRUDService<TEntity> where TEntity : class
     {

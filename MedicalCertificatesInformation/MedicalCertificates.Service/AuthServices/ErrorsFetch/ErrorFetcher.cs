@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MedicalCertificates.Service.Auth.ErrorsFetch
+namespace MedicalCertificates.Service.AuthServices.ErrorsFetch
 {
     class ErrorFetcher
     {

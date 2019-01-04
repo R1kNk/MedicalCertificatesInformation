@@ -1,13 +1,13 @@
 ﻿using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Repositories.Interfaces;
-using MedicalCertificates.Service.Common;
+using MedicalCertificates.Service.CommonServices;
 using MedicalCertificates.Service.Interfaces.Models;
 
 namespace MedicalCertificates.Service.Models
 {
-    public class CourseService : CRUDService<Course>, ICourseService
+    class HospitalService : CRUDService<Hospital>, IHospitalService
     {
-        public CourseService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
+        public HospitalService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
     }

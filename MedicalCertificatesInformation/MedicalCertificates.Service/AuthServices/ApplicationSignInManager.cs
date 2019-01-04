@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace MedicalCertificates.Service.Auth
+namespace MedicalCertificates.Service.AuthServices
 {
     class ApplicationSignInManager : SignInManager<ApplicationUser>, ISignInManager<ApplicationUser>
     {
