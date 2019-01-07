@@ -3,7 +3,7 @@ using MedicalCertificates.Service.Interfaces.Common;
 
 namespace MedicalCertificates.Service.Interfaces.Models
 {
-    interface IPhysicalEducationService : ICRUDService<PhysicalEducation>
+    public interface IPhysicalEducationService : ICRUDService<PhysicalEducation>
     {
     }
 }

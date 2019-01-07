@@ -2,7 +2,10 @@
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Repositories.Interfaces;
 using MedicalCertificates.Service.CommonServices;
+using MedicalCertificates.Service.Interfaces.Common;
 using MedicalCertificates.Service.Interfaces.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.ModelsServices
@@ -19,8 +22,21 @@ namespace MedicalCertificates.Service.ModelsServices
             course.Department = entity;
             entity.Courses.Add(course);
             await _unitOfWork.SaveAsync();
-            ApplicationUser applicationUser = new ApplicationUser();
             return OperationResult<string>.CreateSuccessfulResult();
+        }
+
+        public IReadOnlyList<Student> GetAllStudents(Department department)
+        {
+            List<Student> studentList = new List<Student>();
+            if (department == null)
+                return studentList;
+            foreach(var course in department.Courses)
+            {
+                if (course != null)
+                    studentList.AddRange(course.Groups.SelectMany(p => p.Students).ToList());
+            }
+            return studentList;
+
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.Interfaces.Common;
 
-namespace MedicaCertificates.Service.Interfaces.Models
+namespace MedicalCertificates.Service.Interfaces.Models
 {
-    interface IHealthGroupService : ICRUDService<HealthGroup>
+    public interface IHealthGroupService : ICRUDService<HealthGroup>
     {
     }
 }

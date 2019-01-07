@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Common
 {
-    interface ICRUDService<TEntity> where TEntity : class
+    public interface ICRUDService<TEntity> where TEntity : class
     {
         Task<OperationResult<string>> UpdateAsync(TEntity entity);
 
@@ -18,11 +18,11 @@ namespace MedicalCertificates.Service.Interfaces.Common
 
         Task<TEntity> GetByIdAsync(string id);
 
-        Task<IReadOnlyCollection<TEntity>> GetAllAsync();
+        Task<IReadOnlyList<TEntity>> GetAllAsync();
 
         Task<TEntity> GetSingleOrDefaultAsync(Expression<Func<TEntity, bool>> filterExpression);
 
-        Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterexpression);
+        Task<IReadOnlyList<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterexpression);
 
 
     }

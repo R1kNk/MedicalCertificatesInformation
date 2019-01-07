@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Models
 {
-    interface IUserService<TUser> where TUser : class
+    public interface IUserService<TUser> where TUser : class
     {
         Task<IList<string>> GetRolesAsync(TUser user);
 

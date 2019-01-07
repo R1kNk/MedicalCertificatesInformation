@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Models
 {
-    interface IGroupService : ICRUDService<Group>
+    public interface IGroupService : ICRUDService<Group>, IGetAllStudents<Group>
     {
         Task<OperationResult<string>> AddStudentAsync(Group group, Student student);
+
     }
 }

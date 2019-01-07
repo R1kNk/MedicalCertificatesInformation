@@ -1,6 +1,6 @@
 ﻿namespace MedicalCertificates.Service.ErrorsFetch
 {
-    enum SignInResultError
+    public enum SignInResultError
     {
         IsLockedOut,
         IsNotAllowed,

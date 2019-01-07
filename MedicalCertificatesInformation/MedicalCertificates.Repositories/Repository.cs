@@ -36,12 +36,12 @@ namespace MedicalCertificates.Repositories
             dbSet.Remove(entity);
         }
 
-        public async Task<IReadOnlyCollection<TEntity>> GetAllAsync()
+        public async Task<IReadOnlyList<TEntity>> GetAllAsync()
         {            
             return await dbSet.ToListAsync();
         }
 
-        public async Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterExpression)
+        public async Task<IReadOnlyList<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterExpression)
         {
            return await dbSet.Where(filterExpression).ToListAsync();
         }
@@ -102,7 +102,7 @@ namespace MedicalCertificates.Repositories
             return dbSet;
         }
 
-        public async Task<IReadOnlyCollection<TEntity>> GetAllAsync(IQueryable<TEntity> entities)
+        public async Task<IReadOnlyList<TEntity>> GetAllAsync(IQueryable<TEntity> entities)
         {
             return await entities.ToListAsync();
         }

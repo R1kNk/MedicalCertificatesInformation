@@ -1,6 +1,6 @@
 ﻿namespace MedicalCertificates.Service.ErrorsFetch
 {
-    enum IdentityResultError
+    public enum IdentityResultError
     {
         DefaultError,
         PasswordMismatch,

@@ -43,13 +43,13 @@ namespace MedicalCertificates.Service.CommonServices
             //}
         }
 
-        public async Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterexpression)
+        public async Task<IReadOnlyList<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterexpression)
         {
             var result = await _tEntityRepository.FilterAsync(filterexpression);
             return result;
         }
 
-        public async Task<IReadOnlyCollection<TEntity>> GetAllAsync()
+        public async Task<IReadOnlyList<TEntity>> GetAllAsync()
         {
             var result = await _tEntityRepository.GetAllAsync();
             return result;

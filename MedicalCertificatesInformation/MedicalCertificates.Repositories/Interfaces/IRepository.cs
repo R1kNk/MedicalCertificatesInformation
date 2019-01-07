@@ -18,13 +18,13 @@ namespace MedicalCertificates.Repositories.Interfaces
 
         Task<TEntity> GetByIdAsync(string id);
 
-        Task<IReadOnlyCollection<TEntity>> GetAllAsync();
+        Task<IReadOnlyList<TEntity>> GetAllAsync();
 
-        Task<IReadOnlyCollection<TEntity>> GetAllAsync(IQueryable<TEntity> entities);
+        Task<IReadOnlyList<TEntity>> GetAllAsync(IQueryable<TEntity> entities);
 
         Task<TEntity> GetSingleOrDefaultAsync(Expression<Func<TEntity, bool>> filterExpression);
 
-        Task<IReadOnlyCollection<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterExpression);
+        Task<IReadOnlyList<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterExpression);
 
         IQueryable<TEntity> GetIQueryable();
 

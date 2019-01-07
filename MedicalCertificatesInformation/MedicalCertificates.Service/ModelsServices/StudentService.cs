@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MedicalCertificates.Common;
@@ -31,6 +32,46 @@ namespace MedicalCertificates.Service.Models
             entity.MedicalCertificates.Add(certificate);
             await _unitOfWork.SaveAsync();
             return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
+        }
+
+        public MedicalCertificate GetLastCertificate(Student student)
+        {
+           if(student !=null || student.MedicalCertificates != null)
+           {
+             return student.MedicalCertificates.LastOrDefault();
+           }
+             return null;
+        }
+
+        internal IReadOnlyList<Student> SortStudents(IReadOnlyList<Student> students, bool valid, DateTime dateTime)
+        {
+            List<Student> result = new List<Student>();
+            if (students == null)
+                return result;
+
+            foreach (var student in students)
+            {
+                if (student != null)
+                {
+                    var lastCertificate = GetLastCertificate(student);
+                    if (lastCertificate == null)
+                    {
+                        if (!valid)
+                            result.Add(student);
+                    }
+                    if (lastCertificate.FinishDate < dateTime)
+                    {
+                        if (!valid)
+                            result.Add(student);
+                    }
+                    else
+                    {
+                        if (valid)
+                            result.Add(student);
+                    }
+                }
+            }
+            return result;
         }
     }
 }
