@@ -4,10 +4,28 @@ using System.Text;
 
 namespace MedicalCertificates.Common.ReportModels.Common
 {
-    class CertificatePresenceStat<TEntity> where TEntity : class 
+    public class CertificatePresenceStat<TEntity> where TEntity : class 
     {
-        public Tuple<int, double, IReadOnlyList<TEntity>> Have { get; private set; }
-        public Tuple<int, double, IReadOnlyList<TEntity>> DontHave { get; private set; }
+        public Stat<TEntity> Have { get; private set; }
+        public Stat<TEntity> DontHave { get; private set; }
+
+
+        public IReadOnlyList<int> CountsInEachStat
+        {
+            get
+            {
+                var list = new List<int>();
+                if (Have != null)
+                    list.Add(Have.Count);
+                else list.Add(0);
+                if (DontHave != null)
+                    list.Add(DontHave.Count);
+                else list.Add(0);
+                return list;
+            }
+        }
+
+        public int All { get; set; }
 
         public CertificatePresenceStat(IReadOnlyList<TEntity> have, IReadOnlyList<TEntity> dontHave)
         {
@@ -31,23 +49,55 @@ namespace MedicalCertificates.Common.ReportModels.Common
             int personCount = haveCount + dontHaveCount;
             if(personCount <=0)
             {
-                Have = new Tuple<int, double, IReadOnlyList<TEntity>>(0, 0.0, HaveList);
-                DontHave = new Tuple<int, double, IReadOnlyList<TEntity>>(0, 0.0, DontHaveList);
+                Have = new Stat<TEntity>(0, 0.0, HaveList);
+                DontHave = new Stat<TEntity>(0, 0.0, DontHaveList);
                 return;
             }
 
-            if (have == null) Have = new Tuple<int, double, IReadOnlyList<TEntity>>(0, 0.0, HaveList);
-            if (dontHave == null) DontHave = new Tuple<int, double, IReadOnlyList<TEntity>>(0, 0.0, DontHaveList);
+            if (have == null) Have = new Stat<TEntity>(0, 0.0, HaveList);
+            if (dontHave == null) DontHave = new Stat<TEntity>(0, 0.0, DontHaveList);
 
-
+            All = personCount;
             double percentageHave = Math.Round((double)(100 * haveCount) / personCount, 1);
             double percentageDontHave = 100.0 - percentageHave;
 
-            Have = new Tuple<int, double, IReadOnlyList<TEntity>>(haveCount, percentageHave, HaveList);
-            DontHave = new Tuple<int, double, IReadOnlyList<TEntity>>(dontHaveCount, percentageHave,DontHaveList);
+            Have = new Stat<TEntity>(haveCount, percentageHave, HaveList);
+            DontHave = new Stat<TEntity>(dontHaveCount, percentageHave,DontHaveList);
         }
 
-       
+        public CertificatePresenceStat(IReadOnlyList<TEntity> have, IReadOnlyList<TEntity> dontHave, int haveCount, int dontHaveCount)
+        {
+            IReadOnlyList<TEntity> HaveList = new List<TEntity>();
+            IReadOnlyList<TEntity> DontHaveList = new List<TEntity>();
+
+            if (have != null)
+            {
+                HaveList = have;
+            }
+
+            if (dontHave != null)
+            {
+                DontHaveList = dontHave;
+            }
+
+            int personCount = haveCount + dontHaveCount;
+            if (personCount <= 0)
+            {
+                Have = new Stat<TEntity>(0, 0.0, HaveList);
+                DontHave = new Stat<TEntity>(0, 0.0, DontHaveList);
+                return;
+            }
+
+            if (have == null) Have = new Stat<TEntity>(0, 0.0, HaveList);
+            if (dontHave == null) DontHave = new Stat<TEntity>(0, 0.0, DontHaveList);
+
+            All = personCount;
+            double percentageHave = Math.Round((double)(100 * haveCount) / personCount, 1);
+            double percentageDontHave = 100.0 - percentageHave;
+
+            Have = new Stat<TEntity>(haveCount, percentageHave, HaveList);
+            DontHave = new Stat<TEntity>(dontHaveCount, percentageHave, DontHaveList);
+        }
 
     }
 }

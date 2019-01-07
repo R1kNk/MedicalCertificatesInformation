@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MedicalCertificates.Common.ReportModels
 {
-    class StudentReport
+    public class StudentReport
     {
         public int Id { get; private set; }
         public string Name { get; private set; }

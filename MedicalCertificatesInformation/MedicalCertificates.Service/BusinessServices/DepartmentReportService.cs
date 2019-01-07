@@ -11,19 +11,26 @@ namespace MedicalCertificates.Service.BusinessServices
     {
         public Task<IReadOnlyCollection<MedicalCertificate>> GetAllFrom(Department container)
         {
-            List<MedicalCertificate> medicalCertificates = new List<MedicalCertificate>();
-            foreach(var course in container.Courses)
-            {
-                foreach(var group in course.Groups)
-                {
-                    foreach (var student in group.Students)
-                    {
-                        var certificate = student.MedicalCertificates.LastOrDefault();
-                        if (certificate != null)
-                            medicalCertificates.Add(certificate);
-                    }
-                }
-            }
+            //List<Student> medicalCertificates = new List<Student>();
+            //foreach(var course in container.Courses)
+            //{
+            //    if(course!=null)
+            //    foreach(var group in course.Groups)
+            //    {
+            //        if(group!=null)
+            //        foreach (var student in group.Students)
+            //        {
+            //           if (student != null)
+            //           {
+            //              var certificate = student.MedicalCertificates.LastOrDefault();
+            //              if (certificate != null)
+            //              medicalCertificates.Add(certificate);
+            //           }
+            //        }
+            //    }
+            //}
+            throw new NotImplementedException();
+
         }
 
         public Task<IReadOnlyCollection<MedicalCertificate>> GetInvalidFrom(Department container)
