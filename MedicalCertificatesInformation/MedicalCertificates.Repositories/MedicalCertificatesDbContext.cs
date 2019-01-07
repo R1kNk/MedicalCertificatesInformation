@@ -2,12 +2,15 @@
 using MedicalCertificates.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using static MedicalCertificates.Repositories.Configurations.MedicalCertificatesConfiguration;
 
 namespace MedicalCertificates.Repositories
 {
     public class MedicalCertificatesDbContext : IdentityDbContext<ApplicationUser>, IDbContext
     {
+
+        public readonly static string connectionString = "Server=.\\SQLEXPRESS;Database=MedicalSertificates.Web;Trusted_Connection=True;MultipleActiveResultSets=true";
 
         public MedicalCertificatesDbContext(DbContextOptions<MedicalCertificatesDbContext> options)
            : base(options)
@@ -39,8 +42,26 @@ namespace MedicalCertificates.Repositories
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseSqlServer(connectionString);
             optionsBuilder.UseLazyLoadingProxies();
             base.OnConfiguring(optionsBuilder);
+        }
+
+        public static DbContextOptionsBuilder<MedicalCertificatesDbContext> GetOptionsBuilder()
+        {
+            var builder = new DbContextOptionsBuilder<MedicalCertificatesDbContext>();
+            builder.UseSqlServer(connectionString);
+            builder.UseLazyLoadingProxies();
+            return builder;
+        }
+    }
+
+    internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MedicalCertificatesDbContext>
+    {
+        public MedicalCertificatesDbContext CreateDbContext(string[] args)
+        {
+            var context = new MedicalCertificatesDbContext(MedicalCertificatesDbContext.GetOptionsBuilder().Options);
+            return context;
         }
     }
 }

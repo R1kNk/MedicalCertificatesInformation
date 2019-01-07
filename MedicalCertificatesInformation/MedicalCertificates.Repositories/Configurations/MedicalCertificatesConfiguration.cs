@@ -41,7 +41,7 @@ namespace MedicalCertificates.Repositories.Configurations
             {
                 builder.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 builder.Property(p => p.Surname).IsRequired().HasMaxLength(60);
-                builder.Property(p => p.GoogleDriveFolderId).IsRequired();
+                //builder.Property(p => p.GoogleDriveFolderId).IsRequired();
                 builder.HasMany(b => b.MedicalCertificates).WithOne(p => p.Student).HasForeignKey(p => p.StudentId).OnDelete(DeleteBehavior.Cascade);
 
             }
@@ -54,8 +54,8 @@ namespace MedicalCertificates.Repositories.Configurations
                builder.Property(p => p.StartDate).IsRequired();
                builder.Property(p => p.CertificateTerm).IsRequired();
                builder.Property(p => p.FinishDate).IsRequired();
-               builder.Property(p => p.HealthGroup).IsRequired();
-               builder.Property(p => p.PhysicalEducation).IsRequired();
+               builder.Property(p => p.HealthGroupId).IsRequired();
+               builder.Property(p => p.PhysicalEducationId).IsRequired();
             }
         }
 
@@ -65,9 +65,9 @@ namespace MedicalCertificates.Repositories.Configurations
             {
                 builder.Property(p => p.Name).IsRequired().HasMaxLength(5);
                 builder.HasIndex(p => p.Name).IsUnique();
-                builder.Property(p => p.GoogleDriveFolderId).IsRequired();
+                //builder.Property(p => p.GoogleDriveFolderId).IsRequired();
                 builder.HasMany(b => b.Students).WithOne(p => p.Group).HasForeignKey(p => p.GroupId).OnDelete(DeleteBehavior.Cascade);
-                builder.HasOne(p => p.Curator).WithMany(p => p.Groups).HasForeignKey(p => p.CuratorId);
+                //builder.HasOne(p => p.Curator).WithMany(p => p.Groups).HasForeignKey(p => p.CuratorId);
             }
         }
 

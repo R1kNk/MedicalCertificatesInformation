@@ -11,15 +11,13 @@ namespace MedicalCertificates.Service
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMyServiceDependencies(this IServiceCollection services, string connectionString)
+        public static IServiceCollection MedicalCertificatesServiceDependencies(this IServiceCollection services)
         {
 
-            services.AddDbContext<MedicalCertificatesDbContext>(options =>
-                options.UseSqlServer(connectionString));
-
+            services.AddDbContext<MedicalCertificatesDbContext>(options=>options.UseSqlServer(MedicalCertificatesDbContext.connectionString));
+      
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<MedicalCertificatesDbContext>()
-                //.AddErrorDescriber<CustomIdentityErrorDescriber>()
                 .AddDefaultTokenProviders();
             return services;
 
