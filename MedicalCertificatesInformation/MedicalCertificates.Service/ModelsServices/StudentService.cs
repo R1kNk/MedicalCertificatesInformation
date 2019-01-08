@@ -43,7 +43,7 @@ namespace MedicalCertificates.Service.Models
              return null;
         }
 
-        internal IReadOnlyList<Student> SortStudents(IReadOnlyList<Student> students, bool valid, DateTime dateTime)
+        public IReadOnlyList<Student> SortStudents(IReadOnlyList<Student> students, bool valid, DateTime dateTime)
         {
             List<Student> result = new List<Student>();
             if (students == null)
