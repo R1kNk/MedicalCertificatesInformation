@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using MedicalCertificates.Repositories;
 using MedicalCertificates.DomainModel.Models;
+using MedicalCertificates.Service.Interfaces.Auth;
+using MedicalCertificates.Service.AuthServices;
 
-namespace MedicalCertificates.Service
+namespace MedicalCertificates.Service.ServiceConfigurations
 {
     public static class ServiceCollectionExtensions
     {
@@ -19,6 +18,11 @@ namespace MedicalCertificates.Service
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<MedicalCertificatesDbContext>()
                 .AddDefaultTokenProviders();
+            services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient(typeof(ISignInManager<ApplicationUser>), typeof(ApplicationSignInManager));
+            services.AddTransient(typeof(IUserManager<ApplicationUser>), typeof(ApplicationUserManager));
+
+
             return services;
 
         }

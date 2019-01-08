@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace MedicalSertificates.Web.Views.Manage
+namespace MedicalCertificates.Web.Views.Manage
 {
     public static class ManageNavPages
     {

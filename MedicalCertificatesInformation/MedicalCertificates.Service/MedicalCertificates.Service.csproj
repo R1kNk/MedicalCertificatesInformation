@@ -11,6 +11,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="ReportModels\Common\CertificatePresenceStat.cs" />
+    <Compile Include="ReportModels\Common\HealthGroupStat.cs" />
+    <Compile Include="ReportModels\Common\PhysicalEducationstat.cs" />
+    <Compile Include="ReportModels\Common\RelatedStat.cs" />
+    <Compile Include="ReportModels\Common\Stat.cs" />
+    <Compile Include="ReportModels\DepartmentReport.cs" />
+    <Compile Include="ReportModels\GroupOfDepartmentsReport.cs" />
+    <Compile Include="ReportModels\GroupOfGroupsReport.cs" />
+    <Compile Include="ReportModels\GroupOfStudentsReport.cs" />
+    <Compile Include="ReportModels\GroupReport.cs" />
+    <Compile Include="ReportModels\StudentReport.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MedicalCertificates.Common.ReportModels.Common
+namespace MedicalCertificates.Service.ReportModels.Common
 {
     public class CertificatePresenceStat<TEntity> where TEntity : class 
     {

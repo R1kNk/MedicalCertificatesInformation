@@ -1,11 +1,9 @@
-﻿using MedicalCertificates.Common.ReportModels;
-using MedicalCertificates.DomainModel.Models;
+﻿using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.Interfaces.Business;
 using MedicalCertificates.Service.Interfaces.Models;
-using System;
+using MedicalCertificates.Service.ReportModels;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.BusinessServices

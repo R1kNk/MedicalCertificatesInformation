@@ -10,7 +10,7 @@ namespace MedicalCertificates.Repositories
     public class MedicalCertificatesDbContext : IdentityDbContext<ApplicationUser>, IDbContext
     {
 
-        public readonly static string connectionString = "Server=.\\SQLEXPRESS;Database=MedicalSertificates.Web;Trusted_Connection=True;MultipleActiveResultSets=true";
+        public readonly static string connectionString = "Server=.\\SQLEXPRESS;Database=MedicalCertificates.Web;Trusted_Connection=True;MultipleActiveResultSets=true";
 
         public MedicalCertificatesDbContext(DbContextOptions<MedicalCertificatesDbContext> options)
            : base(options)

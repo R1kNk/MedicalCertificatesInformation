@@ -1,8 +1,8 @@
 @using Microsoft.AspNetCore.Identity
-@using MedicalSertificates.Web.Models
+@using MedicalCertificates.Web.Models
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@inject ISignInManager<ApplicationUser> SignInManager
+@inject IUserManager<ApplicationUser> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {

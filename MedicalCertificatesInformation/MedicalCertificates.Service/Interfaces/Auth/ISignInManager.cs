@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Auth
 {
-    interface ISignInManager<TUser> where TUser : class
+    public interface ISignInManager<TUser> where TUser : class
     {
+       
         Task<SignInResult> PasswordSignInAsync(TUser user, string password, bool isPersistent, bool lockoutOnFailure);
 
         Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isPersistent, bool lockoutOnFailure);
@@ -30,6 +29,8 @@ namespace MedicalCertificates.Service.Interfaces.Auth
         Task<SignInResult> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent, bool bypassTwoFactor);
 
         Task<SignInResult> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent);
+
+        bool IsSignedIn(ClaimsPrincipal principal);
 
         Task SignOutAsync();
     }

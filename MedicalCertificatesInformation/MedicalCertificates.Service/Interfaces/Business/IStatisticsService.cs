@@ -1,5 +1,5 @@
-﻿using MedicalCertificates.Common.ReportModels;
-using MedicalCertificates.DomainModel.Models;
+﻿using MedicalCertificates.DomainModel.Models;
+using MedicalCertificates.Service.ReportModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

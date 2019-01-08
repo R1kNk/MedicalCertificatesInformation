@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
-namespace MedicalSertificates.Web.Models.ManageViewModels
+namespace MedicalCertificates.Web.Models.ManageViewModels
 {
     public class ExternalLoginsViewModel
     {

@@ -1,6 +1,4 @@
-﻿using MedicalCertificates.Common.ReportModels;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Business

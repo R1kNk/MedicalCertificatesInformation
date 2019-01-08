@@ -3,19 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MedicalCertificates.Common.ReportModels.Common
+namespace MedicalCertificates.Service.ReportModels.Common
 {
-    public class HealthGroupStat<TEntity> where  TEntity : class
+    public class PhysicalEducationStat<TEntity> where TEntity : class
     {
-        public IReadOnlyList<RelatedStat<TEntity, HealthGroup>> HealthGroupStatistics { get; private set; }
+
+        public IReadOnlyList<RelatedStat<TEntity, PhysicalEducation>> PhysicalEducationStatistics { get; private set; }
 
         public int All { get; set; }
 
         public IReadOnlyList<int> CountsInEachStat
         {
-            get {
+            get
+            {
                 var list = new List<int>();
-                foreach(var stat in HealthGroupStatistics)
+                foreach (var stat in PhysicalEducationStatistics)
                 {
                     if (stat != null)
                         list.Add(stat.Count);
@@ -26,7 +28,7 @@ namespace MedicalCertificates.Common.ReportModels.Common
         }
 
 
-        public HealthGroupStat(IReadOnlyList<HealthGroup> healthGroups, IReadOnlyList<IReadOnlyList<TEntity>> stats)
+        public PhysicalEducationStat(IReadOnlyList<PhysicalEducation> physicalEducations, IReadOnlyList<IReadOnlyList<TEntity>> stats)
         {
             var result = new List<Stat<TEntity>>();
             var counts = new List<int>();
@@ -35,7 +37,7 @@ namespace MedicalCertificates.Common.ReportModels.Common
             foreach (var list in stats)
             {
                 if (list == null)
-                    result.Add(new RelatedStat<TEntity, HealthGroup>());
+                    result.Add(new RelatedStat<TEntity, PhysicalEducation>());
                 else
                 {
                     All += list.Count;
@@ -43,31 +45,31 @@ namespace MedicalCertificates.Common.ReportModels.Common
                     lists.Add(list);
                 }
             }
-            for(int i = 0; i< lists.Count; i++)
+            for (int i = 0; i < lists.Count; i++)
             {
                 var count = counts[i];
                 var list = lists[i];
-                var healthGroup = healthGroups[i];
-                if (count == 0) result.Add(new RelatedStat<TEntity, HealthGroup>());
+                var physicalEducation = physicalEducations[i];
+                if (count == 0) result.Add(new RelatedStat<TEntity, PhysicalEducation>());
                 else
                 {
                     var percentage = Math.Round((double)(100 * count) / All, 1);
-                    result.Add(new RelatedStat<TEntity, HealthGroup>(count, percentage, list, healthGroup));
+                    result.Add(new RelatedStat<TEntity, PhysicalEducation>(count, percentage, list, physicalEducation));
                 }
             }
 
         }
 
-        public HealthGroupStat(IReadOnlyList<HealthGroup> healthGroups, IReadOnlyList<IReadOnlyList<TEntity>> stats, IReadOnlyList<int> countInEachList)
+        public PhysicalEducationStat(IReadOnlyList<PhysicalEducation> physicalEducations, IReadOnlyList<IReadOnlyList<TEntity>> stats, IReadOnlyList<int> countInEachList)
         {
             var result = new List<Stat<TEntity>>();
             var counts = new List<int>();
             var lists = new List<IReadOnlyList<TEntity>>();
 
-            for(int i = 0; i< countInEachList.Count; i++)
+            for (int i = 0; i < countInEachList.Count; i++)
             {
                 if (stats[i] == null)
-                    result.Add(new RelatedStat<TEntity, HealthGroup>());
+                    result.Add(new RelatedStat<TEntity, PhysicalEducation>());
                 else
                 {
                     All += countInEachList[i];
@@ -80,15 +82,17 @@ namespace MedicalCertificates.Common.ReportModels.Common
             {
                 var count = counts[i];
                 var list = lists[i];
-                var healthGroup = healthGroups[i];
-                if (count == 0) result.Add(new RelatedStat<TEntity, HealthGroup>());
+                var physicalEducation = physicalEducations[i];
+                if (count == 0) result.Add(new RelatedStat<TEntity, PhysicalEducation>());
                 else
                 {
                     var percentage = Math.Round((double)(100 * count) / All, 1);
-                    result.Add(new RelatedStat<TEntity, HealthGroup>(count, percentage, list, healthGroup));
+                    result.Add(new RelatedStat<TEntity, PhysicalEducation>(count, percentage, list, physicalEducation));
                 }
             }
 
+
         }
+
     }
 }

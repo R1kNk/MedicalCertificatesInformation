@@ -1,10 +1,7 @@
-﻿using MedicalCertificates.Common.ReportModels.Common;
-using MedicalCertificates.DomainModel.Models;
+﻿using MedicalCertificates.DomainModel.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MedicalCertificates.Common.ReportModels
+namespace MedicalCertificates.Service.ReportModels
 {
     public class StudentReport
     {

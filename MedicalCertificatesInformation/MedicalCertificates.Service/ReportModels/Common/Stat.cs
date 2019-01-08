@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MedicalCertificates.Common.ReportModels.Common
+namespace MedicalCertificates.Service.ReportModels.Common
 {
     public class Stat<TEntity> where TEntity : class
     {

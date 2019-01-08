@@ -1,8 +1,8 @@
-﻿using MedicalCertificates.Common.ReportModels;
-using MedicalCertificates.DomainModel.Models;
+﻿using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.Interfaces.Business;
 using MedicalCertificates.Service.Interfaces.Common;
 using MedicalCertificates.Service.Interfaces.Models;
+using MedicalCertificates.Service.ReportModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

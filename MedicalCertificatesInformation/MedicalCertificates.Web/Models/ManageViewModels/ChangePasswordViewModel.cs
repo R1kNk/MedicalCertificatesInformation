@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MedicalSertificates.Web.Models.ManageViewModels
+namespace MedicalCertificates.Web.Models.ManageViewModels
 {
     public class ChangePasswordViewModel
     {

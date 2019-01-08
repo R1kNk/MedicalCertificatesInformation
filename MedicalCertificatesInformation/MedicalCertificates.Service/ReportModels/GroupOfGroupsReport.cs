@@ -1,12 +1,9 @@
-﻿using MedicalCertificates.Common.ReportModels;
-using MedicalCertificates.Common.ReportModels.Common;
-using MedicalCertificates.DomainModel.Models;
-using System;
+﻿using MedicalCertificates.DomainModel.Models;
+using MedicalCertificates.Service.ReportModels.Common;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace MedicalCertificates.Common.ReportModels
+namespace MedicalCertificates.Service.ReportModels
 {
     public class GroupOfGroupsReport
     {

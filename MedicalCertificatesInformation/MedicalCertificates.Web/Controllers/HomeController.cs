@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MedicalSertificates.Web.Models;
+using MedicalCertificates.Web.Models;
 
-namespace MedicalSertificates.Web.Controllers
+namespace MedicalCertificates.Web.Controllers
 {
     public class HomeController : Controller
     {

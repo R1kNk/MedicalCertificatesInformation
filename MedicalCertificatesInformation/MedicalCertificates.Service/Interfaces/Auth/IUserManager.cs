@@ -8,11 +8,15 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Auth
 {
-    interface IUserManager<TUser> where TUser : class
+    public interface IUserManager<TUser> where TUser : class
     {
         IQueryable<TUser> Users { get; }
-        
+       
         Task<IdentityResult> CreateAsync(TUser user, string password);
+
+        Task<bool> HasPasswordAsync(TUser user);
+
+        Task<IdentityResult> AddPasswordAsync(TUser user, string password);
 
         Task<IdentityResult> CreateAsync(TUser user);
 
