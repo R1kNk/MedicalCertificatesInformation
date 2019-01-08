@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MedicalCertificates.Common.ReportModels
 {
-    class GroupOfDepartmentsReport
+    public class GroupOfDepartmentsReport
     {
         public int All { get; set; }
        
