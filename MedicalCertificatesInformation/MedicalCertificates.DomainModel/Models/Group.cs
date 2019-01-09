@@ -12,8 +12,5 @@ namespace MedicalCertificates.DomainModel.Models
         public virtual Course Course { get; set; }
 
         public virtual List<Student> Students { get; set; }
-
-        public string CuratorId { get; set; }
-        public virtual ApplicationUser Curator { get; set; }
     }
 }

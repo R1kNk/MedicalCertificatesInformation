@@ -22,6 +22,7 @@
     <Compile Include="ReportModels\GroupOfStudentsReport.cs" />
     <Compile Include="ReportModels\GroupReport.cs" />
     <Compile Include="ReportModels\StudentReport.cs" />
+    <Compile Include="ReportModels\UserManagementHierarchy.cs" />
   </ItemGroup>
 
   <ItemGroup>

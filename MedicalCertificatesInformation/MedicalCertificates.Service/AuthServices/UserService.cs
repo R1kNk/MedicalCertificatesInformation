@@ -3,7 +3,9 @@ using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Auth;
 using MedicalCertificates.Service.Interfaces.Models;
+using MedicalCertificates.Service.ReportModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -22,8 +24,10 @@ namespace MedicalCertificates.Service.AuthServices
         public async Task<OperationResult<string>> AddGroupAsync(ApplicationUser user, Group group)
         {
             var entity = await _userManager.FindByIdAsync(user.Id);
-            group.Curator = user;
-            entity.Groups.Add(group);
+            if (!entity.Groups.Contains(group))
+            {
+                entity.Groups.Add(group);
+            }
             return OperationResult<string>.CreateSuccessfulResult();
         }
 
@@ -135,6 +139,84 @@ namespace MedicalCertificates.Service.AuthServices
             }
 
             return OperationResult<IdentityResultError>.CreateSuccessfulResult();
+        }
+
+        public UserManagementHierarchy GetUserManagementHierarchy(ApplicationUser user)
+        {
+            if (user == null)
+                return null;
+
+            List<Department> departmentsResult = new List<Department>();
+            List<Group> groups = user.Groups;
+            foreach (var group in groups)
+            {
+                var department = group.Course.Department;
+                Department findedDep = departmentsResult.Where(p => p.Id == department.Id).SingleOrDefault();
+                if (findedDep == null)
+                {
+                    findedDep = new Department()
+                    {
+                        Id = department.Id,
+                        Name = department.Name,
+                        Courses = new List<Course>()
+                    };
+                    departmentsResult.Add(findedDep);
+                }
+                Course findedCourse = findedDep.Courses.Where(p => p.Id == group.CourseId).SingleOrDefault();
+                if (findedCourse == null)
+                {
+                    findedCourse = new Course()
+                    {
+                        Id = group.CourseId,
+                        Number = group.Course.Number,
+                        Department = findedDep,
+                        DepartmentId = findedDep.Id,
+                        Groups = new List<Group>()
+                    };
+                    findedDep.Courses.Add(findedCourse);
+                }
+                Group findedGroup = findedCourse.Groups.Where(p => p.Id == group.Id).SingleOrDefault();
+                if (group == null)
+                {
+                    findedGroup = new Group()
+                    {
+                        Id = group.Id,
+                        Name = group.Name,
+                        GoogleDriveFolderId = "",
+                        CourseId = findedCourse.Id,
+                        Course = findedCourse,
+                        Students = new List<Student>()
+                    };
+
+                    foreach (var student in group.Students)
+                    {
+                        Student newStudent = new Student()
+                        {
+                            Id = student.Id,
+                            Name = student.Name,
+                            Surname = student.Surname,
+                            GoogleDriveFolderId = "",
+                            GroupId = findedGroup.Id,
+                            Group = findedGroup,
+                            MedicalCertificates = new List<MedicalCertificate>()
+                        };
+
+                        foreach (var certificate in student.MedicalCertificates)
+                        {
+                            MedicalCertificate newMedicalCertificate = new MedicalCertificate()
+                            {
+                                Id = certificate.Id,
+                                StudentId = newStudent.Id,
+                                Student = newStudent
+                            };
+                            newStudent.MedicalCertificates.Add(newMedicalCertificate);
+                        }
+                        findedGroup.Students.Add(newStudent);
+                    }
+                    findedCourse.Groups.Add(findedGroup);
+                }
+            }
+            return new UserManagementHierarchy(departmentsResult);
         }
     }
 }
