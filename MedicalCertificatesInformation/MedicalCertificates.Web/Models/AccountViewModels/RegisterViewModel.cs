@@ -8,12 +8,14 @@ namespace MedicalCertificates.Web.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
-        [Required]
+        [Required (ErrorMessage ="Поле 'Имя пользователя' должно быть заполнено")]
+        [RegularExpression(@"^[^\\/:?""<>|!]+$", ErrorMessage = "Имя пользователя не должно содержать следующие символы: ^ \\ / : *! ? \" < > |")]
+        [StringLength(40, ErrorMessage = "{0} должно иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 6)]
         [Display(Name = "Имя пользователя")]
         public string Username { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "{0} должен иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }

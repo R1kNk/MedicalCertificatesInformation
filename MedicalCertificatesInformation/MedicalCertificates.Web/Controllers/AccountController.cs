@@ -123,7 +123,6 @@ namespace MedicalCertificates.Web.Controllers
        
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
             return View();

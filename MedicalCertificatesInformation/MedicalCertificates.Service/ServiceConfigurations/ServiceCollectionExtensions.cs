@@ -6,6 +6,8 @@ using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.Interfaces.Auth;
 using MedicalCertificates.Service.AuthServices;
 using System;
+using MedicalCertificates.Service.Interfaces.Common;
+using MedicalCertificates.Service.CommonServices;
 
 namespace MedicalCertificates.Service.ServiceConfigurations
 {
@@ -16,7 +18,7 @@ namespace MedicalCertificates.Service.ServiceConfigurations
 
             services.AddDbContext<MedicalCertificatesDbContext>(options=>options.UseSqlServer(MedicalCertificatesDbContext.connectionString));
       
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<MedicalCertificatesDbContext>()
                 .AddErrorDescriber<RussianIdentityErrorDescriber>()
                 .AddDefaultTokenProviders();
@@ -28,10 +30,12 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 });
 
+         
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient(typeof(ISignInManager<ApplicationUser>), typeof(ApplicationSignInManager));
             services.AddTransient(typeof(IUserManager<ApplicationUser>), typeof(ApplicationUserManager));
-
+            services.AddTransient(typeof(IRoleManager<ApplicationRole>), typeof(ApplicationRoleManager));
+            services.AddTransient<IStringConverterService, StringConverterService>();
 
             return services;
 

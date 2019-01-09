@@ -7,7 +7,7 @@ using static MedicalCertificates.Repositories.Configurations.MedicalCertificates
 
 namespace MedicalCertificates.Repositories
 {
-    public class MedicalCertificatesDbContext : IdentityDbContext<ApplicationUser>, IDbContext
+    public class MedicalCertificatesDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>, IDbContext
     {
 
         public readonly static string connectionString = "Server=.\\SQLEXPRESS;Database=MedicalCertificates.Web;Trusted_Connection=True;MultipleActiveResultSets=true";
