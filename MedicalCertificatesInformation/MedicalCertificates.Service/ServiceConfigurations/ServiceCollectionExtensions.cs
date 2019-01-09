@@ -17,6 +17,7 @@ namespace MedicalCertificates.Service.ServiceConfigurations
       
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<MedicalCertificatesDbContext>()
+                .AddErrorDescriber<RussianIdentityErrorDescriber>()
                 .AddDefaultTokenProviders();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient(typeof(ISignInManager<ApplicationUser>), typeof(ApplicationSignInManager));
