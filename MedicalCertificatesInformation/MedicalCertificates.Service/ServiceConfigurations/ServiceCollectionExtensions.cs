@@ -8,6 +8,9 @@ using MedicalCertificates.Service.AuthServices;
 using System;
 using MedicalCertificates.Service.Interfaces.Common;
 using MedicalCertificates.Service.CommonServices;
+using MedicalCertificates.Service.Interfaces.Models;
+using MedicalCertificates.Service.Models;
+using MedicalCertificates.Repositories.Interfaces;
 
 namespace MedicalCertificates.Service.ServiceConfigurations
 {
@@ -35,6 +38,9 @@ namespace MedicalCertificates.Service.ServiceConfigurations
             services.AddTransient(typeof(ISignInManager<ApplicationUser>), typeof(ApplicationSignInManager));
             services.AddTransient(typeof(IUserManager<ApplicationUser>), typeof(ApplicationUserManager));
             services.AddTransient(typeof(IRoleManager<ApplicationRole>), typeof(ApplicationRoleManager));
+            services.AddTransient<IMedicalCertificatesUnitOfWork, MedicalCertificatesUnitOfWork>();
+
+            services.AddTransient<IHospitalService, HospitalService>();
             services.AddTransient<IStringConverterService, StringConverterService>();
 
             return services;

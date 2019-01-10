@@ -1,0 +1,16 @@
+﻿@model MedicalCertificates.Web.Models.HospitalViewModels.DetailsHospitalViewModel
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <p class="form-control-static">@Model.Name</p>
+        </div>
+        <div class="form-group">
+            <label class="control-label" asp-for="TelephoneNumber"></label>
+            <p class="form-control-static">@Model.TelephoneNumber</p>
+        </div>
+        <a asp-action="Edit" asp-controller="Hospital" asp-route-id="@Model.Id">Edit</a>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>

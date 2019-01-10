@@ -48,7 +48,7 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                 var role = new ApplicationRole() { Name = "Admin" };
                 await _roleManager.CreateAsync(role);
 
-                var user = new ApplicationUser() { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish("Администратор епта_")), Email = "office@kbp.by" };
+                var user = new ApplicationUser() { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish("Администратор")), Email = "office@kbp.by" };
                 string userPassword = "Adminpassword_1";
                 var result = await _userManager.CreateAsync(user, userPassword);
                 if (result.Succeeded)
