@@ -8,7 +8,7 @@ using MedicalCertificates.Service.CommonServices;
 using MedicalCertificates.Service.Interfaces.Common;
 using MedicalCertificates.Service.Interfaces.Models;
 
-namespace MedicalCertificates.Service.Models
+namespace MedicalCertificates.Service.ModelsServices
 {
     class GroupService : CRUDService<Group>, IGroupService, IGetAllStudents<Group>
     {

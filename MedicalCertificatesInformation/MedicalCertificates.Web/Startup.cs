@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MedicalCertificates.Service.ServiceConfigurations;
+using AutoMapper;
 
 namespace MedicalCertificates.Web
 {
@@ -20,6 +21,7 @@ namespace MedicalCertificates.Web
         {
             services.MedicalCertificatesServiceDependencies();
             services.AddMvc();
+            services.AddAutoMapper();
             services.AddTransient<MedicalCertificatesDBConfiguration>();
         }
 

@@ -65,7 +65,7 @@ namespace MedicalCertificates.Repositories
         {
             if (!dbSet.Local.Contains(entity))
             {
-                Context.Entry(entity).State = EntityState.Modified;
+                Context.Entry<TEntity>(entity).State = EntityState.Modified;
             }
         }
 

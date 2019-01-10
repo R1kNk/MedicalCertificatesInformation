@@ -9,7 +9,7 @@ using MedicalCertificates.Service.CommonServices;
 using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Models;
 
-namespace MedicalCertificates.Service.Models
+namespace MedicalCertificates.Service.ModelsServices
 {
     public class StudentService : CRUDService<Student>, IStudentService
     {

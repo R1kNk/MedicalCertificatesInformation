@@ -9,8 +9,8 @@ using System;
 using MedicalCertificates.Service.Interfaces.Common;
 using MedicalCertificates.Service.CommonServices;
 using MedicalCertificates.Service.Interfaces.Models;
-using MedicalCertificates.Service.Models;
 using MedicalCertificates.Repositories.Interfaces;
+using MedicalCertificates.Service.ModelsServices;
 
 namespace MedicalCertificates.Service.ServiceConfigurations
 {
@@ -41,6 +41,12 @@ namespace MedicalCertificates.Service.ServiceConfigurations
             services.AddTransient<IMedicalCertificatesUnitOfWork, MedicalCertificatesUnitOfWork>();
 
             services.AddTransient<IHospitalService, HospitalService>();
+            services.AddTransient<IPhysicalEducationService, PhysicalEducationService>();
+            services.AddTransient<IHealthGroupService, HealthGroupService>();
+            services.AddTransient<IMedicalCertificateService, MedicalCertificateService>();
+            services.AddTransient<IStudentService, StudentService>();
+            services.AddTransient<IGroupService, GroupService>();
+            services.AddTransient<IDepartmentService, DepartmentService>();
             services.AddTransient<IStringConverterService, StringConverterService>();
 
             return services;

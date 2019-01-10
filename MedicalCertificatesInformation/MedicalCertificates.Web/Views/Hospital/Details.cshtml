@@ -10,6 +10,20 @@
             <label class="control-label" asp-for="TelephoneNumber"></label>
             <p class="form-control-static">@Model.TelephoneNumber</p>
         </div>
+        @{ 
+            foreach(var cert in Model.MedicalCertificates)
+            {
+        <div>
+            <p class="form-control-static">@cert.StartDate</p>
+            <p class="form-control-static">@cert.FinishDate</p>
+            <p class="form-control-static">@cert.CertificateTerm</p>
+            <p class="form-control-static">@cert.Student.Name</p>
+            <p class="form-control-static">@cert.Student.Surname</p>
+            <p class="form-control-static">@cert.PhysicalEducation.Name</p>
+
+        </div>
+            }
+        }
         <a asp-action="Edit" asp-controller="Hospital" asp-route-id="@Model.Id">Edit</a>
         <a asp-action="Index">Back to List</a>
     </div>

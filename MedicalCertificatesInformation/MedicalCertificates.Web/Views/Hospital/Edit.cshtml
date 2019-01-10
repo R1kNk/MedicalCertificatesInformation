@@ -1,11 +1,16 @@
-﻿@model MedicalCertificates.Web.Models.HospitalViewModels.CreateHospitalViewModel
+﻿@model MedicalCertificates.Web.Models.HospitalViewModels.EditHospitalViewModel
 
-<h4>CreateHospitalViewModel</h4>
+<h4>EditHospitalViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" id="createHospitalForm">
+        <form asp-action="Edit" id="editHospitalForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden>
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -16,9 +21,8 @@
                 <input asp-for="TelephoneNumber" class="form-control" />
                 <span asp-validation-for="TelephoneNumber" class="text-danger"></span>
             </div>
-
         </form>
-            <button onclick="SendCreateHospitalRequest();" class="btn btn-default">Создать</button>
+        <button onclick="SendEditHospitalRequest();" class="btn btn-default">Отправить</button>
     </div>
 </div>
 

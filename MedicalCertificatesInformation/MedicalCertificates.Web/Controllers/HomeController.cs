@@ -15,6 +15,11 @@ namespace MedicalCertificates.Web.Controllers
             return View();
         }
 
+        public IActionResult IndexFull()
+        {
+            return View("Index");
+        }
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
