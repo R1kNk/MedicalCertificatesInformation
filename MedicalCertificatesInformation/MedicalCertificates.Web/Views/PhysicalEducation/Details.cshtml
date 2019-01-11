@@ -19,6 +19,8 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    <br />
+    <button onclick="GetEditPhysicalEducationRequest(@Model.Id);" class="btn btn-default">Изменить</button>
+    <br />
+    <button onclick="GetIndexPhysicalEducationRequest();" class="btn btn-default">Вернуться к списку</button>
 </div>

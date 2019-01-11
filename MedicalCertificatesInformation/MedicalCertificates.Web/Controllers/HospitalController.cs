@@ -31,7 +31,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(hospitals);
         }
 
-        // GET: Hospital/Details/5
         public async Task<IActionResult> Details(int id)
         {
             var hospital = await _hospitalService.GetByIdAsync(id);
@@ -41,13 +40,11 @@ namespace MedicalCertificates.Web.Controllers
             return View(DetailsViewModel);
         }
 
-        // GET: Hospital/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
 
-       //POST: Hospital/Create
        [HttpPost]
        [ValidateAntiForgeryToken]
        public async Task<IActionResult> Create(CreateHospitalViewModel model)
@@ -110,8 +107,6 @@ namespace MedicalCertificates.Web.Controllers
             return View();
         }
 
-        // GET: Hospital/Delete/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var hospital = await _hospitalService.GetByIdAsync(id);
@@ -120,7 +115,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(deleteViewModel);
         }
 
-        // POST: Hospital/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeleteHospitalViewModel model)

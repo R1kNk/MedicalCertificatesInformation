@@ -6,12 +6,6 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd>
@@ -30,7 +24,7 @@
             <label asp-for="Id" class="control-label"></label>
             <input asp-for="Id" class="form-control" />
         </div>
-        <a asp-action="Index">Back to List</a>
     </form>
-    <button class="btn btn-success">Да</button> | <button class="btn btn-warning">Нет</button>
+    <a onclick="GetIndexPhysicalEducationRequest()">Back to List</a>
+    <button onclick="SendDeleteHospitalRequest()" class="btn btn-success">Да</button> | <button onclick="GetIndexHospitalRequest()" class="btn btn-warning">Нет</button>
 </div>

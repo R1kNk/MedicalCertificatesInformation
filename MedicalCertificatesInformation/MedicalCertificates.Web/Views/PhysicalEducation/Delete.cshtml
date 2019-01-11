@@ -11,12 +11,12 @@
         </dd>
     </dl>
 
-    <form asp-action="Delete">
+    <form id="deletePhysicalEducationForm" asp-action="Delete">
         <div class="form-group" hidden>
             <label asp-for="Id" class="control-label"></label>
             <input asp-for="Id" class="form-control" />
         </div>
-        <a asp-action="Index">Back to List</a>
     </form>
-    <button class="btn btn-success">Да</button> | <button class="btn btn-warning">Нет</button>
+    <a onclick="GetIndexPhysicalEducationRequest();">Вернуться к списку</a>
+    <button onclick="SendDeletePhysicalEducationRequest();" class="btn btn-success">Да</button> | <button onclick="GetIndexPhysicalEducationRequest();" class="btn btn-warning">Нет</button>
 </div>
