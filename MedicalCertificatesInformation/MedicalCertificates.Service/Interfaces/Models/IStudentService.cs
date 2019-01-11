@@ -10,7 +10,9 @@ namespace MedicalCertificates.Service.Interfaces.Models
 {
     public interface IStudentService : ICRUDService<Student>
     {
-        Task<OperationResult<BusinessLogicResultError>> AddMedicalSertificateAsync(Student student, MedicalCertificate certificate);
+        Task<OperationResult<BusinessLogicResultError>> AddMedicalCertificateAsync(Student student, MedicalCertificate certificate);
+
+        Task<OperationResult<BusinessLogicResultError>> UpdateMedicalCertificateAsync(Student student, MedicalCertificate certificate);
 
         MedicalCertificate GetLastCertificate(Student student);
 

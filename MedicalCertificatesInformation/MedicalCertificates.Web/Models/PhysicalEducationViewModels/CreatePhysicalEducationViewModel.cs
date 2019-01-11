@@ -10,7 +10,7 @@ namespace MedicalCertificates.Web.Models.PhysicalEducationViewModels
     {
         [Required(ErrorMessage = "Поле 'Название группы по физкультуре' должно быть заполнено")]
         [Display(Name = "Название группы по физкультуре")]
-        [StringLength(50, ErrorMessage = "{0} должно иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 1)]
+        [StringLength(50, ErrorMessage = "{0} должно иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 3)]
         public string Name { get; set; }
     }
 }

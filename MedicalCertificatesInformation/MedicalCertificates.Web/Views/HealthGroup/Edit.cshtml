@@ -1,10 +1,16 @@
-﻿@model MedicalCertificates.Web.Models.PhysicalEducationViewModels.EditPhysicaleducationViewModel
+﻿@model MedicalCertificates.Web.Models.HealthGroupViewModels.EditHealthGroupViewModel
 
-<h4>EditPhysicaleducationViewModel</h4>
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>EditHealthGroupViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form id="editPhysicalEducationForm" asp-action="Edit">
+        <form id="editHealthGroupForm" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group" hidden>
                 <label asp-for="Id" class="control-label"></label>
@@ -17,12 +23,12 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </form>
-        <button onclick="SendEditPhysicalEducationRequest()" class="btn btn-default">Изменить</button>
+        <button onclick="SendEditHealthGroupRequest(@Model.Id)" class="btn btn-default">Изменить</button>
 
     </div>
 </div>
 
 <div>
-    <a onclick="GetIndexPhysicalEducationRequest()">Вернуться к списку</a>
+    <a onclick="GetIndexHealthGroupRequest()">Вернуться к списку</a>
 </div>
 

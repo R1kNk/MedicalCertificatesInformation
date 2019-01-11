@@ -22,5 +22,10 @@ namespace MedicalCertificates.DomainModel.Models
 
         public int HospitalId { get; set; }
         public virtual Hospital Hospital { get; set; }
+
+        public static implicit operator MedicalCertificate(Student v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

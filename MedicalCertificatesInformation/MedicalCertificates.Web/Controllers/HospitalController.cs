@@ -36,7 +36,6 @@ namespace MedicalCertificates.Web.Controllers
             var hospital = await _hospitalService.GetByIdAsync(id);
             if (hospital == null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая поликлиника не найдена. Обновите страницу." });
             var DetailsViewModel =  _mapper.Map<DetailsHospitalViewModel>(hospital);
-            //var DetailsViewModel = new DetailsHospitalViewModel() { Id = hospital.Id, Name = hospital.Name, TelephoneNumber = hospital.TelephoneNumber, MedicalCertificates = new List<MedicalCertificate>(hospital.MedicalCertificates) };
             return View(DetailsViewModel);
         }
 
@@ -88,7 +87,7 @@ namespace MedicalCertificates.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var hospital = await _hospitalService.GetSingleOrDefaultAsync(p => p.Name == model.Name);
+                    var hospital = await _hospitalService.GetSingleOrDefaultAsync(p => p.Id == model.Id);
                     if (hospital == null)
                     {
                         return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая поликлиника не найдена. Обновите страницу." });

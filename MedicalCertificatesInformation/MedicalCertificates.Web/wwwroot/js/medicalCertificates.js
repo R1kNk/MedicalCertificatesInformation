@@ -82,8 +82,8 @@ function SendEditHospitalRequest() {
     sendFormRequest('/Hospital/Edit', '#editHospitalForm', 'POST');
 };
 
-function GetDeletePhysicalEducationRequest(id) {
-    sendIdRequest('/PhysicalEducation/Delete', id, "GET");
+function GetDeleteHospitalRequest(id) {
+    sendIdRequest('/Hospital/Delete', id, "GET");
 }
 
 function SendDeleteHospitalRequest() {
@@ -122,4 +122,38 @@ function GetDeletePhysicalEducationRequest(id) {
 
 function SendDeletePhysicalEducationRequest() {
     sendFormRequest('/PhysicalEducation/Delete', '#deletePhysicalEducationForm', 'POST');
+};
+
+//Health group functions
+
+function GetIndexHealthGroupRequest() {
+    sendRequest('/HealthGroup/Index', "GET");
+}
+
+function GetDetailsHealthGroupRequest(id) {
+    sendIdRequest('/HealthGroup/Details', id, "GET");
+}
+
+function GetCreateHealthGroupRequest() {
+    sendRequest('/HealthGroup/Create', "GET");
+}
+
+function SendCreateHealthGroupRequest() {
+    sendFormRequest('/HealthGroup/Create', '#createHealthGroupForm', 'POST');
+}
+
+function GetEditHealthGroupRequest(id) {
+    sendIdRequest('/HealthGroup/Edit', id, "GET");
+}
+
+function SendEditHealthGroupRequest() {
+    sendFormRequest('/HealthGroup/Edit', '#editHealthGroupForm', 'POST');
+};
+
+function GetDeleteHealthGroupRequest(id) {
+    sendIdRequest('/HealthGroup/Delete', id, "GET");
+}
+
+function SendDeleteHealthGroupRequest() {
+    sendFormRequest('/HealthGroup/Delete', '#deleteHealthGroupForm', 'POST');
 };

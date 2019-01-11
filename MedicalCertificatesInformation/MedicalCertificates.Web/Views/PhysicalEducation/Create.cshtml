@@ -1,0 +1,27 @@
+﻿@model MedicalCertificates.Web.Models.PhysicalEducationViewModels.CreatePhysicalEducationViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>CreatePhysicalEducationViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="createPhysicalEducationForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </form>
+        <button onclick="SendCreatePhysicalEducationRequest();" class="btn btn-default">Создать</button>
+    </div>
+</div>
+
+<div>
+    <button onclick="GetIndexPhysicalEducationRequest()">Вернуться к списку</button>
+</div>

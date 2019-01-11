@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.Interfaces.Models;
 using MedicalCertificates.Web.Models;
 using MedicalCertificates.Web.Models.PhysicalEducationViewModels;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalCertificates.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PhysicalEducationController : Controller
     {
         IPhysicalEducationService _physicalEducationService;
@@ -22,7 +21,7 @@ namespace MedicalCertificates.Web.Controllers
             _physicalEducationService = physicalEducationService;
             _mapper = mapper;
         }
-        // GET: PhysicalEducation
+
         public async Task<IActionResult> Index()
         {
             var physicalEducations = await _physicalEducationService.GetAllAsync();
@@ -30,7 +29,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(physicalEducations);
         }
 
-        // GET: PhysicalEducation/Details/5
         public async Task<IActionResult> Details(int id)
         {
             PhysicalEducation physicalEducation = await _physicalEducationService.GetByIdAsync(id);
@@ -39,13 +37,11 @@ namespace MedicalCertificates.Web.Controllers
             return View(DetailsViewModel);
         }
 
-        // GET: PhysicalEducation/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: PhysicalEducation/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreatePhysicalEducationViewModel model)
@@ -73,7 +69,6 @@ namespace MedicalCertificates.Web.Controllers
             return View();
         }
 
-        // GET: PhysicalEducation/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var physicalEducation = await _physicalEducationService.GetByIdAsync(id);
@@ -82,7 +77,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(editPhysicalEducationViewModel);
         }
 
-        // POST: PhysicalEducation/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditPhysicaleducationViewModel model)
@@ -91,7 +85,7 @@ namespace MedicalCertificates.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var physicalEducation = await _physicalEducationService.GetSingleOrDefaultAsync(p => p.Name == model.Name);
+                    var physicalEducation = await _physicalEducationService.GetSingleOrDefaultAsync(p => p.Id == model.Id);
                     if (physicalEducation == null)
                     {
                         return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая группа по физкультуре не найдена. Обновите страницу." });
@@ -109,7 +103,6 @@ namespace MedicalCertificates.Web.Controllers
             return View();
         }
 
-        // GET: PhysicalEducation/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var physicalEducation = await _physicalEducationService.GetByIdAsync(id);
@@ -118,7 +111,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(deleteViewModel);
         }
 
-        // POST: PhysicalEducation/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeletePhysicalEducationViewModel model)

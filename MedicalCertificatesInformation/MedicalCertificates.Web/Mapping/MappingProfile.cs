@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using MedicalCertificates.DomainModel.Models;
+using MedicalCertificates.Web.Models.HealthGroupViewModels;
 using MedicalCertificates.Web.Models.HospitalViewModels;
 using MedicalCertificates.Web.Models.PhysicalEducationViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalCertificates.Web.Mapping
 {
@@ -55,6 +52,27 @@ namespace MedicalCertificates.Web.Mapping
                .ReverseMap();
 
             CreateMap<PhysicalEducation, DeletePhysicalEducationViewModel>()
+               .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+               .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+               .ReverseMap();
+
+            //HealthGroup
+            CreateMap<HealthGroup, CreateHealthGroupViewModel>()
+                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ReverseMap();
+
+            CreateMap<HealthGroup, DetailsHealthGroupViewModel>()
+               .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+               .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+               .ForMember(p => p.MedicalCertificates, map => map.MapFrom(p => p.MedicalCertificates))
+               .ReverseMap();
+
+            CreateMap<HealthGroup, EditHealthGroupViewModel>()
+               .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+               .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+               .ReverseMap();
+
+            CreateMap<HealthGroup, DeleteHealthGroupViewModel>()
                .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
                .ReverseMap();

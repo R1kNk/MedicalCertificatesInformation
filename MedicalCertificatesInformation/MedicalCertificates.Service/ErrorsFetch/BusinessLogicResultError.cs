@@ -7,6 +7,10 @@ namespace MedicalCertificates.Service.ErrorsFetch
     public enum BusinessLogicResultError
     {
         InvalidDate,
-        OverlappingDate
+        OverlappingDate,
+        NoCertificates,
+        CertificateNotFound,
+        StudentNotFound,
+        UpdatingExpiredCertificateDate
     }
 }
