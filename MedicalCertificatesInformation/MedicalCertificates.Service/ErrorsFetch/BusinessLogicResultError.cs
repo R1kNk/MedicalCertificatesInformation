@@ -11,6 +11,13 @@ namespace MedicalCertificates.Service.ErrorsFetch
         NoCertificates,
         CertificateNotFound,
         StudentNotFound,
-        UpdatingExpiredCertificateDate
+        GroupNotFound,
+        CourseNotFound,
+        DepartmentNotFound,
+        ExpiredCertificate,
+        AlreadyInThisGroup,
+        DuplicateGroupName,
+        DuplicateCourseNumber,
+        DuplicateDepartmentName
     }
 }

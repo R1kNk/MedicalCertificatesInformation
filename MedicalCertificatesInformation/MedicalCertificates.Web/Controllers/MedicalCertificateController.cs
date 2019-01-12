@@ -1,8 +1,16 @@
 ﻿using AutoMapper;
+using MedicalCertificates.Common;
+using MedicalCertificates.DomainModel.Models;
+using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Models;
+using MedicalCertificates.Web.Models.MedicalCertificatesViewModels;
+using MedicalCertificates.Web.Models.SharedEntities;
+using MedicalCertificates.Web.Models.SharedViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MedicalCertificates.Web.Controllers
 {
@@ -10,91 +18,201 @@ namespace MedicalCertificates.Web.Controllers
     public class MedicalCertificateController : Controller
     {
         private readonly IMedicalCertificateService _medicalCertificateService;
+        private readonly IStudentService _studentService;
+        private readonly IPhysicalEducationService _physicalEducationService;
+        private readonly IHealthGroupService _healthGroupService;
+        private readonly IHospitalService _hospitalService;
+
+
         private readonly IMapper _mapper;
 
-        public MedicalCertificateController(IMedicalCertificateService medicalCertificateService, IMapper mapper)
+        public MedicalCertificateController(IMedicalCertificateService medicalCertificateService, IStudentService studentService, IPhysicalEducationService physicalEducationService, IHealthGroupService healthGroupService, IHospitalService hospitalService, IMapper mapper)
         {
             _medicalCertificateService = medicalCertificateService;
+            _studentService = studentService;
+            _physicalEducationService = physicalEducationService;
+            _healthGroupService = healthGroupService;
+            _hospitalService = hospitalService;
             _mapper = mapper;
         }
-        //// GET: MedicalCertificate
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        // GET: MedicalCertificate/Details/5
-        public ActionResult Details(int id)
+        
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var medicalCertificate = await _medicalCertificateService.GetByIdAsync(id);
+            if (medicalCertificate == null)
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая справка не найдена. Обновите страницу." });
+            var DetailsViewModel = _mapper.Map<DetailsMedicalCertificatesViewModel>(medicalCertificate);
+            return View(DetailsViewModel);
         }
 
-        // GET: MedicalCertificate/Create
-        public ActionResult Create()
+        public async Task<IActionResult> Create(int id)
         {
-            return View();
+            var student = await _studentService.GetByIdAsync(id);
+            if(student == null)
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой студент не найден. Обновите страницу." });
+
+            var CreateViewModel = new CreateMedicalCertificateViewModel();
+            CreateViewModel.StudentId = student.Id;
+            CreateViewModel.HealthGroups = await GetAllHealthGroupsAsync();
+            CreateViewModel.PhysicalEducations = await GetAllPhysicalEducationsAsync();
+            CreateViewModel.HealthGroups = await GetAllHealthGroupsAsync();
+
+            return View(CreateViewModel);
         }
 
-        // POST: MedicalCertificate/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(CreateMedicalCertificateViewModel model)
         {
             try
             {
-                // TODO: Add insert logic here
+                if (ModelState.IsValid)
+                {
+                    MedicalCertificate newMedicalCertificate = _mapper.Map<MedicalCertificate>(model);
+                    var result = await _medicalCertificateService.AddMedicalCertificateAsync(newMedicalCertificate, model.StudentId);
+                    if (!result.IsSucceed)
+                    {
+                        AddOperationResultErrorsToModelState(result);
+                        return View(model);
+                    }
+                }
 
-                return RedirectToAction(nameof(Index));
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
             }
             catch
             {
-                return View();
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
             }
         }
 
-        // GET: MedicalCertificate/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var certificate = _medicalCertificateService.GetByIdAsync(id);
+            if(certificate==null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая справка не найдена. Обновите страницу." });
+
+            var EditViewModel = _mapper.Map<EditMedicalCertificatesViewModel>(certificate);
+
+            EditViewModel.HealthGroups = await GetAllHealthGroupsAsync();
+            EditViewModel.PhysicalEducations = await GetAllPhysicalEducationsAsync();
+            EditViewModel.Hospitals = await GetAllHospitalsAsync();
+
+            return View(EditViewModel);
         }
 
-        // POST: MedicalCertificate/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(EditMedicalCertificatesViewModel model)
         {
             try
             {
-                // TODO: Add update logic here
+                if (ModelState.IsValid)
+                {
+                    MedicalCertificate updateMedicalCertificate = _mapper.Map<MedicalCertificate>(model);
+                    var result = await _medicalCertificateService.EditMedicalCertificateAsync(updateMedicalCertificate);
+                    if (!result.IsSucceed)
+                    {
+                        AddOperationResultErrorsToModelState(result);
+                        return View(model);
+                    }
+                }
 
-                return RedirectToAction(nameof(Index));
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
             }
             catch
             {
-                return View();
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
             }
         }
 
-        // GET: MedicalCertificate/Delete/5
-        public ActionResult Delete(int id)
+        [Authorize(Roles ="Admin")]
+        public IActionResult Delete(int id)
         {
-            return View();
+            var certificate = _medicalCertificateService.GetByIdAsync(id);
+            if (certificate == null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая справка не найдена. Обновите страницу." });
+
+            var DeleteViewModel = _mapper.Map<DeleteMedicalCertificateViewModel>(certificate);
+
+            return View(DeleteViewModel);
         }
 
-        // POST: MedicalCertificate/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(DeleteMedicalCertificateViewModel model)
         {
             try
             {
-                // TODO: Add delete logic here
+                if (ModelState.IsValid)
+                {
+                    var result = await _medicalCertificateService.DeleteMedicalCertificateAsync(model.Id);
+                    if (!result.IsSucceed)
+                    {
+                        foreach(var error in result.Errors)
+                        {
+                            switch (error)
+                            {
+                                case BusinessLogicResultError.CertificateNotFound:
+                                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Такая справка не найдена. Обновите страницу"));
+                                case BusinessLogicResultError.ExpiredCertificate:
+                                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Эта справка не является актуальной. Её изменение или удаление приведет к нарушению статистики о справках студента"));
+                                default:
+                                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка. Обновите страницу."));
+                            }
+                        }
+                    }
+                }
 
-                return RedirectToAction(nameof(Index));
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Delete));
             }
             catch
             {
-                return View();
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка"));
+            }
+        }
+
+        private async Task<IReadOnlyList<HealthGroup>> GetAllHealthGroupsAsync()
+        {
+            return await _healthGroupService.GetAllAsync();
+        }
+
+        private async Task<IReadOnlyList<PhysicalEducation>> GetAllPhysicalEducationsAsync()
+        {
+            return await _physicalEducationService.GetAllAsync();
+        }
+
+        private async Task<IReadOnlyList<Hospital>> GetAllHospitalsAsync()
+        {
+            return await _hospitalService.GetAllAsync();
+        }
+
+        private void AddOperationResultErrorsToModelState(OperationResult<BusinessLogicResultError> operationResult)
+        {
+            foreach (var businessLogicError in operationResult.Errors)
+            {
+                switch (businessLogicError)
+                {
+                    case BusinessLogicResultError.CertificateNotFound:
+                        ModelState.AddModelError("", "Такая справка не найдена. Обновите страницу");
+                        break;
+                    case BusinessLogicResultError.ExpiredCertificate:
+                        ModelState.AddModelError("", "Эта справка не является актуальной. Её изменение или удаление приведет к нарушению статистики о справках студента");
+                        break;
+                    case BusinessLogicResultError.InvalidDate:
+                        ModelState.AddModelError("", "Даты справки указаны некорректно");
+                        break;
+                    case BusinessLogicResultError.NoCertificates:
+                        ModelState.AddModelError("", "У этого студента нет справок");
+                        break;
+                    case BusinessLogicResultError.OverlappingDate:
+                        ModelState.AddModelError("", "Указанные даты не являются корректными по отношению к уже имеющимся справкам");
+                        break;
+                    case BusinessLogicResultError.StudentNotFound:
+                        ModelState.AddModelError("", "Такой студент не найден. Обновите страницу");
+                        break;
+                    default:
+                        ModelState.AddModelError("", "Произошла неизвестная ошибка");
+                        break;
+                }
             }
         }
     }

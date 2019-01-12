@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MedicalCertificates.Web.Models;
+using MedicalCertificates.Web.Models.SharedViewModels;
 
 namespace MedicalCertificates.Web.Controllers
 {

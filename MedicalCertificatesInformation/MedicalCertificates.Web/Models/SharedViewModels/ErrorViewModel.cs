@@ -1,6 +1,6 @@
 using System;
 
-namespace MedicalCertificates.Web.Models
+namespace MedicalCertificates.Web.Models.SharedViewModels
 {
     public class ErrorViewModel
     {

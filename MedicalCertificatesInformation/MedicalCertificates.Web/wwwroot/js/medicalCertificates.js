@@ -157,3 +157,71 @@ function GetDeleteHealthGroupRequest(id) {
 function SendDeleteHealthGroupRequest() {
     sendFormRequest('/HealthGroup/Delete', '#deleteHealthGroupForm', 'POST');
 };
+
+//Medical certificates functions
+
+function GetDetailsMedicalCertificateRequest(id) {
+    sendIdRequest('/MedicalCertificate/Details', id, "GET");
+}
+
+function GetCreateMedicalCertificateRequest(id) {
+    sendIdRequest('/MedicalCertificate/Create', id, "GET");
+}
+
+function SendCreateMedicalCertificateRequest() {
+    sendFormRequest('/MedicalCertificate/Create', '#createMedicalCertificateForm', 'POST');
+}
+
+function GetEditMedicalCertificateRequest(id) {
+    sendIdRequest('/MedicalCertificate/Edit', id, "GET");
+}
+
+function SendEditMedicalCertificateRequest() {
+    sendFormRequest('/MedicalCertificate/Edit', '#editMedicalCertificateForm', 'POST');
+};
+
+function GetDeleteMedicalCertificateRequest(id) {
+    sendIdRequest('/MedicalCertificate/Delete', id, "GET");
+}
+
+function SendDeleteMedicalCertificateRequest() {
+    sendFormRequest('/MedicalCertificate/Delete', '#deleteMedicalCertificateForm', 'POST');
+};
+
+//Student functions
+
+function GetDetailsStudentRequest(id) {
+    sendIdRequest('/Student/Details', id, "GET");
+}
+
+function GetCreateStudentRequest(id) {
+    sendIdRequest('/Student/Create', id, "GET");
+}
+
+function SendCreateStudentRequest() {
+    sendFormRequest('/Student/Create', '#createStudentForm', 'POST');
+}
+
+function GetEditStudentRequest(id) {
+    sendIdRequest('/Student/Edit', id, "GET");
+}
+
+function SendEditStudentRequest() {
+    sendFormRequest('/Student/Edit', '#editStudentForm', 'POST');
+};
+
+function GetDeleteStudentRequest(id) {
+    sendIdRequest('/Student/Delete', id, "GET");
+}
+
+function SendDeleteStudentRequest() {
+    sendFormRequest('/Student/Delete', '#deleteStudentForm', 'POST');
+};
+
+function GetMoveStudentRequest(id) {
+    sendIdRequest('/Student/Move', id, "GET");
+}
+
+function SendMoveStudentRequest() {
+    sendFormRequest('/Student/Delete', '#moveStudentForm', 'POST');
+};

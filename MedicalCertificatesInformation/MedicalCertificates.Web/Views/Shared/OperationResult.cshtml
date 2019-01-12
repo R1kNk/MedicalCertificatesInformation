@@ -1,0 +1,42 @@
+﻿@model OperationResultViewModel
+
+@{
+    string Message = default(string);
+    switch (Model.OperationResult)
+    {
+        case MedicalCertificates.Web.Models.SharedEntities.OperationResultEnum.Create:
+            Message = "Операция создания ";
+            break;
+
+        case MedicalCertificates.Web.Models.SharedEntities.OperationResultEnum.Delete:
+            Message = "Операция удаления";
+            break;
+        case MedicalCertificates.Web.Models.SharedEntities.OperationResultEnum.Edit:
+            Message = "Операция изменения ";
+            break;
+        case MedicalCertificates.Web.Models.SharedEntities.OperationResultEnum.Move:
+            Message = "Операция перемещения ";
+            break;
+    }
+
+    if (Model.IsSuccessfully)
+    {
+        Message += "завершена успешно!";
+    }
+    else
+    {
+        Message += "завершена неудачно.";
+    }
+
+}
+<h4 class="text-info">@Message</h4>
+@if (Model.AdditionalMessage != "" && Model.IsSuccessfully)
+{
+    <h5 class="text-info">@Model.AdditionalMessage</h5>
+}
+else if (Model.AdditionalMessage != "" && !Model.IsSuccessfully)
+{
+    <h5 class="text-danger">@Model.AdditionalMessage</h5>
+
+}
+

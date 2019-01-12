@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.Interfaces.Models;
-using MedicalCertificates.Web.Models;
 using MedicalCertificates.Web.Models.PhysicalEducationViewModels;
+using MedicalCertificates.Web.Models.SharedEntities;
+using MedicalCertificates.Web.Models.SharedViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,8 +32,9 @@ namespace MedicalCertificates.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            PhysicalEducation physicalEducation = await _physicalEducationService.GetByIdAsync(id);
+            var physicalEducation = await _physicalEducationService.GetByIdAsync(id);
             if (physicalEducation == null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая группа по физкультуре не найдена. Обновите страницу." });
+
             var DetailsViewModel = _mapper.Map<DetailsPhysicalEducationViewModel>(physicalEducation);
             return View(DetailsViewModel);
         }
@@ -59,14 +61,14 @@ namespace MedicalCertificates.Web.Controllers
                     var newPhysicalEducation = _mapper.Map<PhysicalEducation>(model);
                     var result = await _physicalEducationService.CreateAsync(newPhysicalEducation);
                     if (result != null)
-                    return RedirectToAction(nameof(Index));
+                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
                 }
             }
             catch
             {
-                return View();
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
             }
-            return View();
+            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -93,20 +95,21 @@ namespace MedicalCertificates.Web.Controllers
                     physicalEducation.Name = model.Name;
                     var result = await _physicalEducationService.UpdateAsync(physicalEducation);
                     if (result.IsSucceed)
-                     return RedirectToAction(nameof(Index));
+                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
                 }
             }
             catch
             {
-                return View();
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
             }
-            return View();
+            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
             var physicalEducation = await _physicalEducationService.GetByIdAsync(id);
-            if (physicalEducation == null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая группа по физкультуре не найдена. Обновите страницу." });
+            if (physicalEducation == null)
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая группа по физкультуре не найдена. Обновите страницу." });
             var deleteViewModel = _mapper.Map<DeletePhysicalEducationViewModel>(physicalEducation);
             return View(deleteViewModel);
         }
@@ -126,14 +129,14 @@ namespace MedicalCertificates.Web.Controllers
                     }
                     var result = await _physicalEducationService.DeleteAsync(physicalEducation);
                     if (result.IsSucceed)
-                        return RedirectToAction(nameof(Index));
+                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Delete));
                 }
             }
             catch
             {
-                return View();
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка"));
             }
-            return View();
+            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка"));
         }
     }
 }

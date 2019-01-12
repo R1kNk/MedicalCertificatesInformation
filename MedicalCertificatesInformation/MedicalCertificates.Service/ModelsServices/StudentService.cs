@@ -13,90 +13,49 @@ namespace MedicalCertificates.Service.ModelsServices
 {
     public class StudentService : CRUDService<Student>, IStudentService
     {
-        private readonly IRepository<MedicalCertificate> _medicalCertificatesRepository;
+        private readonly IMedicalCertificateService _medicalCertificateService;
 
-        public StudentService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
+        private readonly IGroupService _groupService;
+
+
+        public StudentService(IMedicalCertificateService medicalCertificateService, IGroupService groupService, IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _medicalCertificatesRepository = unitOfWork.GetRepository<MedicalCertificate>();
+            _medicalCertificateService = medicalCertificateService;
+            _groupService = groupService;
         }
 
-        public async Task<OperationResult<BusinessLogicResultError>> AddMedicalCertificateAsync(Student student, MedicalCertificate certificate)
+        public async Task<OperationResult<BusinessLogicResultError>> AddStudentAsync(Student student, int groupId)
         {
-            if (certificate.StartDate > certificate.FinishDate || certificate.CertificateTerm != certificate.FinishDate - certificate.StartDate)
-                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>(){ BusinessLogicResultError.InvalidDate});
-            var entity = await _tEntityRepository.GetByIdAsync(student.Id);
-            var lastCertificate = entity.MedicalCertificates.LastOrDefault();
-            if (lastCertificate != null)
-            {
-                if (lastCertificate.FinishDate > certificate.StartDate)
-                    return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.OverlappingDate });
-            }
-            certificate.Student = entity;
-            entity.MedicalCertificates.Add(certificate);
-            await _unitOfWork.SaveAsync();
+            var group = await _groupService.GetByIdAsync(groupId);
+            if(group == null)
+              return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.GroupNotFound });
+
+            student.GroupId = group.Id;
+            student.Group = group;
+
+            var result = CreateAsync(student);
             return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
         }
 
-        public async Task<OperationResult<BusinessLogicResultError>> UpdateMedicalCertificateAsync(Student student, MedicalCertificate updateCertificate)
+        public async Task<OperationResult<BusinessLogicResultError>> MoveStudentAsync(int studentId, int groupId)
         {
-            if (updateCertificate.StartDate > updateCertificate.FinishDate || updateCertificate.CertificateTerm != updateCertificate.FinishDate - updateCertificate.StartDate)
-                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.InvalidDate });
-            var existingStudent = await _tEntityRepository.GetByIdAsync(student.Id);
+            var student = await GetByIdAsync(studentId);
+            if (student == null)
+               return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.StudentNotFound });
 
-            if(existingStudent == null)
-            {
-                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.StudentNotFound });
-            }
-            var lastCertificate = GetLastCertificate(existingStudent);
-            if(lastCertificate == null)
-            {
-                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.NoCertificates });
-            }
-            var existingCertificate = await _medicalCertificatesRepository.GetByIdAsync(updateCertificate.Id);
-            if(existingCertificate == null)
-            {
-                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.CertificateNotFound });
-            }
-            //
-            existingCertificate.HealthGroupId = updateCertificate.HealthGroupId;
-            existingCertificate.HospitalId = updateCertificate.HospitalId;
-            existingCertificate.PhysicalEducationId = updateCertificate.PhysicalEducationId;
-            if(existingCertificate.Id != lastCertificate.Id)
-            {
-                if(existingCertificate.StartDate != updateCertificate.StartDate || existingCertificate.FinishDate != updateCertificate.FinishDate || existingCertificate.CertificateTerm != updateCertificate.CertificateTerm)
-                {
-                    return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.UpdatingExpiredCertificateDate });
-                }
-                _medicalCertificatesRepository.Update(existingCertificate);
-                await _unitOfWork.SaveAsync();
-                return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
-            }
-            else
-            {
-                var penultimateCertificate = existingStudent.MedicalCertificates.Where(p => p.Id != existingCertificate.Id).LastOrDefault();
-                if(penultimateCertificate != null)
-                {
-                    if (penultimateCertificate.FinishDate > updateCertificate.StartDate)
-                        return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.OverlappingDate });
-                }
-                existingCertificate.StartDate = updateCertificate.StartDate;
-                existingCertificate.CertificateTerm = updateCertificate.CertificateTerm;
-                existingCertificate.FinishDate = updateCertificate.FinishDate;
-                _medicalCertificatesRepository.Update(existingCertificate);
-                await _unitOfWork.SaveAsync();
-                return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
-            }
-            //
+            var group = await _groupService.GetByIdAsync(groupId);
+            if(group == null)
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.GroupNotFound });
 
-        }
+            if(student.GroupId == group.Id) 
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.AlreadyInThisGroup });
 
-        public MedicalCertificate GetLastCertificate(Student student)
-        {
-           if(student !=null || student.MedicalCertificates != null)
-           {
-             return student.MedicalCertificates.LastOrDefault();
-           }
-             return null;
+
+            student.GroupId = group.Id;
+            student.Group = group;
+     
+            await _unitOfWork.SaveAsync();
+            return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
         }
 
         public IReadOnlyList<Student> SortStudents(IReadOnlyList<Student> students, bool valid, DateTime dateTime)
@@ -109,7 +68,7 @@ namespace MedicalCertificates.Service.ModelsServices
             {
                 if (student != null)
                 {
-                    var lastCertificate = GetLastCertificate(student);
+                    var lastCertificate = _medicalCertificateService.GetLastCertificate(student);
                     if (lastCertificate == null)
                     {
                         if (!valid)

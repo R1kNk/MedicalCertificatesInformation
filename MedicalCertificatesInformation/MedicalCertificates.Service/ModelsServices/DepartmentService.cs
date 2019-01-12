@@ -2,6 +2,7 @@
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Repositories.Interfaces;
 using MedicalCertificates.Service.CommonServices;
+using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Common;
 using MedicalCertificates.Service.Interfaces.Models;
 using System.Collections.Generic;
@@ -16,13 +17,14 @@ namespace MedicalCertificates.Service.ModelsServices
         {
         }
 
-        public async Task<OperationResult<string>> AddCourseAsync(Department department, Course course)
+        public async Task<OperationResult<BusinessLogicResultError>> AddDepartmentAsync(Department newDepartment)
         {
-            var entity = await GetByIdAsync(department.Id);
-            course.Department = entity;
-            entity.Courses.Add(course);
-            await _unitOfWork.SaveAsync();
-            return OperationResult<string>.CreateSuccessfulResult();
+            var existingdepartment = await GetSingleOrDefaultAsync(p => p.Name == newDepartment.Name);
+            if(existingdepartment!=null)
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.DuplicateDepartmentName });
+
+            var result = await CreateAsync(newDepartment);
+            return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
         }
 
         public IReadOnlyList<Student> GetAllStudents(Department department)

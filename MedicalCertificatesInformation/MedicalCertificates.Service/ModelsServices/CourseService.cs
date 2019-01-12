@@ -1,25 +1,38 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using MedicalCertificates.Common;
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Repositories.Interfaces;
 using MedicalCertificates.Service.CommonServices;
+using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Models;
 
 namespace MedicalCertificates.Service.ModelsServices
 {
     public class CourseService : CRUDService<Course>, ICourseService
     {
-        public CourseService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
+        private readonly IDepartmentService _departmentService;
+
+        public CourseService(IDepartmentService departmentService, IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
         {
+            _departmentService = departmentService;
         }
 
-        public async Task<OperationResult<string>> AddGroupAsync(Course course, Group group)
+        public async Task<OperationResult<BusinessLogicResultError>> AddCourseAsync(Course newCourse, int departmentId)
         {
-            var entity = await GetByIdAsync(course.Id);
-            group.Course = entity;
-            entity.Groups.Add(group);
-            await _unitOfWork.SaveAsync();
-            return OperationResult<string>.CreateSuccessfulResult();
+            var department = await _departmentService.GetByIdAsync(departmentId);
+            if (department == null)
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.DepartmentNotFound });
+
+            var existingCourseInDepartment =  department.Courses.SingleOrDefault(p => p.Number == newCourse.Number);
+            if (existingCourseInDepartment != null)
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.DuplicateCourseNumber });
+
+            newCourse.DepartmentId = department.Id;
+
+            var result = await CreateAsync(newCourse);
+            return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
         }
     }
 }

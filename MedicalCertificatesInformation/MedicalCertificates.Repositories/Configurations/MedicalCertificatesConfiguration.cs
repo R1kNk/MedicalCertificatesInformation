@@ -87,6 +87,7 @@ namespace MedicalCertificates.Repositories.Configurations
             public void Configure(EntityTypeBuilder<Department> builder)
             {
                 builder.Property(p => p.Name).IsRequired().HasMaxLength(60);
+                builder.HasIndex(p => p.Name).IsUnique();
                 builder.HasMany(b => b.Courses).WithOne(p => p.Department).HasForeignKey(p => p.DepartmentId).OnDelete(DeleteBehavior.Cascade);
 
             }

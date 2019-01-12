@@ -1,12 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.Interfaces.Models;
-using MedicalCertificates.Web.Models;
 using MedicalCertificates.Web.Models.HospitalViewModels;
-using MedicalCertificates.Web.Models.PhysicalEducationViewModels;
+using MedicalCertificates.Web.Models.SharedEntities;
+using MedicalCertificates.Web.Models.SharedViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,20 +60,22 @@ namespace MedicalCertificates.Web.Controllers
                     Hospital newHospital = _mapper.Map<Hospital>(model);
                     var result = await _hospitalService.CreateAsync(newHospital);
                     if (result != null)
-                    return RedirectToAction(nameof(Index));
+                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
                 }
             }    
             catch
             {
-                return View(model);
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
             }
-            return View();
+            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
         }
 
         public async Task<IActionResult> Edit(int id)
         {
             var hospital = await _hospitalService.GetByIdAsync(id);
-            if (hospital == null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая поликлиника не найдена. Обновите страницу." });
+            if (hospital == null)
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая поликлиника не найдена. Обновите страницу." });
+
             var editHospitalViewModel = _mapper.Map<EditHospitalViewModel>(hospital);
             return View(editHospitalViewModel);
         }
@@ -96,20 +97,22 @@ namespace MedicalCertificates.Web.Controllers
                     hospital.TelephoneNumber = model.TelephoneNumber;
                     var result = await _hospitalService.UpdateAsync(hospital);
                     if (result.IsSucceed)
-                        return RedirectToAction(nameof(Index));
+                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
                 }
             }
             catch
             {
-                return View();
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit,"Произошла неизвестная ошибка"));
             }
-            return View();
+            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
             var hospital = await _hospitalService.GetByIdAsync(id);
-            if (hospital == null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая группа по физкультуре не найдена. Обновите страницу." });
+            if (hospital == null)
+               return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая группа по физкультуре не найдена. Обновите страницу." });
+
             var deleteViewModel = _mapper.Map<DeleteHospitalViewModel>(hospital);
             return View(deleteViewModel);
         }
@@ -124,19 +127,17 @@ namespace MedicalCertificates.Web.Controllers
                 {
                     var hospital = await _hospitalService.GetByIdAsync(model.Id);
                     if (hospital == null)
-                    {  
                         return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription= "Такая поликлиника не найдена. Обновите страницу."});
-                    }
                     var result = await _hospitalService.DeleteAsync(hospital);
                     if (result.IsSucceed)
-                    return RedirectToAction(nameof(Index));
+                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Delete));
                 }
             }
             catch
             {
-                return View("Error", new ErrorViewModel());
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка"));
             }
-            return View();
+            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка"));
         }
     }
 }
