@@ -11,7 +11,7 @@ namespace MedicalCertificates.Web.Models.HospitalViewModels
 
         [Required]
         [Display(Name = "Поликлиника")]
-        [StringLength(50, ErrorMessage = "{0} должна иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 6)]
+        [StringLength(50, ErrorMessage = "{0} должна иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 1)]
         public string Name { get; set; }
 
         [Required]

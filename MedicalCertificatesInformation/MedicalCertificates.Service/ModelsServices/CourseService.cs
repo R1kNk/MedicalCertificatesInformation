@@ -12,16 +12,16 @@ namespace MedicalCertificates.Service.ModelsServices
 {
     public class CourseService : CRUDService<Course>, ICourseService
     {
-        private readonly IDepartmentService _departmentService;
+        private readonly IRepository<Department> _departmentRepository;
 
-        public CourseService(IDepartmentService departmentService, IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
+        public CourseService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _departmentService = departmentService;
+            _departmentRepository = _unitOfWork.GetRepository<Department>();
         }
 
         public async Task<OperationResult<BusinessLogicResultError>> AddCourseAsync(Course newCourse, int departmentId)
         {
-            var department = await _departmentService.GetByIdAsync(departmentId);
+            var department = await _departmentRepository.GetByIdAsync(departmentId);
             if (department == null)
                 return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.DepartmentNotFound });
 

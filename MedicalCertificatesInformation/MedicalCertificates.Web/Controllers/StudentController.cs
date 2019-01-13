@@ -109,15 +109,17 @@ namespace MedicalCertificates.Web.Controllers
 
                     existingStudent.Name = updateStudent.Name;
                     existingStudent.Surname = updateStudent.Surname;
-                    await _studentService.UpdateAsync(existingStudent);
-                }
-                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
+                    var result = await _studentService.UpdateAsync(existingStudent);
+                    if(result.IsSucceed)
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
 
+                }
             }
             catch
             {
                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
             }
+            return View(model);
         }
 
         [Authorize(Roles ="Admin")]
@@ -146,14 +148,17 @@ namespace MedicalCertificates.Web.Controllers
                     if (existingStudent == null)
                         return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой студент не найден. Обновите страницу." });
 
-                    await _studentService.DeleteAsync(existingStudent);
+                    var result = await _studentService.DeleteAsync(existingStudent);
+                    if(result.IsSucceed)
+                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Delete));
+
                 }
-                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Delete));
             }
             catch
             {
                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка"));
             }
+            return View(model);
         }
 
         // GET: Student/Create

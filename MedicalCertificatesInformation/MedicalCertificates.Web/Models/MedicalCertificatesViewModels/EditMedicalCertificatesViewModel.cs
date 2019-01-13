@@ -18,6 +18,7 @@ namespace MedicalCertificates.Web.Models.MedicalCertificatesViewModels
         [Required(ErrorMessage = "Поле 'Дата окончания' должно быть заполнено")]
         [Display(Name = "Дата окончания")]
         public DateTime FinishDate { get; set; }
+
         [Required(ErrorMessage = "Поле 'Длительность действия' должно быть заполнено")]
         [Display(Name = "Длительность действия")]
         public TimeSpan CertificateTerm { get; set; }

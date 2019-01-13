@@ -15,18 +15,18 @@ namespace MedicalCertificates.Service.ModelsServices
     {
         private readonly IMedicalCertificateService _medicalCertificateService;
 
-        private readonly IGroupService _groupService;
+        private readonly IRepository<Group> _groupRepository;
 
 
-        public StudentService(IMedicalCertificateService medicalCertificateService, IGroupService groupService, IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
+        public StudentService(IMedicalCertificateService medicalCertificateService, IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
         {
             _medicalCertificateService = medicalCertificateService;
-            _groupService = groupService;
+            _groupRepository = _unitOfWork.GetRepository<Group>();
         }
 
         public async Task<OperationResult<BusinessLogicResultError>> AddStudentAsync(Student student, int groupId)
         {
-            var group = await _groupService.GetByIdAsync(groupId);
+            var group = await _groupRepository.GetByIdAsync(groupId);
             if(group == null)
               return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.GroupNotFound });
 
@@ -43,7 +43,7 @@ namespace MedicalCertificates.Service.ModelsServices
             if (student == null)
                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.StudentNotFound });
 
-            var group = await _groupService.GetByIdAsync(groupId);
+            var group = await _groupRepository.GetByIdAsync(groupId);
             if(group == null)
                 return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.GroupNotFound });
 

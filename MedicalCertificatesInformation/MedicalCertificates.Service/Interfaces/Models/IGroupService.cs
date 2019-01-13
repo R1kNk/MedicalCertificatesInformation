@@ -10,5 +10,8 @@ namespace MedicalCertificates.Service.Interfaces.Models
     {
         Task<OperationResult<BusinessLogicResultError>> AddGroupAsync(Group newGroup, int courseId);
 
+        Task<OperationResult<BusinessLogicResultError>> EditGroupAsync(Group editGroup);
+
+
     }
 }

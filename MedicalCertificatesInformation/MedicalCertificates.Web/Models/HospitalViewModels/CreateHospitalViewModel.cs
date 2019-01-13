@@ -6,7 +6,7 @@ namespace MedicalCertificates.Web.Models.HospitalViewModels
     {
         [Required(ErrorMessage = "Поле 'Поликлиника' должно быть заполнено")]
         [Display(Name = "Поликлиники")]
-        [StringLength(50, ErrorMessage = "{0} должна иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 6)]
+        [StringLength(50, ErrorMessage = "{0} должна иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 1)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Поле 'Номер телефона поликлиники' должно быть заполнено")]

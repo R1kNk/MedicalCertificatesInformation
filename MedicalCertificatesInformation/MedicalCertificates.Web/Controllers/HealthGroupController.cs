@@ -70,7 +70,7 @@ namespace MedicalCertificates.Web.Controllers
             {
                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
             }
-            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
+            return View(model);
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -107,7 +107,7 @@ namespace MedicalCertificates.Web.Controllers
             {
                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
             }
-            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
+            return View(model);
         }
 
         public async Task<IActionResult> Delete(int id)
@@ -141,7 +141,7 @@ namespace MedicalCertificates.Web.Controllers
             {
                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка"));
             }
-            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка"));
+            return View(model);
         }
     }
 }

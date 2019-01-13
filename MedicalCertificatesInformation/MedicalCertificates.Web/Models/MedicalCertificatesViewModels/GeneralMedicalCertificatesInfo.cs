@@ -10,19 +10,19 @@ namespace MedicalCertificates.Web.Models.MedicalCertificatesViewModels
     public class GeneralMedicalCertificatesInfo
     {
 
-        [Required]
+        [Required(ErrorMessage = "Группа здоровья должна быть выбрана")]
         [Display(Name = "Группа здоровья")]
         public int HealthGroupId { get; set; }
 
         public IReadOnlyList<HealthGroup> HealthGroups { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Группа по физкультуре должна быть выбрана")]
         [Display(Name = "Группа по физкультуре")]
         public int PhysicalEducationId { get; set; }
 
         public virtual IReadOnlyList<PhysicalEducation> PhysicalEducations { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поликлиника должна быть выбрана")]
         [Display(Name = "Поликлиника которая выдала справку")]
         public int HospitalId { get; set; }
 

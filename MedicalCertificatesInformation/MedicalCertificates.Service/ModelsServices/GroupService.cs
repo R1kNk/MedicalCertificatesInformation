@@ -13,15 +13,15 @@ namespace MedicalCertificates.Service.ModelsServices
 {
     class GroupService : CRUDService<Group>, IGroupService, IGetAllStudents<Group>
     {
-        private readonly ICourseService _courseService;
-        public GroupService(ICourseService courseService,IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
+        private readonly IRepository<Course> _courseRepository;
+        public GroupService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _courseService = courseService;
+            _courseRepository = _unitOfWork.GetRepository<Course>();
         }
 
         public async Task<OperationResult<BusinessLogicResultError>> AddGroupAsync(Group newGroup, int courseId)
         {
-            var course = await _courseService.GetByIdAsync(courseId);
+            var course = await _courseRepository.GetByIdAsync(courseId);
             if (course == null)
                 return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.CourseNotFound });
 
@@ -31,6 +31,22 @@ namespace MedicalCertificates.Service.ModelsServices
 
             newGroup.CourseId = course.Id;
             var result = await CreateAsync(newGroup);
+            return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
+        }
+
+        public async Task<OperationResult<BusinessLogicResultError>> EditGroupAsync(Group editGroup)
+        {
+            var existingGroup = await GetByIdAsync(editGroup.Id);
+            if (existingGroup == null)
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.GroupNotFound });
+
+            var sameNameGroup = await GetSingleOrDefaultAsync(p => p.Name == editGroup.Name);
+            if (sameNameGroup != null)
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.DuplicateGroupName });
+
+            existingGroup.Name = editGroup.Name;
+            //gd folder
+            await EditGroupAsync(existingGroup);
             return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
         }
 
