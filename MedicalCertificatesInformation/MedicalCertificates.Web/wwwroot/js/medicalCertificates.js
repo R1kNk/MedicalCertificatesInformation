@@ -225,3 +225,94 @@ function GetMoveStudentRequest(id) {
 function SendMoveStudentRequest() {
     sendFormRequest('/Student/Delete', '#moveStudentForm', 'POST');
 };
+
+//Group functions
+
+function GetDetailsGroupRequest(id) {
+    sendIdRequest('/Group/Details', id, "GET");
+}
+
+function GetCreateGroupRequest(id) {
+    sendIdRequest('/Group/Create', id, "GET");
+}
+
+function SendCreateGroupRequest() {
+    sendFormRequest('/Group/Create', '#createGroupForm', 'POST');
+}
+
+function GetEditGroupRequest(id) {
+    sendIdRequest('/Group/Edit', id, "GET");
+}
+
+function SendEditGroupRequest() {
+    sendFormRequest('/Group/Edit', '#editGroupForm', 'POST');
+};
+
+function GetDeleteGroupRequest(id) {
+    sendIdRequest('/Group/Delete', id, "GET");
+}
+
+function SendDeleteGroupRequest() {
+    sendFormRequest('/Group/Delete', '#deleteGroupForm', 'POST');
+};
+
+//Course functions
+
+function GetDetailsCourseRequest(id) {
+    sendIdRequest('/Course/Details', id, "GET");
+}
+
+function GetCreateCourseRequest(id) {
+    sendIdRequest('/Course/Create', id, "GET");
+}
+
+function SendCreateCourseRequest() {
+    sendFormRequest('/Course/Create', '#createCourseForm', 'POST');
+}
+
+function GetEditCourseRequest(id) {
+    sendIdRequest('/Course/Edit', id, "GET");
+}
+
+function SendEditCourseRequest() {
+    sendFormRequest('/Course/Edit', '#editCourseForm', 'POST');
+};
+
+function GetDeleteCourseRequest(id) {
+    sendIdRequest('/Course/Delete', id, "GET");
+}
+
+function SendDeleteCourseRequest() {
+    sendFormRequest('/Course/Delete', '#deleteCourseForm', 'POST');
+};
+
+//Department functions
+
+function GetDetailsDepartmentRequest(id) {
+    sendIdRequest('/Department/Details', id, "GET");
+}
+
+function GetCreateDepartmentRequest(id) {
+    sendIdRequest('/Department/Create', id, "GET");
+}
+
+function SendCreateDepartmentRequest() {
+    sendFormRequest('/Department/Create', '#createDepartmentForm', 'POST');
+}
+
+function GetEditDepartmentRequest(id) {
+    sendIdRequest('/Department/Edit', id, "GET");
+}
+
+function SendEditDepartmentRequest() {
+    sendFormRequest('/Department/Edit', '#editDepartmentForm', 'POST');
+};
+
+function GetDeleteDepartmentRequest(id) {
+    sendIdRequest('/Department/Delete', id, "GET");
+}
+
+function SendDeleteDepartmentequest() {
+    sendFormRequest('/Department/Delete', '#deleteDepartmentForm', 'POST');
+};
+

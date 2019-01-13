@@ -72,9 +72,10 @@ namespace MedicalCertificates.Web.Controllers
                         AddOperationResultErrorsToModelState(result);
                         return View(model);
                     }
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
                 }
+                return View(model);
 
-                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
             }
             catch
             {
@@ -112,7 +113,6 @@ namespace MedicalCertificates.Web.Controllers
                     var result = await _studentService.UpdateAsync(existingStudent);
                     if(result.IsSucceed)
                     return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
-
                 }
             }
             catch
@@ -190,9 +190,10 @@ namespace MedicalCertificates.Web.Controllers
                         AddOperationResultErrorsToModelState(result);
                         return View(model);
                     }
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Move));
                 }
+                return View(model);
 
-                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Move));
             }
             catch
             {

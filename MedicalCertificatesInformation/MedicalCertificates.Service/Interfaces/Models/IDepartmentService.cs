@@ -10,6 +10,8 @@ namespace MedicalCertificates.Service.Interfaces.Models
     public interface IDepartmentService : ICRUDService<Department>, IGetAllStudents<Department>
     {
         Task<OperationResult<BusinessLogicResultError>> AddDepartmentAsync(Department newDepartment);
+
+        Task<OperationResult<BusinessLogicResultError>> EditDepartmentAsync(Department updateDepartment);
     }
 }
 

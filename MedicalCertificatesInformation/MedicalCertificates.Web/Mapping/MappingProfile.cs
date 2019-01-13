@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using MedicalCertificates.DomainModel.Models;
+using MedicalCertificates.Web.Models.CourseViewModels;
+using MedicalCertificates.Web.Models.DepartmentViewModels;
+using MedicalCertificates.Web.Models.GroupViewModels;
 using MedicalCertificates.Web.Models.HealthGroupViewModels;
 using MedicalCertificates.Web.Models.HospitalViewModels;
 using MedicalCertificates.Web.Models.MedicalCertificatesViewModels;
@@ -159,6 +162,73 @@ namespace MedicalCertificates.Web.Mapping
                .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
                .ForMember(p => p.GroupId, map => map.MapFrom(p => p.GroupId))
                .ReverseMap();
+
+            //Group
+            CreateMap<Group, CreateGroupViewModel>()
+                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ForMember(p => p.CourseId, map => map.MapFrom(p => p.CourseId))
+                .ReverseMap();
+
+            CreateMap<Group, DetailsGroupViewModel>()
+               .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+               .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ForMember(p => p.Course, map => map.MapFrom(p => p.Course))
+                .ForMember(p => p.Students, map => map.MapFrom(p => p.Students))
+                .ReverseMap();
+
+            CreateMap<Group, DeleteGroupViewModel>()
+                .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ReverseMap();
+
+            CreateMap<Group, EditGroupViewModel>()
+                .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ReverseMap();
+
+            //Course
+            CreateMap<Course, CreateCourseViewModel>()
+                .ForMember(p => p.Number, map => map.MapFrom(p => p.Number))
+                .ForMember(p => p.DepartmentId, map => map.MapFrom(p => p.DepartmentId))
+                .ReverseMap();
+
+            CreateMap<Course, DetailsCourseViewModel>()
+               .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+               .ForMember(p => p.Number, map => map.MapFrom(p => p.Number))
+                .ForMember(p => p.Department, map => map.MapFrom(p => p.Department))
+                .ForMember(p => p.Groups, map => map.MapFrom(p => p.Groups))
+                .ReverseMap();
+
+            CreateMap<Course, DeleteCourseViewModel>()
+                .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+                .ForMember(p => p.Number, map => map.MapFrom(p => p.Number))
+                .ReverseMap();
+
+            CreateMap<Course, EditCourseViewModel>()
+                .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+                .ForMember(p => p.Number, map => map.MapFrom(p => p.Number))
+                .ReverseMap();
+
+            //Department
+            CreateMap<Department, CreateDepartmentViewModel>()
+                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ReverseMap();
+
+            CreateMap<Department, DetailsDepartmentViewModel>()
+               .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+               .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ForMember(p => p.Courses, map => map.MapFrom(p => p.Courses))
+                .ReverseMap();
+
+            CreateMap<Department, DeleteDepartmentViewModel>()
+                .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ReverseMap();
+
+            CreateMap<Department, EditDepartmentViewModel>()
+                .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ReverseMap();
         }
     }
 }

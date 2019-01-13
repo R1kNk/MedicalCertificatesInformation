@@ -75,9 +75,10 @@ namespace MedicalCertificates.Web.Controllers
                         AddOperationResultErrorsToModelState(result);
                         return View(model);
                     }
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
                 }
+                return View(model);
 
-                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
             }
             catch
             {
@@ -114,9 +115,10 @@ namespace MedicalCertificates.Web.Controllers
                         AddOperationResultErrorsToModelState(result);
                         return View(model);
                     }
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
                 }
+                return View(model);
 
-                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
             }
             catch
             {
@@ -160,9 +162,10 @@ namespace MedicalCertificates.Web.Controllers
                             }
                         }
                     }
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Delete));
                 }
+                return View(model);
 
-                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Delete));
             }
             catch
             {
