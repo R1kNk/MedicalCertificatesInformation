@@ -43,6 +43,12 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                 await _context.SaveChangesAsync();
             }
 
+            if (!_context.Hospitals.Any())
+            {
+                await _context.Hospitals.AddRangeAsync(GetDefaultHospitals());
+                await _context.SaveChangesAsync();
+            }
+
             if (!await _roleManager.RoleExistsAsync("Admin"))
             {
                 var role = new ApplicationRole() { Name = "Admin" };
@@ -62,6 +68,50 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                 var role = new ApplicationRole() { Name = "User" };
                 await _roleManager.CreateAsync(role);
             }
+
+
+            DateTime StartDate = new DateTime(2017, 11, 14);
+            DateTime FinishDate = StartDate.AddMonths(6);
+            string span = (FinishDate - StartDate).ToString();
+
+
+            if (!_context.Departments.Any())
+            {
+                Department poit = new Department();
+                Course poit2 = new Course();
+                Group group792 = new Group();
+                group792.Name = "Т-792";
+
+                List<Student> students = new List<Student>()
+                {
+                new Student()
+                { Surname = "Алиев", Name = "Эмиль", SecondName = "Мусаевич",
+                            MedicalCertificates = new List<MedicalCertificate>()
+                            {
+                                new MedicalCertificate(){
+                                    StartDate = StartDate,
+                                    FinishDate = FinishDate,
+                                    CertificateTerm = span,
+                                    HealthGroup = _context.HealthGroups.SingleOrDefault(p=>p.Id == 1),
+                                    PhysicalEducation = _context.PhysicalEducations.SingleOrDefault(p=>p.Id ==1),
+                                    Hospital = _context.Hospitals.SingleOrDefault(p=>p.Id ==1)
+                                }
+                            }
+                            }
+                };
+
+                group792.Students = new List<Student>();
+                poit2.Groups = new List<Group>();
+                poit.Courses = new List<Course>();
+                group792.Students.AddRange(students);
+                poit2.Groups.Add(group792);
+                poit.Name = "ПОИТ";
+                poit.Courses.Add(poit2);
+
+                _context.Departments.Add(poit);
+                await _context.SaveChangesAsync();
+            }
+            
         }
 
         List<PhysicalEducation> GetDefaultPhysicalEducations()
@@ -86,6 +136,22 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                 new HealthGroup() { Name = "5-я группа" },
             };
         }
+
+        List<Hospital> GetDefaultHospitals()
+        {
+            return new List<Hospital>()
+            {
+                new Hospital() { Name = "26-я поликлиника" },
+                new Hospital() { Name = "15-я поликлиника" },
+                new Hospital() { Name = "1-я поликлиника" },
+                new Hospital() { Name = "5-я поликлиника" },
+                new Hospital() { Name = "99-я поликлиника" }
+            };
+        }
+
+
+
+
 
     }
 }

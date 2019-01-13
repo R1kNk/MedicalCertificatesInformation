@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MedicalCertificates.Web.Models;
 using MedicalCertificates.Web.Models.SharedViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MedicalCertificates.Web.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()

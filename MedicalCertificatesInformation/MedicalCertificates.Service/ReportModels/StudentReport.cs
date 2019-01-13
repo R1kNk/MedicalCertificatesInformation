@@ -10,7 +10,7 @@ namespace MedicalCertificates.Service.ReportModels
         public string Surname { get; private set; }
         public DateTime? StartDate { get; private set;}
         public DateTime? FinishDate { get; private set; }
-        public TimeSpan? CertificatePeriod { get; private set; }
+        public string CertificatePeriod { get; private set; }
         public bool CertificateValid { get; private set; }
         public PhysicalEducation PhysicalEducation { get; private set; }
         public HealthGroup HealthGroup  { get; private set; }

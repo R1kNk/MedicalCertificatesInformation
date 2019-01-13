@@ -7,7 +7,7 @@ namespace MedicalCertificates.DomainModel.Models
         public int Id { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
-        public TimeSpan CertificateTerm { get; set; }
+        public string CertificateTerm { get; set; }
         public string GoogleDriveImageId { get; set; }
 
 

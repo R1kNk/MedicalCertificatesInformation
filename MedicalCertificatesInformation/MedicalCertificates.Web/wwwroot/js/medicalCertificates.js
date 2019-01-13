@@ -316,3 +316,8 @@ function SendDeleteDepartmentequest() {
     sendFormRequest('/Department/Delete', '#deleteDepartmentForm', 'POST');
 };
 
+//Other
+
+function LoadTree() {
+    
+}

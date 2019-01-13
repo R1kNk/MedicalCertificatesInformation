@@ -203,7 +203,8 @@ namespace MedicalCertificates.Repositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<TimeSpan>("CertificateTerm");
+                    b.Property<string>("CertificateTerm")
+                        .IsRequired();
 
                     b.Property<DateTime>("FinishDate");
 
@@ -263,6 +264,8 @@ namespace MedicalCertificates.Repositories.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<string>("SecondName");
 
                     b.Property<string>("Surname")
                         .IsRequired()
