@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MedicalCertificates.Web.Models.CourseViewModels
 {
@@ -10,5 +11,8 @@ namespace MedicalCertificates.Web.Models.CourseViewModels
         [Required(ErrorMessage = "Поле 'Номер курса' должно быть заполнено")]
         [Display(Name = "Номер курса")]
         public int Number { get; set; }
+
+        public IReadOnlyList<int> CourseNumbers { get; set; }
+
     }
 }

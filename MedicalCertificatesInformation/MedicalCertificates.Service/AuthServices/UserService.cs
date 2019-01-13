@@ -4,6 +4,7 @@ using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Auth;
 using MedicalCertificates.Service.Interfaces.Models;
 using MedicalCertificates.Service.ReportModels;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -217,6 +218,11 @@ namespace MedicalCertificates.Service.AuthServices
                 }
             }
             return new UserManagementHierarchy(departmentsResult);
+        }
+
+        public async Task<IReadOnlyList<ApplicationUser>> GetAllUsersAsync()
+        {
+            return await _userManager.Users.ToListAsync();
         }
     }
 }

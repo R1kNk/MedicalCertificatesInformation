@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -19,12 +20,20 @@ namespace MedicalCertificates.Web.Controllers
         private readonly IDepartmentService _departmentService;
         private readonly ICourseService _courseService;
         private readonly IMapper _mapper;
+        private readonly IReadOnlyList<int> courseNumbers;
 
         public CourseController(IDepartmentService departmentService, ICourseService courseService, IMapper mapper)
         {
             _departmentService = departmentService;
             _courseService = courseService;
             _mapper = mapper;
+            courseNumbers = new List<int>
+            {
+                1,
+                2,
+                3,
+                4
+            };
         }
 
 
@@ -48,6 +57,7 @@ namespace MedicalCertificates.Web.Controllers
 
             var CreateViewModel = new CreateCourseViewModel();
             CreateViewModel.DepartmentId = department.Id;
+            CreateViewModel.CourseNumbers = courseNumbers;
 
             return View(CreateViewModel);
         }
@@ -88,6 +98,8 @@ namespace MedicalCertificates.Web.Controllers
                 return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой курс не найден. Обновите страницу." });
 
             var EditViewModel = _mapper.Map<EditCourseViewModel>(course);
+            EditViewModel.CourseNumbers = courseNumbers;
+
             return View(EditViewModel);
         }
 

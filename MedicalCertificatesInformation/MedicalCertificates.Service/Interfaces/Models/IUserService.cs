@@ -12,6 +12,8 @@ namespace MedicalCertificates.Service.Interfaces.Models
     {
         Task<IList<string>> GetRolesAsync(TUser user);
 
+        Task<IReadOnlyList<TUser>> GetAllUsersAsync();
+
         Task<TUser> GetUserAsync(ClaimsPrincipal principal);
 
         Task<OperationResult<IdentityResultError>> RemoveFromRoleAsync(TUser user, string role);

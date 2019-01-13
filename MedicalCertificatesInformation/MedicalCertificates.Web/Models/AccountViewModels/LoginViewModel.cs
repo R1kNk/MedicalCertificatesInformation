@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MedicalCertificates.DomainModel.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,5 +18,7 @@ namespace MedicalCertificates.Web.Models.AccountViewModels
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        public IReadOnlyList<ApplicationUser> Users { get; set; }
     }
 }

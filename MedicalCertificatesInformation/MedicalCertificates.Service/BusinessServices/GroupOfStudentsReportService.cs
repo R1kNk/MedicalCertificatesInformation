@@ -49,6 +49,7 @@ namespace MedicalCertificates.Service.BusinessServices
         public async Task<GroupOfStudentsReport> GetInvalidFromAsync(TEntity container)
         {
             IReadOnlyList<Student> students = _studentService.SortStudents(_entityService.GetAllStudents(container), false, DateTime.Now);
+
             IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
             IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
 
@@ -59,6 +60,7 @@ namespace MedicalCertificates.Service.BusinessServices
         public async Task<GroupOfStudentsReport> GetInvalidOnDateFromAsync(TEntity container, DateTime dateTime)
         {
             IReadOnlyList<Student> students = _studentService.SortStudents(_entityService.GetAllStudents(container), false, dateTime);
+
             IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
             IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
 
@@ -73,7 +75,7 @@ namespace MedicalCertificates.Service.BusinessServices
 
         public async Task<GroupOfStudentsReport> GetValidFromAsync(TEntity container)
         {
-            IReadOnlyList<Student> students = _entityService.GetAllStudents(container);
+            IReadOnlyList<Student> students = _studentService.SortStudents(_entityService.GetAllStudents(container), true, DateTime.Now);
             IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
             IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
 
@@ -83,7 +85,8 @@ namespace MedicalCertificates.Service.BusinessServices
 
         public async Task<GroupOfStudentsReport> GetValidOnDateFromAsync(TEntity container, DateTime dateTime)
         {
-            IReadOnlyList<Student> students = _entityService.GetAllStudents(container);
+            IReadOnlyList<Student> students = _studentService.SortStudents(_entityService.GetAllStudents(container), true, dateTime);
+
             IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
             IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
 

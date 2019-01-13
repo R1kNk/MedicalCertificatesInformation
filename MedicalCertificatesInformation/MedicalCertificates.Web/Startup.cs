@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MedicalCertificates.Service.ServiceConfigurations;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 
 namespace MedicalCertificates.Web
 {
@@ -23,6 +24,7 @@ namespace MedicalCertificates.Web
             services.AddMvc();
             services.AddAutoMapper();
             services.AddTransient<MedicalCertificatesDBConfiguration>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

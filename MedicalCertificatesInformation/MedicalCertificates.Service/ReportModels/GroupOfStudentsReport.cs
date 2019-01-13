@@ -39,6 +39,8 @@ namespace MedicalCertificates.Service.ReportModels
             return reports;
         }
 
+
+
         private CertificatePresenceStat<StudentReport> GetCertificatePresenceStat(IReadOnlyList<StudentReport> studentReports)
         {
             if (studentReports == null)

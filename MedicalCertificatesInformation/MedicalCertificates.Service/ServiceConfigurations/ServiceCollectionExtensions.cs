@@ -37,6 +37,10 @@ namespace MedicalCertificates.Service.ServiceConfigurations
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient(typeof(ISignInManager<ApplicationUser>), typeof(ApplicationSignInManager));
             services.AddTransient(typeof(IUserManager<ApplicationUser>), typeof(ApplicationUserManager));
+            services.AddTransient(typeof(IUserService<ApplicationUser>), typeof(UserService));
+            services.AddTransient(typeof(IRoleManager<ApplicationRole>), typeof(ApplicationRoleManager));
+
+
             services.AddTransient(typeof(IRoleManager<ApplicationRole>), typeof(ApplicationRoleManager));
             services.AddTransient<IMedicalCertificatesUnitOfWork, MedicalCertificatesUnitOfWork>();
 
