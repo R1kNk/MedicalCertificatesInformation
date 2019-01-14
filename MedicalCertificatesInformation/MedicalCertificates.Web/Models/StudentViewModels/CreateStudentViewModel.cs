@@ -18,6 +18,11 @@ namespace MedicalCertificates.Web.Models.StudentViewModels
         [StringLength(60, ErrorMessage = "{0} должно иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 2)]
         public string Surname { get; set; }
 
+        [Required(ErrorMessage = "Поле 'Отчество' должно быть заполнено")]
+        [Display(Name = "Отчество")]
+        [StringLength(60, ErrorMessage = "{0} должно иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 2)]
+        public string SecondName { get; set; }
+
         public string GoogleDriveFolderId { get; set; }
 
         [Required(ErrorMessage = "Поле 'Идентификатор группы' должно быть заполнено")]

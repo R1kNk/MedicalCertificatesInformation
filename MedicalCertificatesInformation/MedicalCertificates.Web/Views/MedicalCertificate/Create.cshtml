@@ -1,0 +1,61 @@
+@model MedicalCertificates.Web.Models.MedicalCertificatesViewModels.CreateMedicalCertificateViewModel
+
+<h4>CreateMedicalCertificateViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StudentId" class="control-label"></label>
+                <input asp-for="StudentId" class="form-control" />
+                <span asp-validation-for="StudentId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                
+                <label asp-for="StartDate" class="control-label"></label>
+                <div class='input-group date' id='datetimepicker1'>
+                    <input asp-for="StartDate" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinishDate" class="control-label"></label>
+                <input asp-for="FinishDate" class="form-control" />
+                <span asp-validation-for="FinishDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CertificateTerm" class="control-label"></label>
+                <input asp-for="CertificateTerm" class="form-control" />
+                <span asp-validation-for="CertificateTerm" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HealthGroupId" class="control-label"></label>
+                <input asp-for="HealthGroupId" class="form-control" />
+                <span asp-validation-for="HealthGroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhysicalEducationId" class="control-label"></label>
+                <input asp-for="PhysicalEducationId" class="form-control" />
+                <span asp-validation-for="PhysicalEducationId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HospitalId" class="control-label"></label>
+                <input asp-for="HospitalId" class="form-control" />
+                <span asp-validation-for="HospitalId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

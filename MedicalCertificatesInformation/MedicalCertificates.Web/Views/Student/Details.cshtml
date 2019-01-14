@@ -1,0 +1,49 @@
+@model MedicalCertificates.Web.Models.StudentViewModels.DetailsStudentViewModel
+
+<h2>Описание группы</h2>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Фамилия</th>
+                <th>Отчество</th>
+                <th>Группа</th>
+                <th>Действительна ли справка?</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @{
+                    var isCertValid = "Нет";
+                    var lastCert = Model.MedicalCertificates.LastOrDefault();
+                    if (lastCert != null)
+                    {
+                        if (lastCert.FinishDate > DateTime.Now)
+                        {
+                            isCertValid = "Да";
+                        }
+                    }
+                }
+                <th>@Html.DisplayFor(model => model.Id)</th>
+                <th>@Html.DisplayFor(model => model.Surname)</th>
+                <th>@Html.DisplayFor(model => model.SecondName)</th>
+                <th>@Html.DisplayFor(model => model.Group.Name)</th>
+                <th>@isCertValid</th>
+            </tr>
+        </tbody>
+    </table>
+    <hr />
+</div>
+@if (Model.MedicalCertificates.Count != 0)
+{
+    <h4>Справки учащегося</h4>
+    <!--Table-->
+    @await Html.PartialAsync("MedicalCertificatesTable", Model.MedicalCertificates);
+
+}
+else
+{
+    <h4>Учащийся не принес ни одной справки</h4>
+}

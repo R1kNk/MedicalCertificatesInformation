@@ -5,9 +5,9 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Отделение</th>
             <th>Номер</th>
             <th>Количество групп</th>
+            <th>Отделение</th>
         </tr>
     </thead>
 
@@ -15,12 +15,12 @@
         @foreach (var course in Model)
         {
             var groupCount = course.Groups.Count;
-            <tr onclick="GetDetailsCourseRequest(@course.Id)">
-                <td scope="row">@course.Id</td>
-                <td scope="row">@course.Department.Name</td>
-                <td>@course.Number курс</td>
-                <td>@groupCount</td>
-            </tr>
+        <tr onclick="GetDetailsCourseRequest(@course.Id)">
+            <td scope="row">@course.Id</td>
+            <td>@course.Number курс</td>
+            <td>@groupCount</td>
+            <td>@course.Department.Name</td>
+        </tr>
          }
     </tbody>
 

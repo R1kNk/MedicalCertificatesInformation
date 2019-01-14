@@ -134,6 +134,7 @@ namespace MedicalCertificates.Web.Mapping
                 .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
                 .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
                 .ForMember(p => p.GroupId, map => map.MapFrom(p => p.GroupId))
+                .ForMember(p => p.SecondName, map => map.MapFrom(p => p.SecondName))
                 .ReverseMap();
 
             CreateMap<Student, DetailsStudentViewModel>()
@@ -142,18 +143,21 @@ namespace MedicalCertificates.Web.Mapping
                 .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
                 .ForMember(p => p.Group, map => map.MapFrom(p => p.Group))
                 .ForMember(p => p.MedicalCertificates, map => map.MapFrom(p => p.MedicalCertificates))
+                .ForMember(p => p.SecondName, map => map.MapFrom(p => p.SecondName))
                 .ReverseMap();
 
             CreateMap<Student, DeleteStudentViewModel>()
                 .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
                 .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
                 .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
+                .ForMember(p => p.SecondName, map => map.MapFrom(p => p.SecondName))
                 .ReverseMap();
 
             CreateMap<Student, EditStudentViewModel>()
                 .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
                 .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
                 .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
+                .ForMember(p => p.SecondName, map => map.MapFrom(p => p.SecondName))
                 .ReverseMap();
 
             CreateMap<Student, MoveStudentViewModel>()

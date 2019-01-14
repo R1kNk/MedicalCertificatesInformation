@@ -1,0 +1,44 @@
+﻿@model MedicalCertificates.Web.Models.MedicalCertificatesViewModels.DetailsMedicalCertificatesViewModel
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>DetailsMedicalCertificatesViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FinishDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FinishDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CertificateTerm)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CertificateTerm)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoogleDriveImageId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoogleDriveImageId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Details">
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
