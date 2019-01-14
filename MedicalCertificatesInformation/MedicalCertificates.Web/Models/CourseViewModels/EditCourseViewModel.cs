@@ -12,6 +12,10 @@ namespace MedicalCertificates.Web.Models.CourseViewModels
         [Display(Name = "Номер курса")]
         public int Number { get; set; }
 
+        [Required]
+        [Display(Name = "Название отделения")]
+        public string DepartmentName { get; set; }
+
         public IReadOnlyList<int> CourseNumbers { get; set; }
 
     }

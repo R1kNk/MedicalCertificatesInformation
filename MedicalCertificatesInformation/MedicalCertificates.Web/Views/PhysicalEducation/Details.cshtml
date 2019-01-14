@@ -1,26 +1,32 @@
-﻿@model MedicalCertificates.Web.Models.PhysicalEducationViewModels.DetailsPhysicalEducationViewModel
+@model MedicalCertificates.Web.Models.PhysicalEducationViewModels.DetailsPhysicalEducationViewModel
 
+
+<h2>Описание группы по физкультуре</h2>
 <div>
-    <h4>DetailsPhysicalEducationViewModel</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Название группы по физкультуре</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>@Html.DisplayFor(model => model.Id)</th>
+                <th>@Html.DisplayFor(model => model.Name)</th>
+            </tr>
+        </tbody>
+    </table>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
 </div>
-<div>
-    <br />
-    <button onclick="GetEditPhysicalEducationRequest(@Model.Id);" class="btn btn-default">Изменить</button>
-    <br />
-    <button onclick="GetIndexPhysicalEducationRequest();" class="btn btn-default">Вернуться к списку</button>
-</div>
+<p>
+    <button onclick="GetIndexPhysicalEducationRequest()" class="btn btn-info">Вернуться к списку групп по физкультуре</button>
+</p>
+@if (Model.MedicalCertificates.Count != 0)
+{
+    <h4>Справки с данной группой по физкультуре</h4>
+    @await Html.PartialAsync("MedicalCertificatesTable", Model.MedicalCertificates);
+
+}
+
+

@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalCertificates.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CourseController : Controller
     {
         private readonly IDepartmentService _departmentService;
@@ -36,7 +37,6 @@ namespace MedicalCertificates.Web.Controllers
             };
         }
 
-
         public async Task<IActionResult> Details(int id)
         {
             var course = await _courseService.GetByIdAsync(id);
@@ -49,7 +49,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(DetailsViewModel);
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(int id)
         {
             var department = await _departmentService.GetByIdAsync(id);
@@ -64,7 +63,6 @@ namespace MedicalCertificates.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateCourseViewModel model)
         {
             try
@@ -90,7 +88,6 @@ namespace MedicalCertificates.Web.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
             var course = _courseService.GetByIdAsync(id);
@@ -105,7 +102,6 @@ namespace MedicalCertificates.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(EditCourseViewModel model)
         {
             try
@@ -135,7 +131,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var course = await _courseService.GetByIdAsync(id);
@@ -149,7 +144,6 @@ namespace MedicalCertificates.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(DeleteCourseViewModel model)
         {
             try

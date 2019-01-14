@@ -1,33 +1,34 @@
-﻿@model MedicalCertificates.Web.Models.HealthGroupViewModels.DetailsHealthGroupViewModel
+@model MedicalCertificates.Web.Models.HealthGroupViewModels.DetailsHealthGroupViewModel
 
-@{
-    ViewData["Title"] = "Details";
+<h2>Описание группы здоровья</h2>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Название группы здоровья</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>@Html.DisplayFor(model => model.Id)</th>
+                <th>@Html.DisplayFor(model => model.Name)</th>
+            </tr>
+        </tbody>
+    </table>
+    <hr />
+</div>
+<p>
+    <button onclick="GetIndexHealthGroupRequest()" class="btn btn-info">Вернуться к списку групп здоровья</button>
+</p>
+@if (Model.MedicalCertificates.Count != 0)
+{
+    <h4>Справки с этой группой здоровья</h4>
+    <!--Table-->
+    @await Html.PartialAsync("MedicalCertificatesTable", Model.MedicalCertificates);
+
 }
 
-<h2>Details</h2>
 
-<div>
-    <h4>DetailsPhysicalEducationViewModel</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
-</div>
-<div>
-    <br />
-    <button onclick="GetEditHealthGroupRequest(@Model.Id);" class="btn btn-default">Изменить</button>
-    <br />
-    <button onclick="GetIndexHealthGroupRequest();" class="btn btn-default">Вернуться к списку</button>
-</div>
+
 

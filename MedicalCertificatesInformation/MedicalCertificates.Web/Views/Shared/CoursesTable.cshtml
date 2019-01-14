@@ -1,0 +1,27 @@
+@model IReadOnlyList<Course>
+
+<table class="table table-hover table-condensed">
+
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Отделение</th>
+            <th>Номер</th>
+            <th>Количество групп</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var course in Model)
+        {
+            var groupCount = course.Groups.Count;
+            <tr onclick="GetDetailsCourseRequest(@course.Id)">
+                <td scope="row">@course.Id</td>
+                <td scope="row">@course.Department.Name</td>
+                <td>@course.Number курс</td>
+                <td>@groupCount</td>
+            </tr>
+         }
+    </tbody>
+
+</table>

@@ -10,5 +10,9 @@ namespace MedicalCertificates.Web.Models.CourseViewModels
         [Required(ErrorMessage = "Поле 'Номер курса' должно быть заполнено")]
         [Display(Name = "Номер курса")]
         public int Number { get; set; }
+
+        [Required]
+        [Display(Name = "Отделения")]
+        public string DepartmentName { get; set; }
     }
 }

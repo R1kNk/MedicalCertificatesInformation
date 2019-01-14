@@ -1,4 +1,4 @@
-﻿@model OperationResultViewModel
+@model OperationResultViewModel
 
 @{
     string Message = default(string);
@@ -29,14 +29,32 @@
     }
 
 }
-<h4 class="text-info">@Message</h4>
-@if (Model.AdditionalMessage != "" && Model.IsSuccessfully)
-{
-    <h5 class="text-info">@Model.AdditionalMessage</h5>
-}
-else if (Model.AdditionalMessage != "" && !Model.IsSuccessfully)
-{
-    <h5 class="text-danger">@Model.AdditionalMessage</h5>
 
-}
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <h3 class="modal-title" id="lineModalLabel">Результат</h3>
+        </div>
+        <div class="modal-body">
+            <h4 style="text-align:center" class="text-info">@Message</h4>
+            @if (Model.AdditionalMessage != "" && Model.IsSuccessfully)
+            {
+                <h5 style="text-align:center" class="text-info">@Model.AdditionalMessage</h5>
+            }
+            else if (Model.AdditionalMessage != "" && !Model.IsSuccessfully)
+            {
+                <h5 style="text-align:center" class="text-danger">@Model.AdditionalMessage</h5>
+
+            }
+        </div>
+        <div class="modal-footer">
+            <div class="btn-group btn-group-justified" role="group" aria-label="group button">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

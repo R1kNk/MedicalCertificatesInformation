@@ -1,0 +1,30 @@
+@model MedicalCertificates.Web.Models.CourseViewModels.DetailsCourseViewModel
+
+<h2>Описание курса</h2>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Номер курса</th>
+                <th>Отделение</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>@Html.DisplayFor(model => model.Id)</th>
+                <th>@Html.DisplayFor(model => model.Number) курс</th>
+                <th>@Html.DisplayFor(model => model.Department.Name)</th>
+            </tr>
+        </tbody>
+    </table>
+    <hr />
+</div>
+@if (Model.Groups.Count != 0)
+{
+    <h4>Группы на этом курсе</h4>
+    <!--Table-->
+    @Html.Partial("GroupsTable", Model.Groups);
+
+}

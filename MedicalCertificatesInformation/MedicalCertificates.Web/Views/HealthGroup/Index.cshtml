@@ -1,13 +1,8 @@
-﻿@model IEnumerable<MedicalCertificates.DomainModel.Models.HealthGroup>
+@model IEnumerable<MedicalCertificates.DomainModel.Models.HealthGroup>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h2>Index</h2>
-
+<h2>Список групп здоровья</h2>
 <p>
-    <a asp-action="Create">Create New</a>
+    <button onclick="GetCreateHealthGroupRequest()" class="btn btn-info">Создать</button>
 </p>
 <table class="table">
     <thead>

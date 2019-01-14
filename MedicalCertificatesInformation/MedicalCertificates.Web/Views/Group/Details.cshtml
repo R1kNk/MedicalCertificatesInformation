@@ -1,0 +1,27 @@
+@model MedicalCertificates.Web.Models.GroupViewModels.DetailsGroupViewModel
+
+<h2>Описание группы</h2>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Название группы</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>@Html.DisplayFor(model => model.Id)</th>
+                <th>@Html.DisplayFor(model => model.Name)</th>
+            </tr>
+        </tbody>
+    </table>
+    <hr />
+</div>
+@if (Model.Students.Count != 0)
+{
+<h4>Учащиеся в этой группе</h4>
+ <!--Table-->
+@await Html.PartialAsync("StudentsTable", Model.Students);
+
+}

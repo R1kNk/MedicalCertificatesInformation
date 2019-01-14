@@ -1,32 +1,36 @@
-﻿@model MedicalCertificates.Web.Models.HospitalViewModels.DetailsHospitalViewModel
+@model MedicalCertificates.Web.Models.HospitalViewModels.DetailsHospitalViewModel
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="form-group">
-            <label asp-for="Name" class="control-label"></label>
-            <p class="form-control-static">@Model.Name</p>
-        </div>
-        <div class="form-group">
-            <label class="control-label" asp-for="TelephoneNumber"></label>
-            <p class="form-control-static">@Model.TelephoneNumber</p>
-        </div>
-        @{
-            foreach (var cert in Model.MedicalCertificates)
-            {
-                <div>
-                    <p class="form-control-static">@cert.StartDate</p>
-                    <p class="form-control-static">@cert.FinishDate</p>
-                    <p class="form-control-static">@cert.CertificateTerm</p>
-                    <p class="form-control-static">@cert.Student.Name</p>
-                    <p class="form-control-static">@cert.Student.Surname</p>
-                    <p class="form-control-static">@cert.PhysicalEducation.Name</p>
+<h2>Описание поликлиники</h2>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Имя поликлиники</th>
+                <th>Номер телефона поликлиники</th>
 
-                </div>
-            }
-        }
-        <br />
-        <button onclick="GetEditHospitalRequest(@Model.Id);" class="btn btn-default">Изменить</button>
-        <br />
-        <button onclick="GetIndexHospitalRequest()" class="btn btn-default">Вернуться к списку</button>
-    </div>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>@Html.DisplayFor(model => model.Id)</th>
+                <th>@Html.DisplayFor(model => model.Name)</th>
+                <th>@Html.DisplayFor(model => model.TelephoneNumber)</th>
+
+            </tr>
+        </tbody>
+    </table>
+    <hr />
 </div>
+<p>
+    <button onclick="GetIndexHospitalRequest()" class="btn btn-info">Вернуться к списку поликлиник</button>
+</p>
+@if (Model.MedicalCertificates.Count != 0)
+{
+    <h4>Справки выданные этой поликлиникой</h4>
+    <!--Table-->
+    @await Html.PartialAsync("MedicalCertificatesTable", Model.MedicalCertificates);
+
+}
+
+

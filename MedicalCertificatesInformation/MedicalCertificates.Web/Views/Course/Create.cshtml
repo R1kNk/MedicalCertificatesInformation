@@ -1,0 +1,36 @@
+@model MedicalCertificates.Web.Models.CourseViewModels.CreateCourseViewModel
+
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <h3 class="modal-title" id="lineModalLabel">Создание нового курса</h3>
+        </div>
+        <div class="modal-body">
+            <form asp-action="Create" id="createCourseForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Number" class="control-label"></label>
+                    <select asp-for="Number" class="form-control" asp-items=@(new SelectList(Model.CourseNumbers))>
+                        <option>Выберите номер курса</option>
+                    </select>
+                    <span asp-validation-for="Number" class="text-danger"></span>
+                </div>
+                <div class="form-group" hidden>
+                    <label asp-for="DepartmentId" class="control-label"></label>
+                    <input asp-for="DepartmentId" class="form-control" />
+                    <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="btn-group btn-group-justified" role="group" aria-label="group button">
+                <div class="btn-group" role="group">
+                    <button onclick="SendCreateCourseRequest();" class="btn btn-success">Создать</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

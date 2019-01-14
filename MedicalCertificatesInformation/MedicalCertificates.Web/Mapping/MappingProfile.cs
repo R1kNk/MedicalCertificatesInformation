@@ -202,11 +202,14 @@ namespace MedicalCertificates.Web.Mapping
             CreateMap<Course, DeleteCourseViewModel>()
                 .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
                 .ForMember(p => p.Number, map => map.MapFrom(p => p.Number))
+                .ForMember(p => p.Number, map => map.MapFrom(p => p.Number))
+                .ForMember(p => p.DepartmentName, map => map.MapFrom(p => p.Department.Name))
                 .ReverseMap();
 
             CreateMap<Course, EditCourseViewModel>()
                 .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
                 .ForMember(p => p.Number, map => map.MapFrom(p => p.Number))
+                .ForMember(p => p.DepartmentName, map => map.MapFrom(p => p.Department.Name))
                 .ReverseMap();
 
             //Department

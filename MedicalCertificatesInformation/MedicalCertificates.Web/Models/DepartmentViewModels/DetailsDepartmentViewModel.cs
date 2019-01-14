@@ -15,6 +15,6 @@ namespace MedicalCertificates.Web.Models.DepartmentViewModels
         public string Name { get; set; }
 
         [Required]
-        public virtual List<Course> Courses { get; set; }
+        public List<Course> Courses { get; set; }
     }
 }
