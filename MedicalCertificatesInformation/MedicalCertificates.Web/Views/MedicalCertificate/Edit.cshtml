@@ -1,54 +1,89 @@
-﻿@model MedicalCertificates.Web.Models.MedicalCertificatesViewModels.EditMedicalCertificatesViewModel
+@model MedicalCertificates.Web.Models.MedicalCertificatesViewModels.EditMedicalCertificatesViewModel
 
-<h4>EditMedicalCertificatesViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <h3 class="modal-title" id="lineModalLabel">Изменение справки</h3>
+        </div>
+        <div class="modal-body">
+            <form asp-action="Create" id="editMedicalCertificateForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group" hidden>
+                    <label asp-for="Id" class="control-label"></label>
+                    <input asp-for="Id" class="form-control" />
+                    <span asp-validation-for="Id" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartDate" class="control-label"></label>
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input asp-for="StartDate" type='text' class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="IsUsingTerm" class="control-label">Использовать конечную дату?</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="IsUsingTermNo" asp-for="IsUsingTerm" type="radio" value="false" />
+                        <label class="form-check-label" for="IsUsingTermNo">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="IsUsingTermYes" asp-for="IsUsingTerm" type="radio" value="true" />
+                        <label class="form-check-label" for="IsUsingTermYes">Нет</label>
+                    </div>
+
+                </div>
+                <div class="form-group" id="finishDateBlock" >
+                    <label asp-for="FinishDate" class="control-label"></label>
+                    <div class='input-group date' id='datetimepicker2'>
+                        <input id="finishDateInput" asp-for="FinishDate" type='text' class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <span asp-validation-for="FinishDate" class="text-danger"></span>
+
+                </div>
+                <div class="form-group" id="certificateTermBlock" hidden>
+                    <label class="control-label">Срок действия справки</label>
+                    <select id="certificateTermInput" asp-for="CertificateTerm" class="form-control" asp-items=@(new SelectList(Model.Terms,"Months","Text"))>
+                        <option value="0">Выберите срок действия</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HealthGroupId" class="control-label"></label>
+                    <select asp-for="HealthGroupId" class="form-control" asp-items=@(new SelectList(Model.HealthGroups,"Id","Name"))>
+                        <option>Выберите группу здоровья</option>
+                    </select>
+                    <span asp-validation-for="HealthGroupId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhysicalEducationId" class="control-label"></label>
+                    <select asp-for="PhysicalEducationId" class="form-control" asp-items=@(new SelectList(Model.PhysicalEducations,"Id","Name"))>
+                        <option>Выберите группу по физкультуре</option>
+                    </select>
+                    <span asp-validation-for="PhysicalEducationId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HospitalId" class="control-label"></label>
+                    <select asp-for="HospitalId" class="form-control" asp-items=@(new SelectList(Model.Hospitals,"Id","Name"))>
+                        <option>Выберите поликлинику</option>
+                    </select>
+                    <span asp-validation-for="HospitalId" class="text-danger"></span>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="btn-group btn-group-justified" role="group" aria-label="group button">
+                <div class="btn-group" role="group">
+                    <button onclick="SendEditMedicalCertificateRequest();" class="btn btn-success">Создать</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Закрыть</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FinishDate" class="control-label"></label>
-                <input asp-for="FinishDate" class="form-control" />
-                <span asp-validation-for="FinishDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CertificateTerm" class="control-label"></label>
-                <input asp-for="CertificateTerm" class="form-control" />
-                <span asp-validation-for="CertificateTerm" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HealthGroupId" class="control-label"></label>
-                <input asp-for="HealthGroupId" class="form-control" />
-                <span asp-validation-for="HealthGroupId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhysicalEducationId" class="control-label"></label>
-                <input asp-for="PhysicalEducationId" class="form-control" />
-                <span asp-validation-for="PhysicalEducationId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HospitalId" class="control-label"></label>
-                <input asp-for="HospitalId" class="form-control" />
-                <span asp-validation-for="HospitalId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

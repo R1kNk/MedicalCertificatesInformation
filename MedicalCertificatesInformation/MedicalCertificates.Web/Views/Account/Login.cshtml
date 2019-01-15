@@ -6,9 +6,9 @@
 @model LoginViewModel
 @inject ISignInManager<ApplicationUser> SignInManager
 
-@{
+@*@{
     ViewData["Title"] = "Log in";
-}
+}*@
 
 <div class="row">
     <div class=" col-md-offset-4 col-md-4" style="margin-top:50px; border: solid 1px black;">
@@ -29,7 +29,7 @@
                     <input asp-for="Password" class="form-control" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" hidden>
                     <div class="checkbox">
                         <label asp-for="RememberMe">
                             <input asp-for="RememberMe" />

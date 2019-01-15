@@ -15,6 +15,7 @@
 }
 
 .main-content__instrumental-panel {
+    position: relative;
     max-width: 60px;
     grid-column: 1;
     grid-row: 1 / 2

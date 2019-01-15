@@ -1,44 +1,47 @@
-﻿@model MedicalCertificates.Web.Models.MedicalCertificatesViewModels.DetailsMedicalCertificatesViewModel
+@model MedicalCertificates.Web.Models.MedicalCertificatesViewModels.DetailsMedicalCertificatesViewModel
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>DetailsMedicalCertificatesViewModel</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.FinishDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.FinishDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.CertificateTerm)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CertificateTerm)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.GoogleDriveImageId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.GoogleDriveImageId)
-        </dd>
-    </dl>
-    
-    <form asp-action="Details">
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
-</div>
+
+<h2>Описание справки</h2>
+    <div>
+        <div class="form-group row">
+            <label class="control-label col-sm-2">#</label>
+            <h4 readonly>@Model.Id</h4>
+        </div>
+        @{
+            var owner = Model.Student.Name + " " + Model.Student.Surname;
+        }
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Владелец</label>
+            <p onclick="GetDetailsStudentRequest(@Model.Student.Id)" readonly>@owner</p>
+        </div>
+        <div class="form-group row">
+            <label asp-for="StartDate" class="control-label col-sm-2"></label>
+            <p readonly>@Model.StartDate</p>
+        </div>
+        <div class="form-group row">
+            <label asp-for="FinishDate" class="control-label col-sm-2"></label>
+            <p readonly>@Model.FinishDate</p>
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Группа по физкультуре</label>
+            <p readonly>@Model.PhysicalEducation.Name</p>
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Группа здоровья</label>
+            <p readonly>@Model.HealthGroup.Name</p>
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Поликлиника выдавшая справку</label>
+            <p readonly>@Model.Hospital.Name</p>
+        </div>
+        @{
+            var active = DateTime.Now > DateTime.ParseExact(Model.FinishDate, "yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture) ? "Нет" : "Да";
+        }
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Актуальна ли справка?</label>
+            <p readonly>@active</p>
+        </div>
+        <p>
+            <button onclick="GetDetailsStudentRequest(@Model.Student.Id);" class="btn btn-info">К владельцу</button>
+        </p>
+    </div>

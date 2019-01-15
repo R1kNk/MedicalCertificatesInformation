@@ -72,7 +72,6 @@ namespace MedicalCertificates.Service.ServiceConfigurations
 
             DateTime StartDate = new DateTime(2017, 11, 14);
             DateTime FinishDate = StartDate.AddMonths(6);
-            string span = (FinishDate - StartDate).ToString();
 
 
             if (!_context.Departments.Any())
@@ -91,7 +90,7 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                                 new MedicalCertificate(){
                                     StartDate = StartDate,
                                     FinishDate = FinishDate,
-                                    CertificateTerm = span,
+                                    CertificateTerm = FinishDate.Subtract(StartDate).TotalDays,
                                     HealthGroup = _context.HealthGroups.SingleOrDefault(p=>p.Id == 1),
                                     PhysicalEducation = _context.PhysicalEducations.SingleOrDefault(p=>p.Id ==1),
                                     Hospital = _context.Hospitals.SingleOrDefault(p=>p.Id ==1)

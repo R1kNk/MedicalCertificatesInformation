@@ -10,7 +10,7 @@ namespace MedicalCertificates.Service.ReportModels
         public string Surname { get; private set; }
         public DateTime? StartDate { get; private set;}
         public DateTime? FinishDate { get; private set; }
-        public string CertificatePeriod { get; private set; }
+        public double CertificatePeriod { get; private set; }
         public bool CertificateValid { get; private set; }
         public PhysicalEducation PhysicalEducation { get; private set; }
         public HealthGroup HealthGroup  { get; private set; }
@@ -28,7 +28,7 @@ namespace MedicalCertificates.Service.ReportModels
             }
             StartDate = lastCertificate.StartDate;
             FinishDate = lastCertificate.FinishDate;
-            CertificatePeriod = lastCertificate.CertificateTerm;
+            CertificatePeriod = lastCertificate.CertificateTerm/12;
             if (DateTime.Now > FinishDate)
                 CertificateValid = false;
             else CertificateValid = true;

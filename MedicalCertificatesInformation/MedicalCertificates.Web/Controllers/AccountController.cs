@@ -43,12 +43,12 @@ namespace MedicalCertificates.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string returnUrl = null)
+        public async Task<IActionResult> Login(/*string returnUrl = null*/)
         {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            ViewData["ReturnUrl"] = returnUrl;
+            //ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel loginViewModel = new LoginViewModel();
             loginViewModel.Users = await _userService.GetAllUsersAsync();
             return View(loginViewModel);
@@ -57,9 +57,9 @@ namespace MedicalCertificates.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model/*, string returnUrl = null*/)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            //ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -68,11 +68,13 @@ namespace MedicalCertificates.Web.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal("/Home/Index");
+                    //return RedirectToLocal(returnUrl);
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Неправильное имя пользователя или пароль");
+                    model.Users = await _userService.GetAllUsersAsync();
                     return View(model);
                 }
             }
@@ -87,41 +89,6 @@ namespace MedicalCertificates.Web.Controllers
         public IActionResult Lockout()
         {
             return View();
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Register(string returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish(model.Username)), Pseudonim = model.Username, Email = "office@kbp.by" };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User created a new account with password.");
-
-                   
-                   // await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-
-                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
-                }
-                AddErrors(result);
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
         }
 
         [HttpPost]

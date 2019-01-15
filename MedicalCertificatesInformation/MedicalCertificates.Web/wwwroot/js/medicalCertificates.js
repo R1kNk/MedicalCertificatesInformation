@@ -192,21 +192,21 @@ function GetDetailsMedicalCertificateRequest(id) {
 }
 
 function GetCreateMedicalCertificateRequest(id) {
-    sendIdRequest('/MedicalCertificate/Create', id, "GET", "#formModal");
+    sendIdRequest('/MedicalCertificate/Create', id, "GET", "#formModal", BindDateTimePickers);
     $('#formModal').modal('toggle');
 }
 
 function SendCreateMedicalCertificateRequest() {
-    sendFormRequest('/MedicalCertificate/Create', '#createMedicalCertificateForm', 'POST', "#formModal");
+    sendFormRequest('/MedicalCertificate/Create', '#createMedicalCertificateForm', 'POST', "#formModal", BindDateTimePickers);
 }
 
 function GetEditMedicalCertificateRequest(id) {
-    sendIdRequest('/MedicalCertificate/Edit', id, "GET", "#formModal");
+    sendIdRequest('/MedicalCertificate/Edit', id, "GET", "#formModal", BindDateTimePickers);
     $('#formModal').modal('toggle');
 }
 
 function SendEditMedicalCertificateRequest() {
-    sendFormRequest('/MedicalCertificate/Edit', '#editMedicalCertificateForm', 'POST', "#formModal");
+    sendFormRequest('/MedicalCertificate/Edit', '#editMedicalCertificateForm', 'POST', "#formModal", BindDateTimePickers);
 };
 
 function GetDeleteMedicalCertificateRequest(id) {
@@ -359,8 +359,84 @@ function SendDeleteDepartmentequest() {
     sendFormRequest('/Department/Delete', '#deleteDepartmentForm', 'POST', "#formModal");
 };
 
+//Admin funcs
+
+function GetCreateAccountRequest() {
+    sendRequest('/Admin/Register', "GET", "#formModal");
+    $('#formModal').modal('toggle');
+}
+
+function SendCreateAccountRequest() {
+    sendFormRequest('/Admin/Register', '#registerAccountForm', 'POST', "#formModal");
+}
+
 //Other
 
 function LoadTree() {
     
+}
+
+function BindDateTimePickers() {
+    var bindDatePicker = function () {
+        $(".date").datetimepicker({
+            format: 'YYYY.MM.DD',
+            locale: 'ru',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-arrow-up",
+                down: "fa fa-arrow-down"
+            }
+        }).find('input:first').on("blur", function () {
+            // check if the date is correct. We can accept dd-mm-yyyy and yyyy-mm-dd.
+            // update the format if it's yyyy-mm-dd
+            var date = parseDate($(this).val());
+
+            if (!isValidDate(date)) {
+                //create date based on momentjs (we have that)
+                date = moment().format('YYYY.MM.DD');
+            }
+
+            $(this).val(date);
+        });
+    }
+
+    var bindradioButtons = function() {
+        $("#IsUsingTermNo").prop("checked", true);
+        $("#IsUsingTermYes").prop("checked", false);
+
+        $('input[type=radio][name^=IsUsingTerm]').change(function() {
+            if (this.value === 'true'){
+                $('#finishDateBlock').hide();
+                $('#certificateTermBlock').show();
+            } 
+            else{
+                $('#certificateTermBlock').hide();
+                $('#finishDateBlock').show();
+            }
+        });
+    }
+
+    var isValidDate = function (value, format) {
+        format = format || false;
+        // lets parse the date to the best of our knowledge
+        if (format) {
+            value = parseDate(value);
+        }
+
+        var timestamp = Date.parse(value);
+
+        return isNaN(timestamp) == false;
+    }
+
+    var parseDate = function (value) {
+        var m = value.match(/^(\d{1,2})(\/|-)?(\d{1,2})(\/|-)?(\d{4})$/);
+        if (m)
+            value = m[5] + '-' + ("00" + m[3]).slice(-2) + '-' + ("00" + m[1]).slice(-2);
+
+        return value;
+    }
+
+    bindDatePicker();
+    bindradioButtons();
 }

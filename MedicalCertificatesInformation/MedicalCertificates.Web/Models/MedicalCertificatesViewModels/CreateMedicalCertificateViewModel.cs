@@ -13,15 +13,21 @@ namespace MedicalCertificates.Web.Models.MedicalCertificatesViewModels
         public int StudentId { get; set; }
 
         [Required(ErrorMessage = "Поле 'Дата начала' должно быть заполнено")]
+        [StringLength(10, ErrorMessage = "'{0}' должно иметь {1} знаков", MinimumLength = 10)]
         [Display(Name = "Дата начала")]
-        public DateTime StartDate { get; set; }
+        public string StartDate { get; set; }
 
         [Required(ErrorMessage = "Поле 'Дата окончания' должно быть заполнено")]
         [Display(Name = "Дата окончания")]
-        public DateTime FinishDate { get; set; }
+        [StringLength(10, ErrorMessage = "Поле '{0}; должно иметь {1} знаков", MinimumLength = 10)]
+        public string FinishDate { get; set; }
+
         [Required(ErrorMessage = "Поле 'Длительность действия' должно быть заполнено")]
         [Display(Name = "Длительность действия")]
-        public TimeSpan CertificateTerm { get; set; }
+        public int CertificateTerm { get; set; }
+
+        [Required]
+        public bool IsUsingTerm { get; set; }
 
     }
 }

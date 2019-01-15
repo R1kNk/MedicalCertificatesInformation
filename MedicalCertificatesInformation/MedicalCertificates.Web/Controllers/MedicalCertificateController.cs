@@ -9,7 +9,10 @@ using MedicalCertificates.Web.Models.SharedViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace MedicalCertificates.Web.Controllers
@@ -17,6 +20,7 @@ namespace MedicalCertificates.Web.Controllers
     [Authorize]
     public class MedicalCertificateController : Controller
     {
+
         private readonly IMedicalCertificateService _medicalCertificateService;
         private readonly IStudentService _studentService;
         private readonly IPhysicalEducationService _physicalEducationService;
@@ -42,6 +46,7 @@ namespace MedicalCertificates.Web.Controllers
             if (medicalCertificate == null)
                 return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая справка не найдена. Обновите страницу." });
             var DetailsViewModel = _mapper.Map<DetailsMedicalCertificatesViewModel>(medicalCertificate);
+            DetailsViewModel.CertificateTerm = DetailsViewModel.CertificateTerm / 12;
             return View(DetailsViewModel);
         }
 
@@ -55,7 +60,8 @@ namespace MedicalCertificates.Web.Controllers
             CreateViewModel.StudentId = student.Id;
             CreateViewModel.HealthGroups = await GetAllHealthGroupsAsync();
             CreateViewModel.PhysicalEducations = await GetAllPhysicalEducationsAsync();
-            CreateViewModel.HealthGroups = await GetAllHealthGroupsAsync();
+            CreateViewModel.Hospitals = await GetAllHospitalsAsync();
+            CreateViewModel.Terms = GetCertificateTerms();
 
             return View(CreateViewModel);
         }
@@ -69,14 +75,35 @@ namespace MedicalCertificates.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     MedicalCertificate newMedicalCertificate = _mapper.Map<MedicalCertificate>(model);
+                    if (model.IsUsingTerm)
+                    {
+                        newMedicalCertificate.FinishDate = newMedicalCertificate.StartDate.AddMonths(model.CertificateTerm);
+                        newMedicalCertificate.CertificateTerm = newMedicalCertificate.FinishDate.Subtract(newMedicalCertificate.StartDate).TotalDays;
+                    }
+                    else
+                    {
+                        newMedicalCertificate.FinishDate = DateTime.ParseExact(model.FinishDate, "yyyy.MM.dd", CultureInfo.InvariantCulture);
+                        newMedicalCertificate.CertificateTerm = newMedicalCertificate.FinishDate.Subtract(newMedicalCertificate.StartDate).TotalDays;
+                    }
                     var result = await _medicalCertificateService.AddMedicalCertificateAsync(newMedicalCertificate, model.StudentId);
+
                     if (!result.IsSucceed)
                     {
                         AddOperationResultErrorsToModelState(result);
+                        model.HealthGroups = await GetAllHealthGroupsAsync();
+                        model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
+                        model.Hospitals = await GetAllHospitalsAsync();
+                        model.Terms = GetCertificateTerms();
+                        model.IsUsingTerm = false;
                         return View(model);
                     }
                     return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
                 }
+                model.HealthGroups = await GetAllHealthGroupsAsync();
+                model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
+                model.Hospitals = await GetAllHospitalsAsync();
+                model.Terms = GetCertificateTerms();
+                model.IsUsingTerm = false;
                 return View(model);
 
             }
@@ -88,15 +115,15 @@ namespace MedicalCertificates.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var certificate = _medicalCertificateService.GetByIdAsync(id);
+            var certificate = await _medicalCertificateService.GetByIdAsync(id);
             if(certificate==null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая справка не найдена. Обновите страницу." });
 
-            var EditViewModel = _mapper.Map<EditMedicalCertificatesViewModel>(certificate);
+            var EditViewModel =  _mapper.Map<EditMedicalCertificatesViewModel>(certificate);
 
             EditViewModel.HealthGroups = await GetAllHealthGroupsAsync();
             EditViewModel.PhysicalEducations = await GetAllPhysicalEducationsAsync();
             EditViewModel.Hospitals = await GetAllHospitalsAsync();
-
+            EditViewModel.Terms = GetCertificateTerms();
             return View(EditViewModel);
         }
 
@@ -109,14 +136,34 @@ namespace MedicalCertificates.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     MedicalCertificate updateMedicalCertificate = _mapper.Map<MedicalCertificate>(model);
+                    if (model.IsUsingTerm)
+                    {
+                        updateMedicalCertificate.FinishDate = updateMedicalCertificate.StartDate.AddMonths(model.CertificateTerm);
+                        updateMedicalCertificate.CertificateTerm = updateMedicalCertificate.FinishDate.Subtract(updateMedicalCertificate.StartDate).TotalDays;
+                    }
+                    else
+                    {
+                        updateMedicalCertificate.FinishDate = DateTime.ParseExact(model.FinishDate, "yyyy.MM.dd", CultureInfo.InvariantCulture);
+                        updateMedicalCertificate.CertificateTerm = updateMedicalCertificate.FinishDate.Subtract(updateMedicalCertificate.StartDate).TotalDays;
+                    }
                     var result = await _medicalCertificateService.EditMedicalCertificateAsync(updateMedicalCertificate);
                     if (!result.IsSucceed)
                     {
                         AddOperationResultErrorsToModelState(result);
+                        model.HealthGroups = await GetAllHealthGroupsAsync();
+                        model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
+                        model.Hospitals = await GetAllHospitalsAsync();
+                        model.Terms = GetCertificateTerms();
+                        model.IsUsingTerm = false;
                         return View(model);
                     }
                     return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
                 }
+                model.HealthGroups = await GetAllHealthGroupsAsync();
+                model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
+                model.Hospitals = await GetAllHospitalsAsync();
+                model.Terms = GetCertificateTerms();
+                model.IsUsingTerm = false;
                 return View(model);
 
             }
@@ -127,9 +174,9 @@ namespace MedicalCertificates.Web.Controllers
         }
 
         [Authorize(Roles ="Admin")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var certificate = _medicalCertificateService.GetByIdAsync(id);
+            var certificate = await _medicalCertificateService.GetByIdAsync(id);
             if (certificate == null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая справка не найдена. Обновите страницу." });
 
             var DeleteViewModel = _mapper.Map<DeleteMedicalCertificateViewModel>(certificate);
@@ -217,6 +264,15 @@ namespace MedicalCertificates.Web.Controllers
                         break;
                 }
             }
+        }
+        
+        private List<CertificateTerm> GetCertificateTerms()
+        {
+            return new List<CertificateTerm>()
+            {
+                new CertificateTerm() { Months = 6, Text="6 месяцев"},
+                new CertificateTerm() { Months = 12, Text="12 месяцев"}
+            };
         }
     }
 }

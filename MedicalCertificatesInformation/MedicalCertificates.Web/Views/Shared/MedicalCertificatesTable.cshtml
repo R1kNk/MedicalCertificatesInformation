@@ -8,6 +8,7 @@
             <th>Владелец</th>
             <th>Дата начала</th>
             <th>Дата окончания</th>
+            <th>Срок действия</th>
             <th>Группа здоровья</th>
             <th>Группа по физкультуре</th>
             <th>Поликлиника</th>
@@ -24,11 +25,44 @@
             var finish = certificate.FinishDate.ToString("yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture);
             var active = DateTime.Now > certificate.FinishDate ? "Нет" : "Да";
             var tagClass = DateTime.Now > certificate.FinishDate ? "danger" : "success";
+            double daysToMonths = 30.4368499;
+            double months = certificate.CertificateTerm / daysToMonths;
+            var daysString = "";
+            var monthsString = "";
+            var daysvar = Convert.ToInt32(certificate.CertificateTerm);
+            var monthsvar = Convert.ToDouble(String.Format("{0:0.0}", months));
+
+            daysvar = daysvar % 100;
+            if (daysvar >= 11 && daysvar <= 19)
+            {
+                daysString = " дней";
+
+            }
+            var i = certificate.CertificateTerm % 10;
+            switch (i)
+            {
+                case 1:
+                    daysString = " день";
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                    daysString = " дня";
+                    break;
+                default:
+                    daysString = " дней";
+                    break;
+            }
+            var term = String.Format("{0}{2} ({1:0.00} месяцев)", Convert.ToInt32(certificate.CertificateTerm), months, daysString);
+
+
+
             <tr onclick="GetDetailsMedicalCertificateRequest(@certificate.Id)" class="@tagClass">
                 <td scope="row">@certificate.Id</td>
                 <td>@nameSurname</td>
                 <td>@start</td>
                 <td>@finish</td>
+                <td>@term</td>
                 <td>@certificate.HealthGroup.Name</td>
                 <td>@certificate.PhysicalEducation.Name</td>
                 <td>@certificate.Hospital.Name</td>

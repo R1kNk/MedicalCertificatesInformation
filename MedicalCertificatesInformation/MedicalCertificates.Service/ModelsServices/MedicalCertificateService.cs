@@ -24,7 +24,7 @@ namespace MedicalCertificates.Service.ModelsServices
             if (medicalCertificate == null)
                 return false;
 
-            if (medicalCertificate.StartDate > medicalCertificate.FinishDate /*|| medicalCertificate.CertificateTerm != medicalCertificate.FinishDate - medicalCertificate.StartDate*/)
+            if (medicalCertificate.StartDate > medicalCertificate.FinishDate || medicalCertificate.CertificateTerm != medicalCertificate.FinishDate.Subtract(medicalCertificate.StartDate).TotalDays)
                 return false;
             else return true;
         }

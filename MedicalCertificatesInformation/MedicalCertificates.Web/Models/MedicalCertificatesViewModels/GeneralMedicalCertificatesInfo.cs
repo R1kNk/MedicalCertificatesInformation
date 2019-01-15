@@ -1,4 +1,5 @@
 ﻿using MedicalCertificates.DomainModel.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,5 +28,7 @@ namespace MedicalCertificates.Web.Models.MedicalCertificatesViewModels
         public int HospitalId { get; set; }
 
         public virtual IReadOnlyList<Hospital> Hospitals { get; set; }
+
+        public virtual List<CertificateTerm> Terms { get; set; }
     }
 }
