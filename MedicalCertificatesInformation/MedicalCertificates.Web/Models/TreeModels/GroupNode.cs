@@ -13,6 +13,8 @@ namespace MedicalCertificates.Web.Models.TreeModels
 
         public int parentId { get; set; }
 
+        public string userRole { get; set; }
+
         public string type = "group";
 
         public bool folder = true;

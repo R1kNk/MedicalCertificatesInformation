@@ -17,7 +17,7 @@ namespace MedicalCertificates.Web.Models.MedicalCertificatesViewModels
         [Display(Name = "Дата начала")]
         public string StartDate { get; set; }
 
-        [Required(ErrorMessage = "Поле 'Дата окончания' должно быть заполнено")]
+        //[Required(ErrorMessage = "Поле 'Дата окончания' должно быть заполнено")]
         [Display(Name = "Дата окончания")]
         [StringLength(10, ErrorMessage = "'{0}' должно иметь {1} знаков", MinimumLength = 10)]
         public string FinishDate { get; set; }

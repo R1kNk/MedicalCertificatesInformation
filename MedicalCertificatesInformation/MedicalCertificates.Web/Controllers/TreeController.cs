@@ -26,9 +26,17 @@ namespace MedicalCertificates.Web.Controllers
             _departmentService = departmentService;
         }
 
+        public async Task<JsonResult> GetRole()
+        {
+            var curUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            string role = await _userManager.IsInRoleAsync(curUser, "Admin") ? "admin" : "user";
+            return Json(role);
+        }
+
         public async Task<JsonResult> GetManagementHierarchy()
         {
             var curUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            bool isAdmin = await _userManager.IsInRoleAsync(curUser, "Admin");
             IReadOnlyList<Department> departments = new List<Department>();
             if ( await _userManager.IsInRoleAsync(curUser, "Admin"))
             {
@@ -44,19 +52,19 @@ namespace MedicalCertificates.Web.Controllers
             List<DepartmentNode> departmentNodes = new List<DepartmentNode>();
             foreach(var department in departments)
             {
-                var departmentNode = MakeDepartmentNode(department);
+                var departmentNode = MakeDepartmentNode(department, isAdmin);
                 foreach(var course in department.Courses)
                 {
-                    var courseNode = MakeCourseNode(course, department.Id);
+                    var courseNode = MakeCourseNode(course, department.Id, isAdmin );
                     foreach(var group in course.Groups)
                     {
-                        var groupNode = MakeGroupNode(group, course.Id);
+                        var groupNode = MakeGroupNode(group, course.Id, isAdmin);
                         foreach(var student in group.Students)
                         {
-                            var studentNode = MakeStudentNode(student, group.Id);
+                            var studentNode = MakeStudentNode(student, group.Id, isAdmin);
                             for(int i =0; i< student.MedicalCertificates.Count; i++)
                             {
-                                var certificateNode = MakeCertificateNode(student.MedicalCertificates[i], ("Медицинская справка № " + (i + 1)).ToString(), student.Id);
+                                var certificateNode = MakeCertificateNode(student.MedicalCertificates[i], ("Медицинская справка № " + (i + 1)).ToString(), student.Id, isAdmin);
                                 studentNode.children.Add(certificateNode);
                             }
 
@@ -72,33 +80,43 @@ namespace MedicalCertificates.Web.Controllers
             return json;
         }
 
-        private CertificateNode MakeCertificateNode(MedicalCertificate certificate, string title, int parentId)
+        private CertificateNode MakeCertificateNode(MedicalCertificate certificate, string title, int parentId, bool isAdmin)
         {
             CertificateNode node = new CertificateNode() { modelId = certificate.Id, parentId = parentId, title = title };
+            if (isAdmin) node.userRole = "admin";
+            else node.userRole = "user";
             return node;
         }
 
-        private StudentNode MakeStudentNode(Student student, int parentId)
+        private StudentNode MakeStudentNode(Student student, int parentId, bool isAdmin )
         {
             StudentNode node = new StudentNode() { modelId = student.Id, parentId = parentId, title = student.Surname + " "+student.Name };
+            if (isAdmin) node.userRole = "admin";
+            else node.userRole = "user";
             return node;
         }
 
-        private GroupNode MakeGroupNode(Group group, int parentId)
+        private GroupNode MakeGroupNode(Group group, int parentId, bool isAdmin)
         {
             GroupNode node = new GroupNode() { modelId = group.Id, parentId = parentId, title = group.Name };
+            if (isAdmin) node.userRole = "admin";
+            else node.userRole = "user";
             return node;
         }
 
-        private CourseNode MakeCourseNode(Course course, int parentId)
+        private CourseNode MakeCourseNode(Course course, int parentId, bool isAdmin)
         {
             CourseNode node = new CourseNode() { modelId = course.Id, parentId = parentId, title = course.Number + " курс" };
+            if (isAdmin) node.userRole = "admin";
+            else node.userRole = "user";
             return node;
         }
 
-        private DepartmentNode MakeDepartmentNode(Department department)
+        private DepartmentNode MakeDepartmentNode(Department department, bool isAdmin)
         {
             DepartmentNode node = new DepartmentNode() { modelId = department.Id, title = department.Name };
+            if (isAdmin) node.userRole = "admin";
+            else node.userRole = "user";
             return node;
         }
     }

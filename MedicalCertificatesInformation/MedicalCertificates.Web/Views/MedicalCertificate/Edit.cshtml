@@ -37,7 +37,7 @@
                     </div>
 
                 </div>
-                <div class="form-group" id="finishDateBlock" >
+                <div class="form-group" id="finishDateBlock">
                     <label asp-for="FinishDate" class="control-label"></label>
                     <div class='input-group date' id='datetimepicker2'>
                         <input id="finishDateInput" asp-for="FinishDate" type='text' class="form-control" />
@@ -50,27 +50,55 @@
                 </div>
                 <div class="form-group" id="certificateTermBlock" hidden>
                     <label class="control-label">Срок действия справки</label>
-                    <select id="certificateTermInput" asp-for="CertificateTerm" class="form-control" asp-items=@(new SelectList(Model.Terms,"Months","Text"))>
+                    @{
+                        var listTerms = new SelectList(new List<MedicalCertificates.Web.Models.MedicalCertificatesViewModels.CertificateTerm>(), "Months", "Text");
+                        if (Model.Terms != null)
+                        {
+                            listTerms = new SelectList(Model.Terms, "Months", "Text");
+                        }
+                    }
+                    <select id="certificateTermInput" asp-for="CertificateTerm" class="form-control" asp-items=@listTerms>
                         <option value="0">Выберите срок действия</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label asp-for="HealthGroupId" class="control-label"></label>
-                    <select asp-for="HealthGroupId" class="form-control" asp-items=@(new SelectList(Model.HealthGroups,"Id","Name"))>
+                    @{
+                        var listHealthgroups = new SelectList(new List<HealthGroup>(), "Id", "Name");
+                        if (Model.HealthGroups != null)
+                        {
+                            listHealthgroups = new SelectList(Model.HealthGroups, "Id", "Name");
+                        }
+                    }
+                    <select asp-for="HealthGroupId" class="form-control" asp-items=@listHealthgroups>
                         <option>Выберите группу здоровья</option>
                     </select>
                     <span asp-validation-for="HealthGroupId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="PhysicalEducationId" class="control-label"></label>
-                    <select asp-for="PhysicalEducationId" class="form-control" asp-items=@(new SelectList(Model.PhysicalEducations,"Id","Name"))>
+                    @{
+                        var listPE = new SelectList(new List<PhysicalEducation>(), "Id", "Name");
+                        if (Model.PhysicalEducations != null)
+                        {
+                            listPE = new SelectList(Model.PhysicalEducations, "Id", "Name");
+                        }
+                    }
+                    <select asp-for="PhysicalEducationId" class="form-control" asp-items=@listPE>
                         <option>Выберите группу по физкультуре</option>
                     </select>
                     <span asp-validation-for="PhysicalEducationId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="HospitalId" class="control-label"></label>
-                    <select asp-for="HospitalId" class="form-control" asp-items=@(new SelectList(Model.Hospitals,"Id","Name"))>
+                    @{
+                        var listHospitals = new SelectList(new List<Hospital>(), "Id", "Name");
+                        if (Model.Hospitals != null)
+                        {
+                            listHospitals = new SelectList(Model.Hospitals, "Id", "Name");
+                        }
+                    }
+                    <select asp-for="HospitalId" class="form-control" asp-items=@listHospitals>
                         <option>Выберите поликлинику</option>
                     </select>
                     <span asp-validation-for="HospitalId" class="text-danger"></span>

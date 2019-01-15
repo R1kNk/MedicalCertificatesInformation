@@ -9,16 +9,33 @@
 {
     var user = await UserManager.GetUserAsync(User);
     var pseudonim = user.Pseudonim;
+    <ul class="nav navbar-nav">
+        <li>
+            @if (await UserManager.IsInRoleAsync(user, "Admin"))
+            {
+                <button id="createBtn" onclick="ExecCreateAction();" class="btn btn-link navbar-btn navbar-link" >Создать</button>
 
-    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
+            }
+            else
+            {
+                <button id="createBtn" onclick="ExecCreateAction();" class="btn btn-link navbar-btn navbar-link" disabled>Создать</button>
 
-        <ul style="margin-right:30px" class="nav navbar-nav navbar-right">
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Выйти из аккаунта</button>
-            </li>
-        </ul>
-    </form>
-    <ul class="nav navbar-nav navbar-right">
+            }
+        </li>
+        <li>
+            <button id="editBtn" onclick="ExecEditAction()" class="btn btn-link navbar-btn navbar-link" disabled>Изменить</button>
+        </li>
+        <li>
+            <button id="deleteBtn" onclick="ExecDeleteAction()" class="btn btn-link navbar-btn navbar-link" disabled>Удалить</button>
+        </li>
+        <li>
+            <button onclick="ExecUpdateActionAction()" class="btn btn-link navbar-btn navbar-link">Обновить</button>
+        </li>
+
+    </ul>
+
+
+    <ul class="nav navbar-nav navbar-right" style="margin-right:20px;">
         <li>
             <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Здравствуйте @pseudonim!</a>
         </li>
@@ -40,6 +57,12 @@
             </li>
         }
 
+
+        <li>
+            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                <button type="submit" class="btn btn-link navbar-btn navbar-link">Выйти из аккаунта</button>
+            </form>
+        </li>
     </ul>
 
 }

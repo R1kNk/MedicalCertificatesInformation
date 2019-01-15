@@ -11,6 +11,8 @@ namespace MedicalCertificates.Web.Models.TreeModels
 
         public int modelId { get; set; }
 
+        public string userRole { get; set; }
+
         public string type = "department";
 
         public bool folder = true;

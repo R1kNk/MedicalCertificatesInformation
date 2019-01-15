@@ -14,5 +14,7 @@ namespace MedicalCertificates.Web.Models.TreeModels
         public int parentId { get; set; }
 
         public string type = "certificate";
+
+        public string userRole { get; set; }
     }
 }

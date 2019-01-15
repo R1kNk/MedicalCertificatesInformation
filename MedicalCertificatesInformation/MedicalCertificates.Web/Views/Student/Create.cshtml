@@ -7,32 +7,34 @@
             <h3 class="modal-title" id="lineModalLabel">Добавление нового студента</h3>
         </div>
         <div class="modal-body">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Surname" class="control-label"></label>
-                <input asp-for="Surname" class="form-control" />
-                <span asp-validation-for="Surname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SecondName" class="control-label"></label>
-                <input asp-for="SecondName" class="form-control" />
-                <span asp-validation-for="SecondName" class="text-danger"></span>
-            </div>
-            <div class="form-group" hidden>
-                <label asp-for="GoogleDriveFolderId" class="control-label"></label>
-                <input asp-for="GoogleDriveFolderId" class="form-control" />
-                <span asp-validation-for="GoogleDriveFolderId" class="text-danger"></span>
-            </div>
-            <div class="form-group" hidden>
-                <label asp-for="GroupId" class="control-label"></label>
-                <input asp-for="GroupId" class="form-control" />
-                <span asp-validation-for="GroupId" class="text-danger"></span>
-            </div>
+            <form asp-action="Create" id="createStudentForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Surname" class="control-label"></label>
+                    <input asp-for="Surname" class="form-control" />
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SecondName" class="control-label"></label>
+                    <input asp-for="SecondName" class="form-control" />
+                    <span asp-validation-for="SecondName" class="text-danger"></span>
+                </div>
+                <div class="form-group" hidden>
+                    <label asp-for="GoogleDriveFolderId" class="control-label"></label>
+                    <input asp-for="GoogleDriveFolderId" class="form-control" />
+                    <span asp-validation-for="GoogleDriveFolderId" class="text-danger"></span>
+                </div>
+                <div class="form-group" hidden>
+                    <label asp-for="GroupId" class="control-label"></label>
+                    <input asp-for="GroupId" class="form-control" />
+                    <span asp-validation-for="GroupId" class="text-danger"></span>
+                </div>
+            </form>
         </div>
         <div class="modal-footer">
             <div class="btn-group btn-group-justified" role="group" aria-label="group button">

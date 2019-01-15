@@ -77,11 +77,31 @@ namespace MedicalCertificates.Web.Controllers
                     MedicalCertificate newMedicalCertificate = _mapper.Map<MedicalCertificate>(model);
                     if (model.IsUsingTerm)
                     {
+                        if(model.CertificateTerm == 0)
+                        {
+                            ModelState.AddModelError("", "Выберите срок действия!");
+                            model.HealthGroups = await GetAllHealthGroupsAsync();
+                            model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
+                            model.Hospitals = await GetAllHospitalsAsync();
+                            model.Terms = GetCertificateTerms();
+                            model.IsUsingTerm = false;
+                            return View(model);
+                        }
                         newMedicalCertificate.FinishDate = newMedicalCertificate.StartDate.AddMonths(model.CertificateTerm);
                         newMedicalCertificate.CertificateTerm = newMedicalCertificate.FinishDate.Subtract(newMedicalCertificate.StartDate).TotalDays;
                     }
                     else
                     {
+                        if(model.FinishDate == "")
+                        {
+                            ModelState.AddModelError("", "Выберите дату окончания справки!");
+                            model.HealthGroups = await GetAllHealthGroupsAsync();
+                            model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
+                            model.Hospitals = await GetAllHospitalsAsync();
+                            model.Terms = GetCertificateTerms();
+                            model.IsUsingTerm = false;
+                            return View(model);
+                        }
                         newMedicalCertificate.FinishDate = DateTime.ParseExact(model.FinishDate, "yyyy.MM.dd", CultureInfo.InvariantCulture);
                         newMedicalCertificate.CertificateTerm = newMedicalCertificate.FinishDate.Subtract(newMedicalCertificate.StartDate).TotalDays;
                     }

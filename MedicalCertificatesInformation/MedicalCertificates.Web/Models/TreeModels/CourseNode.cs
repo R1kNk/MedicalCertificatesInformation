@@ -15,6 +15,8 @@ namespace MedicalCertificates.Web.Models.TreeModels
 
         public string type = "course";
 
+        public string userRole { get; set; }
+
         public bool folder = true;
 
         public List<GroupNode> children = new List<GroupNode>();

@@ -24,4 +24,8 @@
     <ProjectReference Include="..\MedicalCertificates.Service\MedicalCertificates.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\img\" />
+  </ItemGroup>
+
 </Project>
