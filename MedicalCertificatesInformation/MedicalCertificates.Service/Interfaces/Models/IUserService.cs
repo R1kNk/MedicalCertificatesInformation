@@ -30,7 +30,7 @@ namespace MedicalCertificates.Service.Interfaces.Models
 
         Task<OperationResult<IdentityResultError>> UpdateAsync(TUser user);
 
-        Task<OperationResult<string>> AddGroupAsync(TUser user, Group group);
+        Task<OperationResult<IdentityResultError>> SetPseudonimAsync(string userId, string pseudonim);
 
         UserManagementHierarchy GetUserManagementHierarchy(TUser user);
     }

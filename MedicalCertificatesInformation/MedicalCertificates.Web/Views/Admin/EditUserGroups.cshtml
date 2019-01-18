@@ -1,0 +1,30 @@
+@model MedicalCertificates.Web.Models.AdminViewModels.EditUserGroupsViewModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <h3 class="modal-title" id="lineModalLabel">Изменение разрешения на управление группами</h3>
+        </div>
+        <div class="modal-body">
+            <form asp-action="Edit" id="editUserGroupsForm">
+                <div class="form-group" hidden>
+                    <label asp-for="UserId" class="control-label"></label>
+                    <input id="userIdEditGroups" asp-for="UserId" class="form-control" />
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
+                <div id="formTree">
+
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="btn-group btn-group-justified" role="group" aria-label="group button">
+                <div class="btn-group" role="group">
+                    <button type="button" onclick="SendEditUserGroupsRequest()" class="btn btn-default btn-info">Изменить</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

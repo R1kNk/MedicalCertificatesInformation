@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -89,6 +89,15 @@
                             node.setFocus(false);
                             node.setActive(false);
                             event.preventDefault();
+                            var role = node.data.userRole;
+                            DisableDeleteBtn();
+                            DisableEditBtn();
+                            DisableMoveBtn();
+                            DisableCreateBtn();
+                            if (role == 'admin') {
+                                EnableCreateBtn();
+                            }
+    
                         }
 
                     },
@@ -99,78 +108,8 @@
                         var role = activeNode.data.userRole;
                         var modelId = activeNode.data.modelId;
 
-                        switch (type) {
-                            case 'department':
-                                if (role === 'admin') {
-                                    EnableCreateBtn();
-                                    EnableEditBtn();
-                                    EnableDeleteBtn();
-                                    DisableMoveBtn();
-                                }
-                                else {
-                                    DisableCreateBtn();
-                                    DisableEditBtn();
-                                    DisableDeleteBtn();
-                                    DisableMoveBtn();
-                                }
-                                break;
-                            case 'course':
-                                if (role === 'admin') {
-                                    EnableCreateBtn();
-                                    EnableEditBtn();
-                                    EnableDeleteBtn();
-                                    DisableMoveBtn();
-                                }
-                                else {
-                                    DisableCreateBtn();
-                                    DisableEditBtn();
-                                    DisableDeleteBtn();
-                                    DisableMoveBtn();
-                                }
-                                break;
-                            case 'group':
-                                if (role === 'admin') {
-                                    EnableCreateBtn();
-                                    EnableEditBtn();
-                                    EnableDeleteBtn();
-                                    DisableMoveBtn();
-                                }
-                                else {
-                                    EnableCreateBtn();
-                                    DisableEditBtn();
-                                    DisableDeleteBtn();
-                                    DisableMoveBtn();
-                                }
-                                break;
-                            case 'student':
-                                if (role === 'admin') {
-                                    EnableCreateBtn();
-                                    EnableEditBtn();
-                                    EnableDeleteBtn();
-                                    EnableMoveBtn();
-                                }
-                                else {
-                                    EnableCreateBtn();
-                                    EnableEditBtn();
-                                    DisableDeleteBtn();
-                                    DisableMoveBtn();
-                                }
-                                break;
-                            case 'certificate':
-                                if (role === 'admin') {
-                                    DisableCreateBtn();
-                                    EnableEditBtn();
-                                    EnableDeleteBtn();
-                                    DisableMoveBtn();
-                                }
-                                else {
-                                    DisableCreateBtn();
-                                    EnableEditBtn();
-                                    EnableDeleteBtn();
-                                    DisableMoveBtn();
-                                }
-                                break;
-                        }
+                        SetButtonsAvailability(type, role);
+                       
                     },
                     dblclick: function (event, data) {
                         // A node was activated: display its title:
@@ -205,6 +144,8 @@
 
                     }
                 });
+
+               
                 // Note: Loading and initialization may be asynchronous, so the nodes may not be accessible yet.
             });
         </script>

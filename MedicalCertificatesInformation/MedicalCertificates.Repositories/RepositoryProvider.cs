@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MedicalCertificates.Repositories
 {
-    class RepositoryProvider<TContext> : IRepositoryProvider where TContext : IDbContext
+    public class RepositoryProvider<TContext> : IRepositoryProvider where TContext : IDbContext
     {
         private IDictionary<Type, Type> _entityTypeToRepositoryMapping;
         private IDictionary<Type, object> _repositories;

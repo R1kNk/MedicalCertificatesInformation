@@ -2,6 +2,7 @@
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Models
@@ -12,6 +13,6 @@ namespace MedicalCertificates.Service.Interfaces.Models
 
         Task<OperationResult<BusinessLogicResultError>> EditGroupAsync(Group editGroup);
 
-
+        Task<OperationResult<string>> EditUserGroupsAsync(string userId, IReadOnlyList<int> activeGroupsId, IReadOnlyList<int> inactiveGroupsId);
     }
 }

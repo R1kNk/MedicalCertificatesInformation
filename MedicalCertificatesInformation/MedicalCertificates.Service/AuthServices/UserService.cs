@@ -2,6 +2,7 @@
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.Interfaces.Auth;
+using MedicalCertificates.Service.Interfaces.Common;
 using MedicalCertificates.Service.Interfaces.Models;
 using MedicalCertificates.Service.ReportModels;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +17,12 @@ namespace MedicalCertificates.Service.AuthServices
     {
 
         private readonly IUserManager<ApplicationUser> _userManager;
+        private readonly IStringConverterService _converter;
 
-        public UserService(IUserManager<ApplicationUser> userManager)
+        public UserService(IUserManager<ApplicationUser> userManager, IStringConverterService converter)
         {
             _userManager = userManager;
-        }
-
-        public async Task<OperationResult<string>> AddGroupAsync(ApplicationUser user, Group group)
-        {
-            var entity = await _userManager.FindByIdAsync(user.Id);
-            if (!entity.Groups.Contains(group))
-            {
-                entity.Groups.Add(group);
-            }
-            return OperationResult<string>.CreateSuccessfulResult();
+            _converter = converter;
         }
 
         public async Task<OperationResult<IdentityResultError>> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
@@ -128,6 +121,36 @@ namespace MedicalCertificates.Service.AuthServices
             return OperationResult<IdentityResultError>.CreateSuccessfulResult();
         }
 
+        public async Task<OperationResult<IdentityResultError>> SetPseudonimAsync(string userId, string pseudonim)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return OperationResult<IdentityResultError>.CreateUnsuccessfulResult(new List<IdentityResultError>() { IdentityResultError.UserNotFound });
+
+            //user.Pseudonim = pseudonim;
+            var identityResult = await _userManager.SetUserNameAsync(user, _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish(pseudonim)));
+            if (!identityResult.Succeeded)
+            {
+
+                var errors = ErrorFetcher.FetchIdentityErrors(identityResult);
+
+                return OperationResult<IdentityResultError>.CreateUnsuccessfulResult(errors);
+            }
+
+            user.Pseudonim = pseudonim;
+
+            identityResult = await _userManager.UpdateAsync(user);
+            if (!identityResult.Succeeded)
+            {
+
+                var errors = ErrorFetcher.FetchIdentityErrors(identityResult);
+
+                return OperationResult<IdentityResultError>.CreateUnsuccessfulResult(errors);
+            }
+
+            return OperationResult<IdentityResultError>.CreateSuccessfulResult();
+        }
+
         public async Task<OperationResult<IdentityResultError>> UpdateAsync(ApplicationUser user)
         {
             var identityResult = await _userManager.UpdateAsync(user);
@@ -177,7 +200,7 @@ namespace MedicalCertificates.Service.AuthServices
                     findedDep.Courses.Add(findedCourse);
                 }
                 Group findedGroup = findedCourse.Groups.Where(p => p.Id == group.Id).SingleOrDefault();
-                if (group == null)
+                if (findedGroup == null)
                 {
                     findedGroup = new Group()
                     {

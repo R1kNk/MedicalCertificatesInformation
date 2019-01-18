@@ -69,48 +69,10 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                 await _roleManager.CreateAsync(role);
             }
 
-
-            DateTime StartDate = new DateTime(2017, 11, 14);
-            DateTime FinishDate = StartDate.AddMonths(6);
-
-
-            if (!_context.Departments.Any())
-            {
-                Department poit = new Department();
-                Course poit2 = new Course();
-                Group group792 = new Group();
-                group792.Name = "Т-792";
-
-                List<Student> students = new List<Student>()
-                {
-                new Student()
-                { Surname = "Алиев", Name = "Эмиль", SecondName = "Мусаевич",
-                            MedicalCertificates = new List<MedicalCertificate>()
-                            {
-                                new MedicalCertificate(){
-                                    StartDate = StartDate,
-                                    FinishDate = FinishDate,
-                                    CertificateTerm = FinishDate.Subtract(StartDate).TotalDays,
-                                    HealthGroup = _context.HealthGroups.SingleOrDefault(p=>p.Id == 1),
-                                    PhysicalEducation = _context.PhysicalEducations.SingleOrDefault(p=>p.Id ==1),
-                                    Hospital = _context.Hospitals.SingleOrDefault(p=>p.Id ==1)
-                                }
-                            }
-                            }
-                };
-
-                group792.Students = new List<Student>();
-                poit2.Groups = new List<Group>();
-                poit.Courses = new List<Course>();
-                group792.Students.AddRange(students);
-                poit2.Groups.Add(group792);
-                poit.Name = "ПОИТ";
-                poit.Courses.Add(poit2);
-
-                _context.Departments.Add(poit);
-                await _context.SaveChangesAsync();
-            }
-            
+            //var userFinded = await _userManager.FindByIdAsync("de03cd8e-92fb-4d69-b95f-8a33d1f048e1");
+            //var group = _context.Groups.FirstOrDefault();
+            //userFinded.Groups.Add(group);
+            //_context.SaveChanges();
         }
 
         List<PhysicalEducation> GetDefaultPhysicalEducations()
@@ -148,7 +110,7 @@ namespace MedicalCertificates.Service.ServiceConfigurations
             };
         }
 
-
+       
 
 
 

@@ -3,6 +3,7 @@
     public enum IdentityResultError
     {
         DefaultError,
+        UserNotFound,
         PasswordMismatch,
         LoginAlreadyAssociated,
         InvalidUserName,

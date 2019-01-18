@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MedicalCertificates.Web.Controllers
@@ -17,6 +18,8 @@ namespace MedicalCertificates.Web.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserService<ApplicationUser> _userService;
         private readonly IDepartmentService _departmentService;
+        private readonly IGroupService groupService;
+
 
         public TreeController(IUserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IUserService<ApplicationUser> userService, IDepartmentService departmentService)
         {
@@ -32,6 +35,16 @@ namespace MedicalCertificates.Web.Controllers
             string role = await _userManager.IsInRoleAsync(curUser, "Admin") ? "admin" : "user";
             return Json(role);
         }
+
+
+        public async Task<JsonResult> GetUserGroupsId(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            List<int> groupsId = user.Groups.Select(p => p.Id).ToList();
+            return Json(groupsId);
+        }
+
+
 
         public async Task<JsonResult> GetManagementHierarchy()
         {
@@ -80,6 +93,42 @@ namespace MedicalCertificates.Web.Controllers
             return json;
         }
 
+        [Authorize(Roles ="Admin")]
+        public async Task<JsonResult> GetManagementFormHierarchy()
+        {
+            var curUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            bool isAdmin = await _userManager.IsInRoleAsync(curUser, "Admin");
+            IReadOnlyList<Department> departments = new List<Department>();
+            if (await _userManager.IsInRoleAsync(curUser, "Admin"))
+            {
+                departments = await _departmentService.GetAllAsync();
+
+            }
+            else
+            {
+                var hierarchy = _userService.GetUserManagementHierarchy(curUser);
+                departments = hierarchy.Departments;
+            }
+
+            List<DepartmentNode> departmentNodes = new List<DepartmentNode>();
+            foreach (var department in departments)
+            {
+                var departmentNode = MakeDepartmentNode(department, isAdmin);
+                foreach (var course in department.Courses)
+                {
+                    var courseNode = MakeCourseNode(course, department.Id, isAdmin);
+                    foreach (var group in course.Groups)
+                    {
+                        var groupNode = MakeGroupNode(group, course.Id, isAdmin);
+                        courseNode.children.Add(groupNode);
+                    }
+                    departmentNode.children.Add(courseNode);
+                }
+                departmentNodes.Add(departmentNode);
+            }
+            var json = Json(departmentNodes);
+            return json;
+        }
         private CertificateNode MakeCertificateNode(MedicalCertificate certificate, string title, int parentId, bool isAdmin)
         {
             CertificateNode node = new CertificateNode() { modelId = certificate.Id, parentId = parentId, title = title };

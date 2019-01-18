@@ -1,0 +1,41 @@
+@model IEnumerable<MedicalCertificates.DomainModel.Models.ApplicationUser>
+
+<h2>Список пользователей</h2>
+<p>
+    <button onclick="GetCreateAccountRequest()" class="btn btn-info">Создать нового пользователя</button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Количество групп в управлении</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pseudonim)
+                </td>
+                <td>
+                    @{
+                        var count = default(int);
+                        var id = @item.Id;
+                        if (item.Groups != null)
+                        {
+                            count = item.Groups.Count;
+                        }
+                    }
+                    @count
+                </td>
+                <td>
+                    <button onclick="GetEditUserNameRequest('@item.Id')" class="btn btn-default">Изменить имя</button>
+                    <button onclick="GetEditUserGroupsRequest('@item.Id');" class="btn btn-default">Изменить список доступных групп</button>
+                    <button onclick="GetDeleteUserRequest('@item.Id')" class="btn btn-default">Удалить</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

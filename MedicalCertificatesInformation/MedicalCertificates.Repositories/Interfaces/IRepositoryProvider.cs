@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MedicalCertificates.Repositories.Interfaces
 {
-    interface IRepositoryProvider : IDisposable
+    public interface IRepositoryProvider : IDisposable
     {
 
         IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;

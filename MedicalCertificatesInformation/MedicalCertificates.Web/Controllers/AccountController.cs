@@ -43,12 +43,10 @@ namespace MedicalCertificates.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(/*string returnUrl = null*/)
+        public async Task<IActionResult> Login()
         {
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            //ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel loginViewModel = new LoginViewModel();
             loginViewModel.Users = await _userService.GetAllUsersAsync();
             return View(loginViewModel);
@@ -57,19 +55,16 @@ namespace MedicalCertificates.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model/*, string returnUrl = null*/)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            //ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal("/Home/Index");
-                    //return RedirectToLocal(returnUrl);
                 }
                 else
                 {

@@ -30,6 +30,81 @@ function sendFormRequest(url, formId, method, replaceIntoId, promiseArray, param
     });
 }
 
+function SetButtonsAvailability(type ,role){
+    switch (type) {
+        case 'department':
+            if (role === 'admin') {
+                EnableCreateBtn();
+                EnableEditBtn();
+                EnableDeleteBtn();
+                DisableMoveBtn();
+            }
+            else {
+                DisableCreateBtn();
+                DisableEditBtn();
+                DisableDeleteBtn();
+                DisableMoveBtn();
+            }
+            break;
+        case 'course':
+            if (role === 'admin') {
+                EnableCreateBtn();
+                EnableEditBtn();
+                EnableDeleteBtn();
+                DisableMoveBtn();
+            }
+            else {
+                DisableCreateBtn();
+                DisableEditBtn();
+                DisableDeleteBtn();
+                DisableMoveBtn();
+            }
+            break;
+        case 'group':
+            if (role === 'admin') {
+                EnableCreateBtn();
+                EnableEditBtn();
+                EnableDeleteBtn();
+                DisableMoveBtn();
+            }
+            else {
+                EnableCreateBtn();
+                DisableEditBtn();
+                DisableDeleteBtn();
+                DisableMoveBtn();
+            }
+            break;
+        case 'student':
+            if (role === 'admin') {
+                EnableCreateBtn();
+                EnableEditBtn();
+                EnableDeleteBtn();
+                EnableMoveBtn();
+            }
+            else {
+                EnableCreateBtn();
+                EnableEditBtn();
+                DisableDeleteBtn();
+                DisableMoveBtn();
+            }
+            break;
+        case 'certificate':
+            if (role === 'admin') {
+                DisableCreateBtn();
+                EnableEditBtn();
+                EnableDeleteBtn();
+                DisableMoveBtn();
+            }
+            else {
+                DisableCreateBtn();
+                EnableEditBtn();
+                EnableDeleteBtn();
+                DisableMoveBtn();
+            }
+            break;
+    }
+}
+
 function sendIdRequest(url, id, method, replaceIntoId, promiseArray, parameterArray) {
     url = url + '?id=' + id;
         $.ajax({
@@ -41,12 +116,16 @@ function sendIdRequest(url, id, method, replaceIntoId, promiseArray, parameterAr
                 if(promiseArray!=undefined){
                     if(parameterArray!=undefined){
                         for(var i = 0; i< promiseArray.length; i++){
+                            if(parameterArray[i] != undefined)
                             promiseArray[i](parameterArray[i]);
+                            else{
+                                promiseArray[i]();
+                            }
                         }
                     }
                     else{
                         for(var i = 0; i< promiseArray.length; i++){
-                            promiseArray[i]();
+                                promiseArray[i]();
                         }
                     }
                 }
@@ -463,10 +542,159 @@ function GetCreateAccountRequest() {
 }
 
 function SendCreateAccountRequest() {
-    sendFormRequest('/Admin/Register', '#registerAccountForm', 'POST', "#formModal");
+    var funcs = new Array();
+    funcs.push(GetIndexUsersRequest);
+    sendFormRequest('/Admin/Register', '#registerAccountForm', 'POST', "#formModal", funcs);
 }
 
+function GetIndexUsersRequest(){
+    sendRequest('/Admin/Users', "GET");
+}
+
+function GetEditUserNameRequest(id) {
+    
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Admin/EditUserName', id, "GET", "#formModal", funcs);
+}
+
+function SendEditUserNameRequest() {
+    var funcs = new Array();
+    funcs.push(GetIndexUsersRequest)
+    sendFormRequest('/Admin/EditUserName', '#editUserNameForm', 'POST', "#formModal", funcs);
+};
+
+function GetDeleteUserRequest(id) {
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Admin/Delete', id, "GET", "#formModal", funcs);
+}
+
+function SendDeleteUserRequest() {
+    var funcs = new Array();
+    funcs.push(GetIndexUsersRequest)
+    sendFormRequest('/Admin/Delete', '#deleteUserForm', 'POST', "#formModal", funcs);
+};
+
+function GetEditUserGroupsRequest(id) {
+    var funcs = new Array();
+    funcs.push(BindFormTree);
+    funcs.push(toggleFormModal);
+    var parameters = new Array();
+    parameters.push(id);
+    sendIdRequest('/Admin/EditUserGroups', id, "GET", "#formModal", funcs, parameters);
+}
+
+function SendEditUserGroupsRequest() {
+    //var funcs = new Array();
+    //funcs.push(GetIndexUsersRequest)
+    //sendFormRequest('/Admin/EditUserGroups', '#editUserGroupsForm', 'POST', "#formModal", funcs);
+
+    var result = {};
+    var value = $('#userIdEditGroups').val();
+    result['UserId'] = value;
+    result['ActiveGroupsId'] = [];
+    result['InactiveGroupId'] = [];
+
+    var formTree = $('#formTree').fancytree('getTree');
+
+    formTree.visit(function(n){
+        console.log(n);
+        if(n.type=='group'){
+            if(n.selected == true){
+                result['ActiveGroupsId'].push(n.data.modelId);
+            }
+            else{
+                result['InactiveGroupId'].push(n.data.modelId);
+            }
+        }
+    });
+    var jsonResult = JSON.stringify(result);
+    $.ajax({
+        type: "POST",
+        cache: false,
+        url: '/Admin/EditUserGroups',
+        contentType: "application/json; charset=utf-8",
+        data: jsonResult,
+        success: function (data) {
+           SetHtml("#formModal", data);
+           GetIndexUsersRequest();
+        },
+        error: function (data) {
+            console.log("error")
+        }
+    });
+    
+};
+
 //Other
+ function LoadFormTree(id){
+     $("#formTree").fancytree({
+        source: $.ajax({
+                url: '/Tree/GetManagementFormHierarchy',
+                method: 'GET',
+                dataType: "json",
+                success: function (data) {
+                }
+              }),
+            cache: false,
+        clickFolderMode: 1,
+        click: function (event, data) {
+            var node = data.node;
+            if (node.isActive()) {
+                node.setFocus(false);
+                node.setActive(false);
+                event.preventDefault();
+            }
+
+        },
+        loadChildren: function(event, data) {
+            var formTree = $('#formTree').fancytree('getTree');
+
+            formTree.visit(function(n){
+                console.log(n);
+                if(n.type=='group'){
+                n.checkbox = true;
+                }
+            });
+            CheckSelectedGroups(id);
+        }
+    });
+
+    function CheckSelectedGroups(){
+        var formTree = $('#formTree').fancytree('getTree');
+        var result = undefined;
+        var url =  "/Tree/GetUserGroupsId" + '?id=' + id;
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            success: function (data) {
+            result = data;
+            if(result!= undefined){
+                formTree.visit(function(n){
+                    if(n.type=='group'){
+                    for(var i = 0; i< result.length; i++){
+                        if(result[i] == n.data.modelId){
+                            n.setSelected(true)
+                            break;
+                            }
+                        }
+                        }
+                    });
+                }
+            },
+                error: function (data) {
+                    console.log("error")
+                }
+        }); 
+    }
+
+}
+async function BindFormTree(id){
+   await LoadFormTree(id);
+}
+
 function toggleFormModal() {
     $('#formModal').modal('toggle');
 }

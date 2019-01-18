@@ -14,7 +14,7 @@
         @foreach (var group in Model)
         {
             var studentsCount = group.Students.Count;
-            <tr onclick="GetDetailsGroupRequest(@group.Id)">
+            <tr class="cursor-pointer" onclick="GetDetailsGroupRequest(@group.Id)">
                 <td>@group.Name</td>
                 <td>@group.Course.Number курс</td>
                 <td>@studentsCount</td>
