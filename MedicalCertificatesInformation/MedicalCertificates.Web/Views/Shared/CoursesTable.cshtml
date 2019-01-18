@@ -4,7 +4,6 @@
 
     <thead>
         <tr>
-            <th>#</th>
             <th>Номер</th>
             <th>Количество групп</th>
             <th>Отделение</th>
@@ -16,7 +15,6 @@
         {
             var groupCount = course.Groups.Count;
         <tr onclick="GetDetailsCourseRequest(@course.Id)">
-            <td scope="row">@course.Id</td>
             <td>@course.Number курс</td>
             <td>@groupCount</td>
             <td>@course.Department.Name</td>

@@ -1,21 +1,9 @@
 @model MedicalCertificates.Web.Models.GroupViewModels.DetailsGroupViewModel
 
-<h2>Описание группы</h2>
-<div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Название группы</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th>@Html.DisplayFor(model => model.Id)</th>
-                <th>@Html.DisplayFor(model => model.Name)</th>
-            </tr>
-        </tbody>
-    </table>
+<h3>Описание группы</h3>
+
+<h2>@Html.DisplayFor(model => model.Name)</h2>
+
     <p>
         <button onclick="GetDetailsCourseRequest(@Model.Course.Id);" class="btn btn-info">К курсу</button>
     </p>

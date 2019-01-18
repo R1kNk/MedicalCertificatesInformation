@@ -20,6 +20,11 @@
                     <h4 readonly>@Model.Name</h4>
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
+                <div class="form-group">
+                    <label asp-for="SecondName" class="control-label"></label>
+                    <h4 readonly>@Model.SecondName</h4>
+                    <span asp-validation-for="SecondName" class="text-danger"></span>
+                </div>
                 <div class="form-group" hidden>
                     <label asp-for="Id" class="control-label"></label>
                     <input asp-for="Id" class="form-control" readonly />

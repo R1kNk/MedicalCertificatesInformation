@@ -81,9 +81,9 @@ namespace MedicalCertificates.Web.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var group = _groupService.GetByIdAsync(id);
+            var group = await _groupService.GetByIdAsync(id);
             if (group == null)
                 return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такая группа не найдена. Обновите страницу." });
 

@@ -68,9 +68,9 @@ namespace MedicalCertificates.Web.Controllers
             }
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var department = _departmentService.GetByIdAsync(id);
+            var department = await _departmentService.GetByIdAsync(id);
             if (department == null)
                 return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такое отделение не найдено. Обновите страницу." });
 

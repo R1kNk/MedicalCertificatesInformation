@@ -88,9 +88,9 @@ namespace MedicalCertificates.Web.Controllers
             }
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var course = _courseService.GetByIdAsync(id);
+            var course = await _courseService.GetByIdAsync(id);
             if (course == null)
                 return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой курс не найден. Обновите страницу." });
 
@@ -114,8 +114,8 @@ namespace MedicalCertificates.Web.Controllers
                     if (existingCourse == null)
                         return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой курс не найден. Обновите страницу." });
 
-                    var coursesWithSameNumber = existingCourse.Department.Courses.Where(p => p.Id != existingCourse.Id && p.Number == existingCourse.Number).ToList();
-                    if(coursesWithSameNumber !=null)
+                    var coursesWithSameNumber = existingCourse.Department.Courses.Where(p => p.Id != existingCourse.Id && p.Number == model.Number).ToList();
+                    if(coursesWithSameNumber ==null || coursesWithSameNumber.Count!=0)
                         return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Курс с таким номером уже существует в этом отделении" });
 
                     existingCourse.Number = updateCourse.Number;

@@ -102,7 +102,7 @@ namespace MedicalCertificates.Web.Controllers
                             model.IsUsingTerm = false;
                             return View(model);
                         }
-                        newMedicalCertificate.FinishDate = DateTime.ParseExact(model.FinishDate, "yyyy.MM.dd", CultureInfo.InvariantCulture);
+                        newMedicalCertificate.FinishDate = DateTime.ParseExact(model.FinishDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                         newMedicalCertificate.CertificateTerm = newMedicalCertificate.FinishDate.Subtract(newMedicalCertificate.StartDate).TotalDays;
                     }
                     var result = await _medicalCertificateService.AddMedicalCertificateAsync(newMedicalCertificate, model.StudentId);
@@ -163,7 +163,7 @@ namespace MedicalCertificates.Web.Controllers
                     }
                     else
                     {
-                        updateMedicalCertificate.FinishDate = DateTime.ParseExact(model.FinishDate, "yyyy.MM.dd", CultureInfo.InvariantCulture);
+                        updateMedicalCertificate.FinishDate = DateTime.ParseExact(model.FinishDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                         updateMedicalCertificate.CertificateTerm = updateMedicalCertificate.FinishDate.Subtract(updateMedicalCertificate.StartDate).TotalDays;
                     }
                     var result = await _medicalCertificateService.EditMedicalCertificateAsync(updateMedicalCertificate);
@@ -290,6 +290,8 @@ namespace MedicalCertificates.Web.Controllers
         {
             return new List<CertificateTerm>()
             {
+                new CertificateTerm() { Months = 1, Text="1 месяц"},
+                new CertificateTerm() { Months = 3, Text="3 месяц"},
                 new CertificateTerm() { Months = 6, Text="6 месяцев"},
                 new CertificateTerm() { Months = 12, Text="12 месяцев"}
             };

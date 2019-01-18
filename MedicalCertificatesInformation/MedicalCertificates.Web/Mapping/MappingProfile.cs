@@ -85,8 +85,8 @@ namespace MedicalCertificates.Web.Mapping
             //MedicalCertificate
             CreateMap<MedicalCertificate, CreateMedicalCertificateViewModel>()
                 .ForMember(p => p.StudentId, map => map.MapFrom(p => p.StudentId))
-                .ForMember(p => p.StartDate, map => map.MapFrom(p => p.StartDate.ToString("yyyy.MM.dd")))
-                .ForMember(p => p.FinishDate, map => map.MapFrom(p => p.FinishDate.ToString("yyyy.MM.dd")))
+                .ForMember(p => p.StartDate, map => map.MapFrom(p => p.StartDate.ToString("dd.MM.yyyy")))
+                .ForMember(p => p.FinishDate, map => map.MapFrom(p => p.FinishDate.ToString("dd.MM.yyyy")))
                 .ForMember(p => p.CertificateTerm, map => map.MapFrom(p => p.FinishDate.Subtract(p.StartDate).TotalDays))
                 .ForMember(p => p.HealthGroupId, map => map.MapFrom(p => p.HealthGroupId))
                 .ForMember(p => p.PhysicalEducationId, map => map.MapFrom(p => p.PhysicalEducationId))
@@ -94,8 +94,8 @@ namespace MedicalCertificates.Web.Mapping
                 .ReverseMap();
 
             CreateMap<MedicalCertificate, DetailsMedicalCertificatesViewModel>()
-                .ForMember(p => p.StartDate, map => map.MapFrom(p => p.StartDate.ToString("yyyy.MM.dd")))
-                .ForMember(p => p.FinishDate, map => map.MapFrom(p => p.FinishDate.ToString("yyyy.MM.dd")))
+                .ForMember(p => p.StartDate, map => map.MapFrom(p => p.StartDate.ToString("dd.MM.yyyy")))
+                .ForMember(p => p.FinishDate, map => map.MapFrom(p => p.FinishDate.ToString("dd.MM.yyyy")))
                 .ForMember(p => p.CertificateTerm, map => map.MapFrom(p => p.FinishDate.Subtract(p.StartDate).TotalDays))
                 .ForMember(p => p.HealthGroup, map => map.MapFrom(p => p.HealthGroup))
                 .ForMember(p => p.PhysicalEducation, map => map.MapFrom(p => p.PhysicalEducation))
@@ -103,15 +103,15 @@ namespace MedicalCertificates.Web.Mapping
                 .ReverseMap();
 
             CreateMap<MedicalCertificate, DeleteMedicalCertificateViewModel>()
-                .ForMember(p => p.StartDate, map => map.MapFrom(p => p.StartDate.ToString("yyyy.MM.dd")))
-                .ForMember(p => p.FinishDate, map => map.MapFrom(p => p.FinishDate.ToString("yyyy.MM.dd")))
+                .ForMember(p => p.StartDate, map => map.MapFrom(p => p.StartDate.ToString("dd.MM.yyyy")))
+                .ForMember(p => p.FinishDate, map => map.MapFrom(p => p.FinishDate.ToString("dd.MM.yyyy")))
                 .ForMember(p => p.CertificateTerm, map => map.MapFrom(p => p.FinishDate.Subtract(p.StartDate).TotalDays))
                 .ForMember(p => p.Student, map => map.MapFrom(p => p.Student))
                 .ReverseMap();
 
             CreateMap<MedicalCertificate, EditMedicalCertificatesViewModel>()
-                .ForMember(p => p.StartDate, map => map.MapFrom(p => p.StartDate.ToString("yyyy.MM.dd")))
-                .ForMember(p => p.FinishDate, map => map.MapFrom(p => p.FinishDate.ToString("yyyy.MM.dd")))
+                .ForMember(p => p.StartDate, map => map.MapFrom(p => p.StartDate.ToString("dd.MM.yyyy")))
+                .ForMember(p => p.FinishDate, map => map.MapFrom(p => p.FinishDate.ToString("dd.MM.yyyy")))
                 .ForMember(p => p.CertificateTerm, map => map.MapFrom(p => p.FinishDate.Subtract(p.StartDate).TotalDays))
                 .ForMember(p => p.HealthGroupId, map => map.MapFrom(p => p.HealthGroupId))
                 .ForMember(p => p.PhysicalEducationId, map => map.MapFrom(p => p.PhysicalEducationId))

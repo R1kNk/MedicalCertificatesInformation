@@ -103,8 +103,9 @@ function GetDetailsHospitalRequest(id) {
 }
 
 function GetCreateHospitalRequest() {
-    sendRequest('/PhysicalEducation/Create', "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+   sendRequest('/PhysicalEducation/Create', "GET", "#formModal", funcs);
 }
 
  function SendCreateHospitalRequest() {
@@ -115,8 +116,9 @@ function GetCreateHospitalRequest() {
 };
 
 function GetEditHospitalRequest(id) {
-    sendIdRequest('/Hospital/Edit', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+     sendIdRequest('/Hospital/Edit', id, "GET", "#formModal", funcs);
 }
 
  function SendEditHospitalRequest() {
@@ -126,8 +128,9 @@ function GetEditHospitalRequest(id) {
 };
 
 function GetDeleteHospitalRequest(id) {
-    sendIdRequest('/Hospital/Delete', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+   sendIdRequest('/Hospital/Delete', id, "GET", "#formModal", funcs);
 }
 
 function SendDeleteHospitalRequest() {
@@ -147,8 +150,9 @@ function GetDetailsPhysicalEducationRequest(id) {
 }
 
 function GetCreatePhysicalEducationRequest() {
-    sendRequest('/PhysicalEducation/Create', "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendRequest('/PhysicalEducation/Create', "GET", "#formModal",funcs);
 }
 
 function SendCreatePhysicalEducationRequest() {
@@ -158,8 +162,9 @@ function SendCreatePhysicalEducationRequest() {
 }
 
 function GetEditPhysicalEducationRequest(id) {
-    sendIdRequest('/PhysicalEducation/Edit', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+  sendIdRequest('/PhysicalEducation/Edit', id, "GET", "#formModal", funcs);
 }
 
 function SendEditPhysicalEducationRequest() {
@@ -169,8 +174,9 @@ function SendEditPhysicalEducationRequest() {
 };
 
 function GetDeletePhysicalEducationRequest(id) {
-    sendIdRequest('/PhysicalEducation/Delete', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/PhysicalEducation/Delete', id, "GET", "#formModal", funcs);
 }
 
 function SendDeletePhysicalEducationRequest() {
@@ -190,8 +196,9 @@ function GetDetailsHealthGroupRequest(id) {
 }
 
 function GetCreateHealthGroupRequest() {
-    sendRequest('/HealthGroup/Create', "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+  sendRequest('/HealthGroup/Create', "GET", "#formModal", funcs);
 }
 
 function SendCreateHealthGroupRequest() {
@@ -201,8 +208,9 @@ function SendCreateHealthGroupRequest() {
 }
 
 function GetEditHealthGroupRequest(id) {
-    sendIdRequest('/HealthGroup/Edit', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+  sendIdRequest('/HealthGroup/Edit', id, "GET", "#formModal", funcs);
 }
 
 function SendEditHealthGroupRequest() {
@@ -212,8 +220,9 @@ function SendEditHealthGroupRequest() {
 };
 
 function GetDeleteHealthGroupRequest(id) {
-    sendIdRequest('/HealthGroup/Delete', id, "GET","#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/HealthGroup/Delete', id, "GET","#formModal", funcs);
 }
 
 function SendDeleteHealthGroupRequest() {
@@ -231,8 +240,8 @@ function GetDetailsMedicalCertificateRequest(id) {
 function GetCreateMedicalCertificateRequest(id) {
     var funcs = new Array();
     funcs.push(BindDateTimePickers);
+    funcs.push(toggleFormModal);
     sendIdRequest('/MedicalCertificate/Create', id, "GET", "#formModal", funcs);
-    $('#formModal').modal('toggle');
 }
 
  function SendCreateMedicalCertificateRequest() {
@@ -245,8 +254,8 @@ function GetCreateMedicalCertificateRequest(id) {
 function GetEditMedicalCertificateRequest(id) {
     var funcs = new Array();
     funcs.push(BindDateTimePickers);
+    funcs.push(toggleFormModal)
     sendIdRequest('/MedicalCertificate/Edit', id, "GET", "#formModal", funcs);
-    $('#formModal').modal('toggle');
 }
 
  function SendEditMedicalCertificateRequest() {
@@ -257,15 +266,13 @@ function GetEditMedicalCertificateRequest(id) {
 };
 
 function GetDeleteMedicalCertificateRequest(id) {
-    sendIdRequest('/MedicalCertificate/Delete', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+  sendIdRequest('/MedicalCertificate/Delete', id, "GET", "#formModal");
 }
 
  function SendDeleteMedicalCertificateRequest() {
     var funcs = new Array();
     funcs.push(ExecUpdateActionAction);
     sendFormRequest('/MedicalCertificate/Delete', '#deleteMedicalCertificateForm', 'POST', "#formModal", funcs);
-    ExecUpdateActionAction();
 };
 
 //Student functions
@@ -275,8 +282,9 @@ function GetDetailsStudentRequest(id) {
 }
 
 function GetCreateStudentRequest(id) {
-    sendIdRequest('/Student/Create', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Student/Create', id, "GET", "#formModal", funcs);
 }
 
  function SendCreateStudentRequest() {
@@ -286,8 +294,9 @@ function GetCreateStudentRequest(id) {
 }
 
 function GetEditStudentRequest(id) {
-    sendIdRequest('/Student/Edit', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+   sendIdRequest('/Student/Edit', id, "GET", "#formModal", funcs);
 }
 
 function SendEditStudentRequest() {
@@ -297,8 +306,9 @@ function SendEditStudentRequest() {
 };
 
 function GetDeleteStudentRequest(id) {
-    sendIdRequest('/Student/Delete', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Student/Delete', id, "GET", "#formModal", funcs);
 }
 
 function SendDeleteStudentRequest() {
@@ -308,14 +318,15 @@ function SendDeleteStudentRequest() {
 };
 
 function GetMoveStudentRequest(id) {
-    sendIdRequest('/Student/Move', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Student/Move', id, "GET", "#formModal",funcs);
 }
 
 function SendMoveStudentRequest() {
     var funcs = new Array();
     funcs.push(ExecUpdateActionAction);
-   sendFormRequest('/Student/Move', '#moveStudentForm', 'POST', "#formModal", funcs);
+    sendFormRequest('/Student/Move', '#moveStudentForm', 'POST', "#formModal", funcs);
 };
 
 //Group functions
@@ -325,8 +336,9 @@ function GetDetailsGroupRequest(id) {
 }
 
 function GetCreateGroupRequest(id) {
-    sendIdRequest('/Group/Create', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Group/Create', id, "GET", "#formModal", funcs);
 }
 
 function SendCreateGroupRequest() {
@@ -336,8 +348,9 @@ function SendCreateGroupRequest() {
 }
 
 function GetEditGroupRequest(id) {
-    sendIdRequest('/Group/Edit', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Group/Edit', id, "GET", "#formModal", funcs);
 }
  function SendEditGroupRequest() {
     var funcs = new Array();
@@ -346,8 +359,9 @@ function GetEditGroupRequest(id) {
 };
 
 function GetDeleteGroupRequest(id) {
-    sendIdRequest('/Group/Delete', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Group/Delete', id, "GET", "#formModal", funcs);
 }
 
 function SendDeleteGroupRequest() {
@@ -363,8 +377,9 @@ function GetDetailsCourseRequest(id) {
 }
 
 function GetCreateCourseRequest(id) {
-    sendIdRequest('/Course/Create', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Course/Create', id, "GET", "#formModal", funcs);
 }
 
 function SendCreateCourseRequest() {
@@ -373,9 +388,10 @@ function SendCreateCourseRequest() {
    sendFormRequest('/Course/Create', '#createCourseForm', 'POST', "#formModal", funcs);
 }
 
-function GetEditCourseRequest(id) {
-    sendIdRequest('/Course/Edit', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+ function GetEditCourseRequest(id) {
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Course/Edit', id, "GET", "#formModal", funcs);
 }
 
 function SendEditCourseRequest() {
@@ -385,8 +401,9 @@ function SendEditCourseRequest() {
 };
 
 function GetDeleteCourseRequest(id) {
-    sendIdRequest('/Course/Delete', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Course/Delete', id, "GET", "#formModal", funcs);
 }
 
 function SendDeleteCourseRequest() {
@@ -402,8 +419,9 @@ function GetDetailsDepartmentRequest(id) {
 }
 
 function GetCreateDepartmentRequest() {
-    sendRequest('/Department/Create', "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendRequest('/Department/Create', "GET", "#formModal", funcs);
 }
 
 function SendCreateDepartmentRequest() {
@@ -413,8 +431,9 @@ function SendCreateDepartmentRequest() {
 }
 
 function GetEditDepartmentRequest(id) {
-    sendIdRequest('/Department/Edit', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendIdRequest('/Department/Edit', id, "GET", "#formModal", funcs);
 }
 
 function SendEditDepartmentRequest() {
@@ -424,11 +443,12 @@ function SendEditDepartmentRequest() {
 };
 
 function GetDeleteDepartmentRequest(id) {
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
     sendIdRequest('/Department/Delete', id, "GET", "#formModal");
-    $('#formModal').modal('toggle');
 }
 
-function SendDeleteDepartmentequest() {
+function SendDeleteDepartmentRequest() {
     var funcs = new Array();
     funcs.push(ExecUpdateActionAction);
     sendFormRequest('/Department/Delete', '#deleteDepartmentForm', 'POST', "#formModal", funcs);
@@ -437,8 +457,9 @@ function SendDeleteDepartmentequest() {
 //Admin funcs
 
 function GetCreateAccountRequest() {
-    sendRequest('/Admin/Register', "GET", "#formModal");
-    $('#formModal').modal('toggle');
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+   sendRequest('/Admin/Register', "GET", "#formModal", funcs);
 }
 
 function SendCreateAccountRequest() {
@@ -446,6 +467,9 @@ function SendCreateAccountRequest() {
 }
 
 //Other
+function toggleFormModal() {
+    $('#formModal').modal('toggle');
+}
 
 function  isAdmin(){
     return new Promise(function (resolve, reject) {
@@ -604,7 +628,7 @@ function ExecDeleteAction(){
                 }
                 break;
             case 'certificate':
-                GetEditMedicalCertificateRequest(modelId);
+                GetDeleteMedicalCertificateRequest(modelId);
                 break;    
         }
     }
@@ -645,7 +669,7 @@ async function ExecUpdateActionAction(){
 function BindDateTimePickers() {
     var bindDatePicker = function () {
         $(".date").datetimepicker({
-            format: 'YYYY.MM.DD',
+            format: 'DD.MM.YYYY',
             locale: 'ru',
             icons: {
                 time: "fa fa-clock-o",
@@ -658,10 +682,10 @@ function BindDateTimePickers() {
             // update the format if it's yyyy-mm-dd
             var date = parseDate($(this).val());
 
-            if (!isValidDate(date)) {
-                //create date based on momentjs (we have that)
-                date = moment().format('YYYY.MM.DD');
-            }
+            //if (!isValidDate(date)) {
+            //    //create date based on momentjs (we have that)
+            //    date = moment().format('DD.MM.YYYY');
+            //}
 
             $(this).val(date);
         });

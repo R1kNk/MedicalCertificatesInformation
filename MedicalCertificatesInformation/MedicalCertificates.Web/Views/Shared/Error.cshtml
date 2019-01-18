@@ -1,18 +1,29 @@
-﻿@model ErrorViewModel
+@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Ошибка.</h1>
-<h2 class="text-danger">Во время обрабоки вашего запроса произошла ошибка.</h2>
 
-@*@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}*@
-@if (Model.MessageDescription != null)
-{
-    <p class="text-danger">@Model.MessageDescription</p>
-}
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel">Ошибка</h3>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-danger">Во время обрабоки вашего запроса произошла ошибка.</h3>
+                @if (Model.MessageDescription != null)
+                {
+                    <h4 class="text-danger">@Model.MessageDescription</h4>
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group btn-group-justified" role="group" aria-label="group button">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

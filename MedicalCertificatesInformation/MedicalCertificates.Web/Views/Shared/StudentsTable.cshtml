@@ -4,9 +4,8 @@
 
     <thead>
         <tr>
-            <th>#</th>
-            <th>Имя</th>
             <th>Фамилия</th>
+            <th>Имя</th>
             <th>Отчество</th>
             <th>Группа</th>
             <th>Количество справок</th>
@@ -16,6 +15,11 @@
     </thead>
 
     <tbody>
+        @{
+            var people = Model.Count;
+            var have = 0;
+
+        }
         @foreach (var student in Model)
         {
             var studentsCount = student.MedicalCertificates.Count;
@@ -27,13 +31,13 @@
                 if (lastCert.FinishDate > DateTime.Now)
                 {
                     isCertValid = "Да";
+                    have++;
                     tagClass = "success";
                 }
             }
             <tr class="@tagClass" onclick="GetDetailsStudentRequest(@student.Id)">
-                <td scope="row">@student.Id</td>
-                <td>@student.Name</td>
                 <td>@student.Surname</td>
+                <td>@student.Name</td>
                 <td>@student.SecondName</td>
                 <td>@student.Group.Name</td>
                 <td>@student.MedicalCertificates.Count</td>
@@ -43,5 +47,19 @@
 
         }
     </tbody>
+    <tfoot>
+        <tr class="success">
+            <td>Итого</td>
+            <td>Всего студентов: @people</td>
+            <td>С актуальными справками: @have</td>
+            @{
+                double percentageHave = Math.Round((double)(100 * have) / people, 1);
+            }
+            <td>Процент имеющих справку @percentageHave </td>
+            <td>Процент не имеющих справку: @(100-percentageHave)</td>
+            <td></td>
+
+        </tr>
+    </tfoot>
 
 </table>

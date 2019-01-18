@@ -3,10 +3,6 @@
 
 <h2>Описание справки</h2>
     <div>
-        <div class="form-group row">
-            <label class="control-label col-sm-2">#</label>
-            <h4 readonly>@Model.Id</h4>
-        </div>
         @{
             var owner = Model.Student.Name + " " + Model.Student.Surname;
         }
@@ -35,7 +31,7 @@
             <p readonly>@Model.Hospital.Name</p>
         </div>
         @{
-            var active = DateTime.Now > DateTime.ParseExact(Model.FinishDate, "yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture) ? "Нет" : "Да";
+            var active = DateTime.Now > DateTime.ParseExact(Model.FinishDate, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture) ? "Нет" : "Да";
         }
         <div class="form-group row">
             <label class="control-label col-sm-2">Актуальна ли справка?</label>

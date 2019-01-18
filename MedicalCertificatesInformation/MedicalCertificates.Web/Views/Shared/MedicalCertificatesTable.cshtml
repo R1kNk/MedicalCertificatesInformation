@@ -4,7 +4,6 @@
     <!--Table head-->
     <thead>
         <tr>
-            <th>#</th>
             <th>Владелец</th>
             <th>Дата начала</th>
             <th>Дата окончания</th>
@@ -21,8 +20,8 @@
         @foreach (var certificate in Model)
         {
             var nameSurname = certificate.Student.Name + " " + certificate.Student.Surname;
-            var start = certificate.StartDate.ToString("yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture);
-            var finish = certificate.FinishDate.ToString("yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture);
+            var start = certificate.StartDate.ToString("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            var finish = certificate.FinishDate.ToString("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture);
             var active = DateTime.Now > certificate.FinishDate ? "Нет" : "Да";
             var tagClass = DateTime.Now > certificate.FinishDate ? "danger" : "success";
             double daysToMonths = 30.4368499;
@@ -58,7 +57,6 @@
 
 
             <tr onclick="GetDetailsMedicalCertificateRequest(@certificate.Id)" class="@tagClass">
-                <td scope="row">@certificate.Id</td>
                 <td>@nameSurname</td>
                 <td>@start</td>
                 <td>@finish</td>

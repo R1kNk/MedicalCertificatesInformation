@@ -85,9 +85,9 @@ namespace MedicalCertificates.Web.Controllers
         }
 
         // GET: Student/Edit/5
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var student = _studentService.GetByIdAsync(id);
+            var student = await _studentService.GetByIdAsync(id);
             if (student == null) return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой студент не найден. Обновите страницу." });
 
             var EditViewModel = _mapper.Map<EditStudentViewModel>(student);
