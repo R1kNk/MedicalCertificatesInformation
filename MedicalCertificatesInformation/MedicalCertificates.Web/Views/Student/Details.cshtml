@@ -1,41 +1,31 @@
 @model MedicalCertificates.Web.Models.StudentViewModels.DetailsStudentViewModel
 
 <h2>Описание учащегося</h2>
+<hr />
 <div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Фамилия</th>
-                <th>Имя</th>
-                <th>Отчество</th>
-                <th>Группа</th>
-                <th>Действительна ли справка?</th>
+    <h3>Фамилия: <strong>@Model.Surname</strong></h3>
+    <h3>Имя: <strong>@Model.Name</strong></h3>
+    <h3>Отчество: <strong>@Model.SecondName</strong></h3>
+    <h4>Группа: <strong>@Model.Group.Name</strong></h4>
+    <h4>Курс: <strong>@Model.Group.Course.Number-й</strong></h4>
+    <h4>Отделение: <strong>@Model.Group.Course.Department.Name</strong></h4>
+    @{ 
+        var isValid = "Нет";
+        MedicalCertificate lastCert = null;
+        if(Model.MedicalCertificates!=null || Model.MedicalCertificates.Count != 0)
+        {
+            lastCert = Model.MedicalCertificates.OrderBy(p => p.Id).ToList().LastOrDefault();
+        }
+        if (lastCert != null)
+        {
+            if(lastCert.FinishDate > DateTime.Now)
+            {
+                isValid = "Да";
+            }
+        }
+    }
+    <h4>Действительная ли справка: <strong>@isValid</strong></h4>
 
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                @{
-                    var isCertValid = "Нет";
-                    var lastCert = Model.MedicalCertificates.LastOrDefault();
-                    if (lastCert != null)
-                    {
-                        if (lastCert.FinishDate > DateTime.Now)
-                        {
-                            isCertValid = "Да";
-                        }
-                    }
-                }
-                <th>@Html.DisplayFor(model => model.Id)</th>
-                <th>@Html.DisplayFor(model => model.Name)</th>
-                <th>@Html.DisplayFor(model => model.Surname)</th>
-                <th>@Html.DisplayFor(model => model.SecondName)</th>
-                <th>@Html.DisplayFor(model => model.Group.Name)</th>
-                <th>@isCertValid</th>
-            </tr>
-        </tbody>
-    </table>
     <p>
         <button onclick="GetDetailsGroupRequest(@Model.Group.Id);" class="btn btn-info">К группе учащегося</button>
     </p>

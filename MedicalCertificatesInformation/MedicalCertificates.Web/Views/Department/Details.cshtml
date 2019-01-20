@@ -1,27 +1,20 @@
 @model MedicalCertificates.Web.Models.DepartmentViewModels.DetailsDepartmentViewModel
 
 <h2>Описание отделения</h2>
+<hr />
 <div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Название отделения</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th>@Html.DisplayFor(model => model.Id)</th>
-                <th>@Html.DisplayFor(model => model.Name)</th>
-            </tr>
-        </tbody>
-    </table>
+    <h3><strong>@Model.Name</strong></h3>
     <hr />
 </div>
-@if (Model.Courses.Count != 0)
+
+@if (Model.Courses != null && Model.Courses.Count != 0)
 {
     <h4>Курсы на этом отделении</h4>
     <!--Table-->
     @await Html.PartialAsync("CoursesTable", Model.Courses);
 
+}
+else
+{
+    <h3>В этом отделении пока что нет ни одного курса</h3>
 }

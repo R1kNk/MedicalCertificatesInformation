@@ -1,33 +1,25 @@
 @model MedicalCertificates.Web.Models.CourseViewModels.DetailsCourseViewModel
 
 <h2>Описание курса</h2>
+<hr />
 <div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Номер курса</th>
-                <th>Отделение</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th>@Html.DisplayFor(model => model.Id)</th>
-                <th>@Html.DisplayFor(model => model.Number) курс</th>
-                <th>@Html.DisplayFor(model => model.Department.Name)</th>
-            </tr>
-        </tbody>
-    </table>
+    <h3><strong>@Model.Number-й курс</strong></h3>
+    <h3>Отделение - <strong>@Model.Department.Name</strong></h3>
+    @{ 
+        var count = default(int);
+        if (Model.Groups != null)
+        {
+            count = Model.Groups.Count;
+        }
+    }
+    <h3>Количество групп - <strong>@Model.Groups.Count</strong></h3>
     <p>
         <button onclick="GetDetailsDepartmentRequest(@Model.Department.Id);" class="btn btn-info">К отделению</button>
     </p>
     <hr />
 </div>
-@if (Model.Groups.Count != 0)
+@if (Model.Groups != null && Model.Groups.Count != 0)
 {
-    <h4>Группы на этом курсе</h4>
-    <!--Table-->
+    <h4><strong>Группы на этом курсе</strong></h4>
     @Html.Partial("GroupsTable", Model.Groups);
-
 }

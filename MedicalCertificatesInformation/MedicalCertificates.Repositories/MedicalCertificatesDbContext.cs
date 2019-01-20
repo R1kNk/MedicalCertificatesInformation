@@ -20,7 +20,6 @@ namespace MedicalCertificates.Repositories
 
         public DbSet<HealthGroup> HealthGroups { get; set; }
         public DbSet<PhysicalEducation> PhysicalEducations { get; set; }
-        public DbSet<Hospital> Hospitals { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<MedicalCertificate> MedicalCertificates { get; set; }
         public DbSet<Group> Groups { get; set; }
@@ -31,7 +30,6 @@ namespace MedicalCertificates.Repositories
         {
             modelBuilder.ApplyConfiguration(new HealthGroupConfiguration());
             modelBuilder.ApplyConfiguration(new PhysicalEducationConfiguration());
-            modelBuilder.ApplyConfiguration(new HospitalConfiguration());
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
             modelBuilder.ApplyConfiguration(new MedicalCertificateConfiguration());
             modelBuilder.ApplyConfiguration(new GroupConfiguration());

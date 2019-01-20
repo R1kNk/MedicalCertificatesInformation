@@ -47,19 +47,4 @@
 
         }
     </tbody>
-    <tfoot>
-        <tr class="success">
-            <td>Итого</td>
-            <td>Всего студентов: @people</td>
-            <td>С актуальными справками: @have</td>
-            @{
-                double percentageHave = Math.Round((double)(100 * have) / people, 1);
-            }
-            <td>Процент имеющих справку @percentageHave </td>
-            <td>Процент не имеющих справку: @(100-percentageHave)</td>
-            <td></td>
-
-        </tr>
-    </tfoot>
-
 </table>

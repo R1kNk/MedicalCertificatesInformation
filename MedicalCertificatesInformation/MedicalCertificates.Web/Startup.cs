@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MedicalCertificates.Service.ServiceConfigurations;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Rotativa.AspNetCore;
 
 namespace MedicalCertificates.Web
 {
@@ -36,7 +35,6 @@ namespace MedicalCertificates.Web
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                RotativaConfiguration.Setup(env);
             }
             else
             {

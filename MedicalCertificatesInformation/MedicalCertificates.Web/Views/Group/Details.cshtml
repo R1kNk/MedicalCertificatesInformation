@@ -1,18 +1,42 @@
 @model MedicalCertificates.Web.Models.GroupViewModels.DetailsGroupViewModel
 
-<h3>Описание группы</h3>
+<h2>Описание группы</h2>
+<hr />
+<h3><strong>@Model.Name</strong></h3>
+<h4><strong>@Model.Course.Number-й</strong> курс</h4>
+<h4>Отделение - <strong>@Model.Course.Department.Name</strong></h4>
+<hr />
+@{
+    var all = Model.Students.Count;
+    var haveCerts = default(int);
+    var percentage = 0.0;
+    foreach (var student in Model.Students)
+    {
+        MedicalCertificate lastCertificate = null;
+        if (student.MedicalCertificates != null || student.MedicalCertificates.Count != 0)
+        {
+            lastCertificate = student.MedicalCertificates.OrderBy(p => p.Id).ToList().LastOrDefault();
+        }
+        if (lastCertificate != null)
+        {
+            if (lastCertificate.FinishDate > DateTime.Now)
+            {
+                haveCerts++;
+            }
+        }
+    }
+    percentage = Math.Round((double)(100 * haveCerts) / all, 1);
+}
+<h4>Студенты имеющие действующие справки: @haveCerts (@percentage%)</h4>
+<h4>Студенты не имеющие действующие справки: @(all - haveCerts) (@(100.0 - percentage)%)</h4>
 
-<h2>@Html.DisplayFor(model => model.Name)</h2>
-
-    <p>
-        <button onclick="GetDetailsCourseRequest(@Model.Course.Id);" class="btn btn-info">К курсу</button>
-    </p>
-    <hr />
-</div>
+<p>
+    <button onclick="GetDetailsCourseRequest(@Model.Course.Id);" class="btn btn-info">К курсу</button>
+</p>
+<hr />
 @if (Model.Students.Count != 0)
 {
-<h4>Учащиеся в этой группе</h4>
- <!--Table-->
-@await Html.PartialAsync("StudentsTable", Model.Students);
+    <h4>Учащиеся в этой группе</h4>
+    @await Html.PartialAsync("StudentsTable", Model.Students);
 
 }

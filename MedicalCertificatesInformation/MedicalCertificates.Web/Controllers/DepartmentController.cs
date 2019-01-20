@@ -24,6 +24,7 @@ namespace MedicalCertificates.Web.Controllers
             _mapper = mapper;
         }
 
+
         public async Task<IActionResult> Details(int id)
         {
             var department = await _departmentService.GetByIdAsync(id);
@@ -36,7 +37,7 @@ namespace MedicalCertificates.Web.Controllers
             return View(DetailsViewModel);
         }
 
-        public  IActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -108,7 +109,7 @@ namespace MedicalCertificates.Web.Controllers
         {
             var department = await _departmentService.GetByIdAsync(id);
             if (department == null)
-                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой курс не найден. Обновите страницу." });
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такое отделение не найдено. Обновите страницу." });
 
             var DeleteViewModel = _mapper.Map<DeleteDepartmentViewModel>(department);
 

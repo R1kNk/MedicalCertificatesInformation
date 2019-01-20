@@ -4,9 +4,9 @@
 
     <thead>
         <tr>
-            <th>Название</th>
-            <th>Курс</th>
+            <th>Группа</th>
             <th>Количество студентов</th>
+            <th>Курс</th>
         </tr>
     </thead>
 
@@ -14,11 +14,11 @@
         @foreach (var group in Model)
         {
             var studentsCount = group.Students.Count;
-            <tr class="cursor-pointer" onclick="GetDetailsGroupRequest(@group.Id)">
-                <td>@group.Name</td>
-                <td>@group.Course.Number курс</td>
-                <td>@studentsCount</td>
-            </tr>
+        <tr class="cursor-pointer" onclick="GetDetailsGroupRequest(@group.Id)">
+            <td>@group.Name</td>
+            <td>@studentsCount</td>
+            <td>@group.Course.Number-й курс</td>
+        </tr>
         }
     </tbody>
 

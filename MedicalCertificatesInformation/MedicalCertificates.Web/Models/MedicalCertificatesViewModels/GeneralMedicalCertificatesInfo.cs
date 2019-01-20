@@ -23,12 +23,6 @@ namespace MedicalCertificates.Web.Models.MedicalCertificatesViewModels
 
         public virtual IReadOnlyList<PhysicalEducation> PhysicalEducations { get; set; }
 
-        [Required(ErrorMessage = "Поликлиника должна быть выбрана")]
-        [Display(Name = "Поликлиника которая выдала справку")]
-        public int HospitalId { get; set; }
-
-        public virtual IReadOnlyList<Hospital> Hospitals { get; set; }
-
         public virtual List<CertificateTerm> Terms { get; set; }
     }
 }

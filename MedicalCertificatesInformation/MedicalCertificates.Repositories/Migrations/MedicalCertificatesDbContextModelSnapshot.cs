@@ -177,26 +177,6 @@ namespace MedicalCertificates.Repositories.Migrations
                     b.ToTable("HealthGroups");
                 });
 
-            modelBuilder.Entity("MedicalCertificates.DomainModel.Models.Hospital", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("TelephoneNumber");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Hospitals");
-                });
-
             modelBuilder.Entity("MedicalCertificates.DomainModel.Models.MedicalCertificate", b =>
                 {
                     b.Property<int>("Id")
@@ -211,8 +191,6 @@ namespace MedicalCertificates.Repositories.Migrations
 
                     b.Property<int>("HealthGroupId");
 
-                    b.Property<int>("HospitalId");
-
                     b.Property<int>("PhysicalEducationId");
 
                     b.Property<DateTime>("StartDate");
@@ -222,8 +200,6 @@ namespace MedicalCertificates.Repositories.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("HealthGroupId");
-
-                    b.HasIndex("HospitalId");
 
                     b.HasIndex("PhysicalEducationId");
 
@@ -388,11 +364,6 @@ namespace MedicalCertificates.Repositories.Migrations
                     b.HasOne("MedicalCertificates.DomainModel.Models.HealthGroup", "HealthGroup")
                         .WithMany("MedicalCertificates")
                         .HasForeignKey("HealthGroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MedicalCertificates.DomainModel.Models.Hospital", "Hospital")
-                        .WithMany("MedicalCertificates")
-                        .HasForeignKey("HospitalId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MedicalCertificates.DomainModel.Models.PhysicalEducation", "PhysicalEducation")

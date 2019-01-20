@@ -25,18 +25,16 @@ namespace MedicalCertificates.Web.Controllers
         private readonly IStudentService _studentService;
         private readonly IPhysicalEducationService _physicalEducationService;
         private readonly IHealthGroupService _healthGroupService;
-        private readonly IHospitalService _hospitalService;
 
 
         private readonly IMapper _mapper;
 
-        public MedicalCertificateController(IMedicalCertificateService medicalCertificateService, IStudentService studentService, IPhysicalEducationService physicalEducationService, IHealthGroupService healthGroupService, IHospitalService hospitalService, IMapper mapper)
+        public MedicalCertificateController(IMedicalCertificateService medicalCertificateService, IStudentService studentService, IPhysicalEducationService physicalEducationService, IHealthGroupService healthGroupService, IMapper mapper)
         {
             _medicalCertificateService = medicalCertificateService;
             _studentService = studentService;
             _physicalEducationService = physicalEducationService;
             _healthGroupService = healthGroupService;
-            _hospitalService = hospitalService;
             _mapper = mapper;
         }
         
@@ -60,7 +58,6 @@ namespace MedicalCertificates.Web.Controllers
             CreateViewModel.StudentId = student.Id;
             CreateViewModel.HealthGroups = await GetAllHealthGroupsAsync();
             CreateViewModel.PhysicalEducations = await GetAllPhysicalEducationsAsync();
-            CreateViewModel.Hospitals = await GetAllHospitalsAsync();
             CreateViewModel.Terms = GetCertificateTerms();
 
             return View(CreateViewModel);
@@ -82,7 +79,6 @@ namespace MedicalCertificates.Web.Controllers
                             ModelState.AddModelError("", "Выберите срок действия!");
                             model.HealthGroups = await GetAllHealthGroupsAsync();
                             model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
-                            model.Hospitals = await GetAllHospitalsAsync();
                             model.Terms = GetCertificateTerms();
                             model.IsUsingTerm = false;
                             return View(model);
@@ -97,7 +93,6 @@ namespace MedicalCertificates.Web.Controllers
                             ModelState.AddModelError("", "Выберите дату окончания справки!");
                             model.HealthGroups = await GetAllHealthGroupsAsync();
                             model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
-                            model.Hospitals = await GetAllHospitalsAsync();
                             model.Terms = GetCertificateTerms();
                             model.IsUsingTerm = false;
                             return View(model);
@@ -112,7 +107,6 @@ namespace MedicalCertificates.Web.Controllers
                         AddOperationResultErrorsToModelState(result);
                         model.HealthGroups = await GetAllHealthGroupsAsync();
                         model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
-                        model.Hospitals = await GetAllHospitalsAsync();
                         model.Terms = GetCertificateTerms();
                         model.IsUsingTerm = false;
                         return View(model);
@@ -121,7 +115,6 @@ namespace MedicalCertificates.Web.Controllers
                 }
                 model.HealthGroups = await GetAllHealthGroupsAsync();
                 model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
-                model.Hospitals = await GetAllHospitalsAsync();
                 model.Terms = GetCertificateTerms();
                 model.IsUsingTerm = false;
                 return View(model);
@@ -142,7 +135,6 @@ namespace MedicalCertificates.Web.Controllers
 
             EditViewModel.HealthGroups = await GetAllHealthGroupsAsync();
             EditViewModel.PhysicalEducations = await GetAllPhysicalEducationsAsync();
-            EditViewModel.Hospitals = await GetAllHospitalsAsync();
             EditViewModel.Terms = GetCertificateTerms();
             return View(EditViewModel);
         }
@@ -172,7 +164,6 @@ namespace MedicalCertificates.Web.Controllers
                         AddOperationResultErrorsToModelState(result);
                         model.HealthGroups = await GetAllHealthGroupsAsync();
                         model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
-                        model.Hospitals = await GetAllHospitalsAsync();
                         model.Terms = GetCertificateTerms();
                         model.IsUsingTerm = false;
                         return View(model);
@@ -181,7 +172,6 @@ namespace MedicalCertificates.Web.Controllers
                 }
                 model.HealthGroups = await GetAllHealthGroupsAsync();
                 model.PhysicalEducations = await GetAllPhysicalEducationsAsync();
-                model.Hospitals = await GetAllHospitalsAsync();
                 model.Terms = GetCertificateTerms();
                 model.IsUsingTerm = false;
                 return View(model);
@@ -250,10 +240,6 @@ namespace MedicalCertificates.Web.Controllers
             return await _physicalEducationService.GetAllAsync();
         }
 
-        private async Task<IReadOnlyList<Hospital>> GetAllHospitalsAsync()
-        {
-            return await _hospitalService.GetAllAsync();
-        }
 
         private void AddOperationResultErrorsToModelState(OperationResult<BusinessLogicResultError> operationResult)
         {

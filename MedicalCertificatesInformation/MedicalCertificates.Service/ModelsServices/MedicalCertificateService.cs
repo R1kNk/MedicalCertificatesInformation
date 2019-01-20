@@ -70,7 +70,6 @@ namespace MedicalCertificates.Service.ModelsServices
             }
 
             existingCertificate.HealthGroupId = updateCertificate.HealthGroupId;
-            existingCertificate.HospitalId = updateCertificate.HospitalId;
             existingCertificate.PhysicalEducationId = updateCertificate.PhysicalEducationId;
 
             if (existingCertificate.Id != lastCertificate.Id)

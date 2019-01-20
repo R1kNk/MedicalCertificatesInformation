@@ -2,42 +2,31 @@
 
 
 <h2>Описание справки</h2>
-    <div>
-        @{
-            var owner = Model.Student.Name + " " + Model.Student.Surname;
+<hr />
+<div>
+    @{
+        var owner = Model.Student.Name + " " + Model.Student.Surname;
+    }
+    <h3>Владелец: <strong>@owner</strong></h3>
+    <h3>Дата начала действия: <strong>@Model.StartDate</strong></h3>
+    <h3>Дата конца действия: <strong>@Model.FinishDate</strong></h3>
+    <h3>Группа здоровья: <strong>@Model.PhysicalEducation.Name</strong></h3>
+    <h3>Группа по физкультуре: <strong>@Model.HealthGroup.Name</strong></h3>
+    @{
+        var active = DateTime.Now > DateTime.ParseExact(Model.FinishDate, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture) ? "Нет" : "Да";
+        var days = 0;
+        if (active == "Да")
+        {
+            days = Convert.ToInt32(( DateTime.ParseExact(Model.FinishDate, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture)-DateTime.Now).TotalDays);
         }
-        <div class="form-group row">
-            <label class="control-label col-sm-2">Владелец</label>
-            <p onclick="GetDetailsStudentRequest(@Model.Student.Id)" readonly>@owner</p>
-        </div>
-        <div class="form-group row">
-            <label asp-for="StartDate" class="control-label col-sm-2"></label>
-            <p readonly>@Model.StartDate</p>
-        </div>
-        <div class="form-group row">
-            <label asp-for="FinishDate" class="control-label col-sm-2"></label>
-            <p readonly>@Model.FinishDate</p>
-        </div>
-        <div class="form-group row">
-            <label class="control-label col-sm-2">Группа по физкультуре</label>
-            <p readonly>@Model.PhysicalEducation.Name</p>
-        </div>
-        <div class="form-group row">
-            <label class="control-label col-sm-2">Группа здоровья</label>
-            <p readonly>@Model.HealthGroup.Name</p>
-        </div>
-        <div class="form-group row">
-            <label class="control-label col-sm-2">Поликлиника выдавшая справку</label>
-            <p readonly>@Model.Hospital.Name</p>
-        </div>
-        @{
-            var active = DateTime.Now > DateTime.ParseExact(Model.FinishDate, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture) ? "Нет" : "Да";
-        }
-        <div class="form-group row">
-            <label class="control-label col-sm-2">Актуальна ли справка?</label>
-            <p readonly>@active</p>
-        </div>
-        <p>
-            <button onclick="GetDetailsStudentRequest(@Model.Student.Id);" class="btn btn-info">К владельцу</button>
-        </p>
-    </div>
+    }
+    @if (active == "Да")
+    {
+        <h3>Дней до конца справки: <strong>@days</strong></h3>
+    }
+    <h3>Актуальна ли справка: <strong>@active</strong></h3>
+    <hr />
+    <p>
+        <button onclick="GetDetailsStudentRequest(@Model.Student.Id);" class="btn btn-info">К владельцу</button>
+    </p>
+</div>

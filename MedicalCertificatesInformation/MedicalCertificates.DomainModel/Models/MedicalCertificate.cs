@@ -20,8 +20,5 @@ namespace MedicalCertificates.DomainModel.Models
         public int PhysicalEducationId { get; set; }
         public virtual PhysicalEducation PhysicalEducation { get; set; }
 
-        public int HospitalId { get; set; }
-        public virtual Hospital Hospital { get; set; }
-
     }
 }

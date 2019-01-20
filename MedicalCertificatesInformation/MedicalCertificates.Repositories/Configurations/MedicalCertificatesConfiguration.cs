@@ -25,16 +25,6 @@ namespace MedicalCertificates.Repositories.Configurations
             }
         }
 
-        public class HospitalConfiguration : IEntityTypeConfiguration<Hospital>
-        {
-            public void Configure(EntityTypeBuilder<Hospital> builder)
-            {
-                builder.Property(p => p.Name).IsRequired().HasMaxLength(50);
-                builder.HasIndex(p => p.Name).IsUnique();
-
-            }
-        }
-
         public class StudentConfiguration : IEntityTypeConfiguration<Student>
         {
             public void Configure(EntityTypeBuilder<Student> builder)

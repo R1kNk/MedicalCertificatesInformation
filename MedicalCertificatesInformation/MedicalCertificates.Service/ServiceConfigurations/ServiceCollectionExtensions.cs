@@ -47,7 +47,6 @@ namespace MedicalCertificates.Service.ServiceConfigurations
             services.AddTransient(typeof(IRoleManager<ApplicationRole>), typeof(ApplicationRoleManager));
             services.AddScoped<IMedicalCertificatesUnitOfWork, MedicalCertificatesUnitOfWork>();
 
-            services.AddScoped<IHospitalService, HospitalService>();
             services.AddScoped<IPhysicalEducationService, PhysicalEducationService>();
             services.AddScoped<IHealthGroupService, HealthGroupService>();
             services.AddScoped<IMedicalCertificateService, MedicalCertificateService>();

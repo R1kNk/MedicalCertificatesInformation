@@ -36,8 +36,5 @@ namespace MedicalCertificates.Web.Models.MedicalCertificatesViewModels
 
         [Required]
         public virtual PhysicalEducation PhysicalEducation { get; set; }
-
-        [Required]
-        public virtual Hospital Hospital { get; set; }
     }
 }

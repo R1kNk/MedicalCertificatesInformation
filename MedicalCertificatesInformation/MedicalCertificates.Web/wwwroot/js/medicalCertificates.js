@@ -149,54 +149,6 @@ async function SetHtml(containerId, data, promiseArray, parametersArray) {
     return 1;
 }
 
-//Hospital functions
-//
-
-function GetIndexHospitalRequest() {
-    sendRequest('/Hospital/Index', "GET");
-}
-
-function GetDetailsHospitalRequest(id) {
-    sendIdRequest('/Hospital/Details', id, "GET");
-}
-
-function GetCreateHospitalRequest() {
-    var funcs = new Array();
-    funcs.push(toggleFormModal);
-   sendRequest('/PhysicalEducation/Create', "GET", "#formModal", funcs);
-}
-
- function SendCreateHospitalRequest() {
-     var funcs = new Array();
-     funcs.push(GetIndexHospitalRequest);
- sendFormRequest('/Hospital/Create', '#createHospitalForm', 'POST', "#formModal", funcs);
-
-};
-
-function GetEditHospitalRequest(id) {
-    var funcs = new Array();
-    funcs.push(toggleFormModal);
-     sendIdRequest('/Hospital/Edit', id, "GET", "#formModal", funcs);
-}
-
- function SendEditHospitalRequest() {
-    var funcs = new Array();
-    funcs.push(GetIndexHospitalRequest);
-    sendFormRequest('/Hospital/Edit', '#editHospitalForm', 'POST', "#formModal", funcs);
-};
-
-function GetDeleteHospitalRequest(id) {
-    var funcs = new Array();
-    funcs.push(toggleFormModal);
-   sendIdRequest('/Hospital/Delete', id, "GET", "#formModal", funcs);
-}
-
-function SendDeleteHospitalRequest() {
-    var funcs = new Array();
-    funcs.push(GetIndexHospitalRequest);
-    sendFormRequest('/Hospital/Delete', '#deleteHospitalForm', 'POST', "#formModal", funcs);
-};
-
 //Physical education functions
 
 function GetIndexPhysicalEducationRequest() {
@@ -503,7 +455,7 @@ function SendEditDepartmentRequest() {
 function GetDeleteDepartmentRequest(id) {
     var funcs = new Array();
     funcs.push(toggleFormModal);
-    sendIdRequest('/Department/Delete', id, "GET", "#formModal");
+    sendIdRequest('/Department/Delete', id, "GET", "#formModal",funcs);
 }
 
 function SendDeleteDepartmentRequest() {
@@ -511,6 +463,7 @@ function SendDeleteDepartmentRequest() {
     funcs.push(ExecUpdateActionAction);
     sendFormRequest('/Department/Delete', '#deleteDepartmentForm', 'POST', "#formModal", funcs);
 };
+
 //Manage
 
 function GetEditPasswordRequest(){
@@ -1237,4 +1190,44 @@ function BindDateTimePickerMedicalCertificatesForm() {
     
     bindDatePicker();
     bindradioButtons();
+}
+
+
+function print() {
+    var element =  document.getElementById('main-content').firstElementChild.innerHTML;
+    var title = '';
+    if(element !=undefined){
+       title = element;
+    }
+    title = transliterate(title);
+    var size = Math.floor(($('#main-content').width()*0.26458333333719))
+    console.log(title);
+    size = size + 'mm';
+    return xepOnline.Formatter.Format('main-content',
+    {pageWidth:size, pageHeight:'279mm', render: 'download', pageMargin: '0.1in', filename:  title}
+    //{render:'download'}
+     );
+}
+
+function transliterate(word){
+    var answer = ""
+      , a = {};
+
+   a["Ё"]="YO";a["Й"]="I";a["Ц"]="TS";a["У"]="U";a["К"]="K";a["Е"]="E";a["Н"]="N";a["Г"]="G";a["Ш"]="SH";a["Щ"]="SCH";a["З"]="Z";a["Х"]="H";a["Ъ"]="'";
+   a["ё"]="yo";a["й"]="i";a["ц"]="ts";a["у"]="u";a["к"]="k";a["е"]="e";a["н"]="n";a["г"]="g";a["ш"]="sh";a["щ"]="sch";a["з"]="z";a["х"]="h";a["ъ"]="'";
+   a["Ф"]="F";a["Ы"]="I";a["В"]="V";a["А"]="a";a["П"]="P";a["Р"]="R";a["О"]="O";a["Л"]="L";a["Д"]="D";a["Ж"]="ZH";a["Э"]="E";
+   a["ф"]="f";a["ы"]="i";a["в"]="v";a["а"]="a";a["п"]="p";a["р"]="r";a["о"]="o";a["л"]="l";a["д"]="d";a["ж"]="zh";a["э"]="e";
+   a["Я"]="Ya";a["Ч"]="CH";a["С"]="S";a["М"]="M";a["И"]="I";a["Т"]="T";a["Ь"]="'";a["Б"]="B";a["Ю"]="YU";
+   a["я"]="ya";a["ч"]="ch";a["с"]="s";a["м"]="m";a["и"]="i";a["т"]="t";a["ь"]="'";a["б"]="b";a["ю"]="yu";
+
+   for (i in word){
+     if (word.hasOwnProperty(i)) {
+       if (a[word[i]] === undefined){
+         answer += word[i];
+       } else {
+         answer += a[word[i]];
+       }
+     }
+   }
+   return answer;
 }

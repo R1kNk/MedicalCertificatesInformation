@@ -43,12 +43,6 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                 await _context.SaveChangesAsync();
             }
 
-            if (!_context.Hospitals.Any())
-            {
-                await _context.Hospitals.AddRangeAsync(GetDefaultHospitals());
-                await _context.SaveChangesAsync();
-            }
-
             if (!await _roleManager.RoleExistsAsync("Admin"))
             {
                 var role = new ApplicationRole() { Name = "Admin" };
@@ -97,21 +91,7 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                 new HealthGroup() { Name = "5-я группа" },
             };
         }
-
-        List<Hospital> GetDefaultHospitals()
-        {
-            return new List<Hospital>()
-            {
-                new Hospital() { Name = "26-я поликлиника" },
-                new Hospital() { Name = "15-я поликлиника" },
-                new Hospital() { Name = "1-я поликлиника" },
-                new Hospital() { Name = "5-я поликлиника" },
-                new Hospital() { Name = "99-я поликлиника" }
-            };
-        }
-
-       
-
+    
 
 
     }

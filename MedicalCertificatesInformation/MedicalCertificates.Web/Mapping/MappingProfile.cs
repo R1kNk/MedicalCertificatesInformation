@@ -4,7 +4,6 @@ using MedicalCertificates.Web.Models.CourseViewModels;
 using MedicalCertificates.Web.Models.DepartmentViewModels;
 using MedicalCertificates.Web.Models.GroupViewModels;
 using MedicalCertificates.Web.Models.HealthGroupViewModels;
-using MedicalCertificates.Web.Models.HospitalViewModels;
 using MedicalCertificates.Web.Models.MedicalCertificatesViewModels;
 using MedicalCertificates.Web.Models.PhysicalEducationViewModels;
 using MedicalCertificates.Web.Models.StudentViewModels;
@@ -15,30 +14,6 @@ namespace MedicalCertificates.Web.Mapping
     {
         public MappingProfile()
         {
-            //Hospital
-            CreateMap<Hospital, CreateHospitalViewModel>()
-                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
-                .ForMember(p => p.TelephoneNumber, map => map.MapFrom(p => p.TelephoneNumber))
-                .ReverseMap();
-
-            CreateMap<Hospital, DetailsHospitalViewModel>()
-               .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
-               .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
-               .ForMember(p => p.TelephoneNumber, map => map.MapFrom(p => p.TelephoneNumber))
-               .ForMember(p => p.MedicalCertificates, map => map.MapFrom(p => p.MedicalCertificates))
-               .ReverseMap();
-
-            CreateMap<Hospital, EditHospitalViewModel>()
-               .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
-               .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
-               .ForMember(p => p.TelephoneNumber, map => map.MapFrom(p => p.TelephoneNumber))
-               .ReverseMap();
-
-            CreateMap<Hospital, DeleteHospitalViewModel>()
-              .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
-              .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
-              .ForMember(p => p.TelephoneNumber, map => map.MapFrom(p => p.TelephoneNumber))
-              .ReverseMap();
 
             //Physicaleducation
             CreateMap<PhysicalEducation, CreatePhysicalEducationViewModel>()
@@ -90,7 +65,6 @@ namespace MedicalCertificates.Web.Mapping
                 .ForMember(p => p.CertificateTerm, map => map.MapFrom(p => p.FinishDate.Subtract(p.StartDate).TotalDays))
                 .ForMember(p => p.HealthGroupId, map => map.MapFrom(p => p.HealthGroupId))
                 .ForMember(p => p.PhysicalEducationId, map => map.MapFrom(p => p.PhysicalEducationId))
-                .ForMember(p => p.HospitalId, map => map.MapFrom(p => p.HospitalId))
                 .ReverseMap();
 
             CreateMap<MedicalCertificate, DetailsMedicalCertificatesViewModel>()
@@ -99,7 +73,6 @@ namespace MedicalCertificates.Web.Mapping
                 .ForMember(p => p.CertificateTerm, map => map.MapFrom(p => p.FinishDate.Subtract(p.StartDate).TotalDays))
                 .ForMember(p => p.HealthGroup, map => map.MapFrom(p => p.HealthGroup))
                 .ForMember(p => p.PhysicalEducation, map => map.MapFrom(p => p.PhysicalEducation))
-                .ForMember(p => p.Hospital, map => map.MapFrom(p => p.Hospital))
                 .ReverseMap();
 
             CreateMap<MedicalCertificate, DeleteMedicalCertificateViewModel>()
@@ -115,7 +88,6 @@ namespace MedicalCertificates.Web.Mapping
                 .ForMember(p => p.CertificateTerm, map => map.MapFrom(p => p.FinishDate.Subtract(p.StartDate).TotalDays))
                 .ForMember(p => p.HealthGroupId, map => map.MapFrom(p => p.HealthGroupId))
                 .ForMember(p => p.PhysicalEducationId, map => map.MapFrom(p => p.PhysicalEducationId))
-                .ForMember(p => p.HospitalId, map => map.MapFrom(p => p.HospitalId))
                 .ReverseMap();
 
             //Student

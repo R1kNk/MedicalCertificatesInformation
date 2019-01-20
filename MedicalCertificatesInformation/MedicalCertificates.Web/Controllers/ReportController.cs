@@ -11,7 +11,6 @@ using MedicalCertificates.Web.Models.SharedEntities;
 using MedicalCertificates.Web.Models.SharedViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Rotativa.AspNetCore;
 
 namespace MedicalCertificates.Web.Controllers
 {
