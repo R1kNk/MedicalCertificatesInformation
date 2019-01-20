@@ -48,7 +48,7 @@ namespace MedicalCertificates.Web.Controllers
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             LoginViewModel loginViewModel = new LoginViewModel();
-            loginViewModel.Users = await _userService.GetAllUsersAsync();
+            loginViewModel.Users = await _userService.GetAllUsersSortedAsync();
             return View(loginViewModel);
         }
 

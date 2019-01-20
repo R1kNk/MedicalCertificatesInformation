@@ -74,19 +74,23 @@ namespace MedicalCertificates.Service.ModelsServices
                         if (!valid)
                             result.Add(student);
                     }
-                    if (lastCertificate.FinishDate < dateTime)
-                    {
-                        if (!valid)
-                            result.Add(student);
-                    }
                     else
                     {
-                        if (valid)
-                            result.Add(student);
+                        if (lastCertificate.FinishDate < dateTime)
+                        {
+                            if (!valid)
+                                result.Add(student);
+                        }
+                        else
+                        {
+                            if (valid)
+                                result.Add(student);
+                        }
                     }
                 }
             }
             return result;
         }
+
     }
 }

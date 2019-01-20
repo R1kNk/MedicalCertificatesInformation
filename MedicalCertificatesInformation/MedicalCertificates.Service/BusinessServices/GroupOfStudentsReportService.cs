@@ -36,67 +36,119 @@ namespace MedicalCertificates.Service.BusinessServices
             return await _physicalEducationService.GetAllAsync();
         }
 
-        public async Task<GroupOfStudentsReport> GetAllFromAsync(TEntity container)
+        private async Task<GroupOfStudentsReport> GetReportAsync(IReadOnlyList<Student> students, DateTime dateTime)
         {
-            IReadOnlyList<Student> students = _entityService.GetAllStudents(container);
             IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
             IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
 
-            GroupOfStudentsReport report = new GroupOfStudentsReport(students, healthGroups, physicalEducations);
+            GroupOfStudentsReport report = new GroupOfStudentsReport(students, healthGroups, physicalEducations, dateTime);
             return report;
+        }
+        //
+        public async Task<GroupOfStudentsReport> GetAllFromAsync(IReadOnlyList<TEntity> containers)
+        {
+            List<Student> students = new List<Student>();
+            foreach(var container in containers)
+            {
+                students.AddRange(_entityService.GetAllStudents(container));
+            }  
+            return await GetReportAsync(students, DateTime.Now);
+        }
+
+        public async Task<GroupOfStudentsReport> GetAllFromOnDateAsync(IReadOnlyList<TEntity> containers, DateTime dateTime)
+        {
+            List<Student> students = new List<Student>();
+            foreach (var container in containers)
+            {
+                students.AddRange(_entityService.GetAllStudents(container));
+            }
+            return await GetReportAsync(students, dateTime);
+        }
+
+        public async Task<GroupOfStudentsReport> GetInvalidFromAsync(IReadOnlyList<TEntity> containers)
+        {
+            List<Student> studentsList = new List<Student>();
+            foreach (var container in containers)
+            {
+                studentsList.AddRange(_entityService.GetAllStudents(container));
+            }
+            var students = _studentService.SortStudents(studentsList, false, DateTime.Now);
+            return await GetReportAsync(students, DateTime.Now);
+        }
+
+        public async Task<GroupOfStudentsReport> GetInvalidOnDateFromAsync(IReadOnlyList<TEntity> containers, DateTime dateTime)
+        {
+            List<Student> studentsList = new List<Student>();
+            foreach (var container in containers)
+            {
+                studentsList.AddRange(_entityService.GetAllStudents(container));
+            }
+            var students = _studentService.SortStudents(studentsList, false, dateTime);
+            return await GetReportAsync(students, dateTime);
+        }
+     
+        public async Task<GroupOfStudentsReport> GetValidFromAsync(IReadOnlyList<TEntity> containers)
+        {
+            List<Student> studentsList = new List<Student>();
+            foreach (var container in containers)
+            {
+                studentsList.AddRange(_entityService.GetAllStudents(container));
+            }
+            var students = _studentService.SortStudents(studentsList, true, DateTime.Now);
+            return await GetReportAsync(students, DateTime.Now);
+        }
+
+        public async Task<GroupOfStudentsReport> GetValidOnDateFromAsync(IReadOnlyList<TEntity> containers, DateTime dateTime)
+        {
+            List<Student> studentsList = new List<Student>();
+            foreach (var container in containers)
+            {
+                studentsList.AddRange(_entityService.GetAllStudents(container));
+            }
+            var students = _studentService.SortStudents(studentsList, true, dateTime);
+            return await GetReportAsync(students, DateTime.Now);
+        }
+
+        //
+        public async Task<GroupOfStudentsReport> GetAllFromAsync(TEntity container)
+        {
+            IReadOnlyList<Student> students = _entityService.GetAllStudents(container);
+
+            return await GetReportAsync(students, DateTime.Now);
+        }
+
+        public async Task<GroupOfStudentsReport> GetAllFromOnDateAsync(TEntity container, DateTime dateTime)
+        {
+            IReadOnlyList<Student> students = _entityService.GetAllStudents(container);
+
+            return await GetReportAsync(students, dateTime);
         }
 
         public async Task<GroupOfStudentsReport> GetInvalidFromAsync(TEntity container)
         {
             IReadOnlyList<Student> students = _studentService.SortStudents(_entityService.GetAllStudents(container), false, DateTime.Now);
 
-            IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
-            IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
-
-            GroupOfStudentsReport report = new GroupOfStudentsReport(students, healthGroups, physicalEducations);
-            return report;
+            return await GetReportAsync(students, DateTime.Now);
         }
 
         public async Task<GroupOfStudentsReport> GetInvalidOnDateFromAsync(TEntity container, DateTime dateTime)
         {
             IReadOnlyList<Student> students = _studentService.SortStudents(_entityService.GetAllStudents(container), false, dateTime);
 
-            IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
-            IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
-
-            GroupOfStudentsReport report = new GroupOfStudentsReport(students, healthGroups, physicalEducations);
-            return report;
-        }
-
-        public Task<GroupOfStudentsReport> GetInvalidOnDateIntervalFromAsync(TEntity container, DateTime dateTime)
-        {
-            throw new NotImplementedException();
+            return await GetReportAsync(students, dateTime);
         }
 
         public async Task<GroupOfStudentsReport> GetValidFromAsync(TEntity container)
         {
             IReadOnlyList<Student> students = _studentService.SortStudents(_entityService.GetAllStudents(container), true, DateTime.Now);
-            IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
-            IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
-
-            GroupOfStudentsReport report = new GroupOfStudentsReport(students, healthGroups, physicalEducations);
-            return report;
+            return await GetReportAsync(students, DateTime.Now);
         }
 
         public async Task<GroupOfStudentsReport> GetValidOnDateFromAsync(TEntity container, DateTime dateTime)
         {
             IReadOnlyList<Student> students = _studentService.SortStudents(_entityService.GetAllStudents(container), true, dateTime);
 
-            IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
-            IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
-
-            GroupOfStudentsReport report = new GroupOfStudentsReport(students, healthGroups, physicalEducations);
-            return report;
-        }
-
-        public Task<GroupOfStudentsReport> GetValidOnDateIntervalFromAsync(TEntity container, DateTime dateTime)
-        {
-            throw new NotImplementedException();
+            return await GetReportAsync(students, dateTime);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Models
 {
-    public interface ICourseService : ICRUDService<Course>
+    public interface ICourseService : ICRUDService<Course>, IGetAllStudents<Course>
     {
         Task<OperationResult<BusinessLogicResultError>> AddCourseAsync(Course newCourse, int departmentId);
     }

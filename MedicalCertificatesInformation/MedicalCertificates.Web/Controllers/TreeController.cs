@@ -36,15 +36,12 @@ namespace MedicalCertificates.Web.Controllers
             return Json(role);
         }
 
-
         public async Task<JsonResult> GetUserGroupsId(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             List<int> groupsId = user.Groups.Select(p => p.Id).ToList();
             return Json(groupsId);
         }
-
-
 
         public async Task<JsonResult> GetManagementHierarchy()
         {
@@ -93,7 +90,6 @@ namespace MedicalCertificates.Web.Controllers
             return json;
         }
 
-        [Authorize(Roles ="Admin")]
         public async Task<JsonResult> GetManagementFormHierarchy()
         {
             var curUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
@@ -129,6 +125,7 @@ namespace MedicalCertificates.Web.Controllers
             var json = Json(departmentNodes);
             return json;
         }
+
         private CertificateNode MakeCertificateNode(MedicalCertificate certificate, string title, int parentId, bool isAdmin)
         {
             CertificateNode node = new CertificateNode() { modelId = certificate.Id, parentId = parentId, title = title };

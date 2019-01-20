@@ -10,19 +10,8 @@ function sendFormRequest(url, formId, method, replaceIntoId, promiseArray, param
         url: url,
         data: data,
         success: function (data) {
-            SetHtml(replaceIntoId, data);
-            if(promiseArray!=undefined){
-                if(parameterArray!=undefined){
-                    for(var i = 0; i< promiseArray.length; i++){
-                        promiseArray[i](parameterArray[i]);
-                    }
-                }
-                else{
-                    for(var i = 0; i< promiseArray.length; i++){
-                        promiseArray[i]();
-                    }
-                }
-            }
+            SetHtml(replaceIntoId, data, promiseArray, parameterArray);
+            
         },
         error: function (data) {
             console.log("error") 
@@ -112,23 +101,7 @@ function sendIdRequest(url, id, method, replaceIntoId, promiseArray, parameterAr
             cache: false,
             url: url,
             success: function (data) {
-                SetHtml(replaceIntoId, data);
-                if(promiseArray!=undefined){
-                    if(parameterArray!=undefined){
-                        for(var i = 0; i< promiseArray.length; i++){
-                            if(parameterArray[i] != undefined)
-                            promiseArray[i](parameterArray[i]);
-                            else{
-                                promiseArray[i]();
-                            }
-                        }
-                    }
-                    else{
-                        for(var i = 0; i< promiseArray.length; i++){
-                                promiseArray[i]();
-                        }
-                    }
-                }
+                SetHtml(replaceIntoId, data, promiseArray, parameterArray);
             },
             error: function (data) {
                 console.log("error")
@@ -142,19 +115,8 @@ function sendRequest(url, method, replaceIntoId, promiseArray, parameterArray) {
         cache: false,
         url: url,
         success: function (data) {
-            SetHtml(replaceIntoId, data);
-            if(promiseArray!=undefined){
-                if(parameterArray!=undefined){
-                    for(var i = 0; i< promiseArray.length; i++){
-                        promiseArray[i](parameterArray[i]);
-                    }
-                }
-                else{
-                    for(var i = 0; i< promiseArray.length; i++){
-                        promiseArray[i]();
-                    }
-                }
-            }
+            SetHtml(replaceIntoId, data, promiseArray, parameterArray);
+            
         },
         error: function (data) {
             console.log("error")
@@ -162,12 +124,29 @@ function sendRequest(url, method, replaceIntoId, promiseArray, parameterArray) {
     });
 }
 
-function SetHtml(containerId, data) {
+async function SetHtml(containerId, data, promiseArray, parametersArray) {
     if (containerId == undefined)
         containerId = mainContainerId;
     if (data != undefined) {
         $(containerId).html(data);
+        if(promiseArray!=undefined){
+            if(parametersArray!=undefined){
+                for(var i = 0; i< promiseArray.length; i++){
+                    if(parametersArray[i] != undefined)
+                    promiseArray[i](parametersArray[i]);
+                    else{
+                        promiseArray[i]();
+                    }
+                }
+            }
+            else{
+                for(var i = 0; i< promiseArray.length; i++){
+                        promiseArray[i]();
+                }
+            }
+        }
     }
+    return 1;
 }
 
 //Hospital functions
@@ -318,28 +297,28 @@ function GetDetailsMedicalCertificateRequest(id) {
 
 function GetCreateMedicalCertificateRequest(id) {
     var funcs = new Array();
-    funcs.push(BindDateTimePickers);
+    funcs.push(BindDateTimePickerMedicalCertificatesForm);
     funcs.push(toggleFormModal);
     sendIdRequest('/MedicalCertificate/Create', id, "GET", "#formModal", funcs);
 }
 
  function SendCreateMedicalCertificateRequest() {
     var funcs = [];
-    funcs.push(BindDateTimePickers)
+    funcs.push(BindDateTimePickerMedicalCertificatesForm)
     funcs.push(ExecUpdateActionAction);
    sendFormRequest('/MedicalCertificate/Create', '#createMedicalCertificateForm', 'POST', "#formModal", funcs);
 }
 
 function GetEditMedicalCertificateRequest(id) {
     var funcs = new Array();
-    funcs.push(BindDateTimePickers);
+    funcs.push(BindDateTimePickerMedicalCertificatesForm);
     funcs.push(toggleFormModal)
     sendIdRequest('/MedicalCertificate/Edit', id, "GET", "#formModal", funcs);
 }
 
  function SendEditMedicalCertificateRequest() {
     var funcs = new Array();
-    funcs.push(BindDateTimePickers);
+    funcs.push(BindDateTimePickerMedicalCertificatesForm);
     funcs.push(ExecUpdateActionAction);
   sendFormRequest('/MedicalCertificate/Edit', '#editMedicalCertificateForm', 'POST', "#formModal", funcs);
 };
@@ -532,6 +511,17 @@ function SendDeleteDepartmentRequest() {
     funcs.push(ExecUpdateActionAction);
     sendFormRequest('/Department/Delete', '#deleteDepartmentForm', 'POST', "#formModal", funcs);
 };
+//Manage
+
+function GetEditPasswordRequest(){
+    var funcs = new Array();
+    funcs.push(toggleFormModal);
+    sendRequest('/Manage/ChangePassword', 'GET', '#formModal', funcs);
+}
+
+function SendEditPasswordRequest(){
+    sendFormRequest('/Manage/ChangePassword', '#changePasswordForm', 'POST', '#formModal');
+}
 
 //Admin funcs
 
@@ -578,7 +568,7 @@ function SendDeleteUserRequest() {
 
 function GetEditUserGroupsRequest(id) {
     var funcs = new Array();
-    funcs.push(BindFormTree);
+    funcs.push(BindFormTreeEditGroups);
     funcs.push(toggleFormModal);
     var parameters = new Array();
     parameters.push(id);
@@ -627,8 +617,280 @@ function SendEditUserGroupsRequest() {
     
 };
 
+
+//Reports
+function GetConfigureGroupReportRequest() {
+    var funcs = new Array();
+    funcs.push(BindFormTreeReportGroups)
+    funcs.push(BindDateTimePickerReportForm);
+    funcs.push(toggleFormModal);
+    sendRequest('/Report/ConfigureGroupReport', "GET", "#formModal", funcs);
+}
+
+async function SendConfigureGroupReportRequest() {
+    var dataArray = $('#configureGroupReport').serialize();
+    var formTree = $('#formTree').fancytree('getTree');
+
+    var counter = 0;
+    formTree.visit(function(n){
+        console.log(n);
+        if(n.type=='group'){
+            if(n.selected == true){
+                dataArray+= '&GroupsId['+counter+']='+n.data.modelId;
+                counter++;
+            }
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/ConfigureGroupReport',
+        data: dataArray,
+        success: function (data) {      
+            var substring = '&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430';
+            if(data.indexOf(substring)!=-1){
+                var funcs = [];
+                funcs.push(BindFormTreeReportGroups);
+                funcs.push(BindDateTimePickerReportForm);
+                SetHtml('#formModal',data, funcs);
+            }
+            else{
+                SetHtml('#formModal',data);
+                GetGroupReportRequest(dataArray)
+            }
+        },
+        error: function (data) {
+            console.log(data) 
+        }
+    });
+}
+
+function GetGroupReportRequest(data){
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/GroupReport',
+        data: data,
+        success: function (data) {      
+            SetHtml(undefined,data);
+        },
+        error: function (data) {
+            console.log(data); 
+        }
+    });
+}
+
+function GetConfigureDepartmentReportRequest() {
+    var funcs = new Array();
+    funcs.push(BindFormTreeReportDepartments)
+    funcs.push(BindDateTimePickerReportForm);
+    funcs.push(toggleFormModal);
+    sendRequest('/Report/ConfigureDepartmentReport', "GET", "#formModal", funcs);
+}
+
+async function SendConfigureDepartmentReportRequest() {
+    var dataArray = $('#configureDepartmentReport').serialize();
+    var formTree = $('#formTree').fancytree('getTree');
+
+    var counter = 0;
+    formTree.visit(function(n){
+        console.log(n);
+        if(n.type=='department'){
+            if(n.selected == true){
+                dataArray+= '&DepartmentsId['+counter+']='+n.data.modelId;
+                counter++;
+            }
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/ConfigureDepartmentReport',
+        data: dataArray,
+        success: function (data) {      
+            var substring = '&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430';
+            if(data.indexOf(substring)!=-1){
+                var funcs = [];
+                funcs.push(BindFormTreeReportDepartments);
+                funcs.push(BindDateTimePickerReportForm);
+                SetHtml('#formModal',data, funcs);
+            }
+            else{
+                SetHtml('#formModal',data);
+                GetDepartmentReportRequest(dataArray);
+            }
+        },
+        error: function (data) {
+            console.log(data) 
+        }
+    });
+}
+
+function GetDepartmentReportRequest(data){
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/DepartmentReport',
+        data: data,
+        success: function (data) {      
+            SetHtml(undefined,data);
+        },
+        error: function (data) {
+            console.log(data); 
+        }
+    });
+}
+
+//
+function GetConfigureCourseReportRequest() {
+    var funcs = new Array();
+    funcs.push(BindFormTreeReportCourses)
+    funcs.push(BindDateTimePickerReportForm);
+    funcs.push(toggleFormModal);
+    sendRequest('/Report/ConfigureCourseReport', "GET", "#formModal", funcs);
+}
+
+async function SendConfigureCourseReportRequest() {
+    var dataArray = $('#configureCourseReport').serialize();
+    var formTree = $('#formTree').fancytree('getTree');
+
+    var counter = 0;
+    formTree.visit(function(n){
+        console.log(n);
+        if(n.type=='course'){
+            if(n.selected == true){
+                dataArray+= '&CoursesId['+counter+']='+n.data.modelId;
+                counter++;
+            }
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/ConfigureCourseReport',
+        data: dataArray,
+        success: function (data) {      
+            var substring = '&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430';
+            if(data.indexOf(substring)!=-1){
+                var funcs = [];
+                funcs.push(BindFormTreeReportCourses);
+                funcs.push(BindDateTimePickerReportForm);
+                SetHtml('#formModal',data, funcs);
+            }
+            else{
+                SetHtml('#formModal',data);
+                GetCourseReportRequest(dataArray);
+            }
+        },
+        error: function (data) {
+            console.log(data) 
+        }
+    });
+}
+
+function GetCourseReportRequest(data){
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/CourseReport',
+        data: data,
+        success: function (data) {      
+            SetHtml(undefined,data);
+        },
+        error: function (data) {
+            console.log(data); 
+        }
+    });
+}
+
+function ChangeReportType(){
+    var value = $('#reportType').val();
+    switch(+value){
+        case 2:
+        $('#reportOnDate').show();
+        $('#reportMonthsCount').hide();
+        break;
+        case 3:
+        $('#reportOnDate').hide();
+        $('#reportMonthsCount').show();
+        break;
+        default:
+        $('#reportOnDate').hide();
+        $('#reportMonthsCount').hide();
+        break;
+    }
+}
+
 //Other
- function LoadFormTree(id){
+
+function BindFormTreeEditGroups(id){
+    var funcs = [];
+    funcs.push(SetCheckboxesOnGroups);
+    funcs.push(CheckSelectedGroups);
+    funcs.push(ExpandAllNodes);
+    var parameters = [];
+    parameters[1]= id;
+    parameters[2] = '#formTree';
+    LoadFormTree(funcs, parameters);    
+}
+
+function BindFormTreeReportGroups(){
+        var funcs = [];
+        funcs.push(SetCheckboxesOnGroups);
+        funcs.push(ExpandAllNodes);
+        var parameters = [];
+        parameters[1] = '#formTree';
+        LoadFormTree(funcs, parameters);    
+}
+
+function BindFormTreeReportDepartments(){
+    var funcs = [];
+    funcs.push(SetCheckboxesOnDepartments);
+    var parameters = [];
+    parameters[1] = '#formTree';
+    LoadFormTree(funcs, parameters);    
+}
+
+function BindFormTreeReportCourses(){
+    var funcs = [];
+    funcs.push(SetCheckboxesOnCourses);
+    funcs.push(ExpandDepartmentNodes);
+    var parameters = [];
+    parameters[1] = '#formTree';
+    LoadFormTree(funcs, parameters);    
+}
+
+ function SetCheckboxesOnGroups(){
+    var formTree = $('#formTree').fancytree('getTree');
+    formTree.visit(function(n){
+        console.log(n);
+        if(n.type=='group'){
+        n.checkbox = true;
+        }
+    });
+ }
+
+ function SetCheckboxesOnDepartments(){
+    var formTree = $('#formTree').fancytree('getTree');
+    formTree.visit(function(n){
+        console.log(n);
+        if(n.type=='department'){
+        n.checkbox = true;
+        }
+    });
+ }
+
+ function SetCheckboxesOnCourses(){
+    var formTree = $('#formTree').fancytree('getTree');
+    formTree.visit(function(n){
+        console.log(n);
+        if(n.type=='course'){
+        n.checkbox = true;
+        }
+    });
+ }
+
+ function LoadFormTree(functionsArray, parametersArray){
      $("#formTree").fancytree({
         source: $.ajax({
                 url: '/Tree/GetManagementFormHierarchy',
@@ -649,50 +911,72 @@ function SendEditUserGroupsRequest() {
 
         },
         loadChildren: function(event, data) {
-            var formTree = $('#formTree').fancytree('getTree');
-
-            formTree.visit(function(n){
-                console.log(n);
-                if(n.type=='group'){
-                n.checkbox = true;
+            if(functionsArray!=undefined){
+                if(parametersArray!=undefined){
+                    for(var i = 0; i< functionsArray.length; i++){
+                        if(parametersArray[i] != undefined)
+                        functionsArray[i](parametersArray[i]);
+                        else{
+                            functionsArray[i]();
+                        }
+                    }
                 }
-            });
-            CheckSelectedGroups(id);
+                else{
+                    for(var i = 0; i< functionsArray.length; i++){
+                        functionsArray[i]();
+                    }
+                }
+            }
+            
         }
     });
-
-    function CheckSelectedGroups(){
-        var formTree = $('#formTree').fancytree('getTree');
-        var result = undefined;
-        var url =  "/Tree/GetUserGroupsId" + '?id=' + id;
-        $.ajax({
-            type: "GET",
-            cache: false,
-            url: url,
-            success: function (data) {
-            result = data;
-            if(result!= undefined){
-                formTree.visit(function(n){
-                    if(n.type=='group'){
-                    for(var i = 0; i< result.length; i++){
-                        if(result[i] == n.data.modelId){
-                            n.setSelected(true)
-                            break;
-                            }
-                        }
-                        }
-                    });
-                }
-            },
-                error: function (data) {
-                    console.log("error")
-                }
-        }); 
-    }
-
 }
-async function BindFormTree(id){
-   await LoadFormTree(id);
+
+function CheckSelectedGroups(id){
+    var formTree = $('#formTree').fancytree('getTree');
+    var result = undefined;
+    var url =  "/Tree/GetUserGroupsId" + '?id=' + id;
+    $.ajax({
+        type: "GET",
+        cache: false,
+        url: url,
+        success: function (data) {
+        result = data;
+        if(result!= undefined){
+            formTree.visit(function(n){
+                if(n.type=='group'){
+                for(var i = 0; i< result.length; i++){
+                    if(result[i] == n.data.modelId){
+                        n.setSelected(true);
+                        break;
+                        }
+                    }
+                    }
+                });
+            }
+        },
+            error: function (data) {
+                console.log("error")
+            }
+    }); 
+}
+
+function ExpandAllNodes(id){
+    var formTree = $(id).fancytree('getTree');
+    formTree.visit(function(n){
+        if(n.isFolder()){
+        n.setExpanded(true);
+        }
+    });
+}
+
+function ExpandDepartmentNodes(id){
+    var formTree = $(id).fancytree('getTree');
+    formTree.visit(function(n){
+        if(n.type=='department'){
+        n.setExpanded(true);
+        }
+    });
 }
 
 function toggleFormModal() {
@@ -892,49 +1176,52 @@ async function ExecUpdateActionAction(){
 }
 
 
-//
+function bindDatePicker() {
+    $(".date").datetimepicker({
+        format: 'DD.MM.YYYY',
+        locale: 'ru',
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+    }).find('input:first').on("blur", function () {
+        var date = parseDate($(this).val());
+        $(this).val(date);
+    });
+}
 
-function BindDateTimePickers() {
-    var bindDatePicker = function () {
-        $(".date").datetimepicker({
-            format: 'DD.MM.YYYY',
-            locale: 'ru',
-            icons: {
-                time: "fa fa-clock-o",
-                date: "fa fa-calendar",
-                up: "fa fa-arrow-up",
-                down: "fa fa-arrow-down"
-            }
-        }).find('input:first').on("blur", function () {
-            // check if the date is correct. We can accept dd-mm-yyyy and yyyy-mm-dd.
-            // update the format if it's yyyy-mm-dd
-            var date = parseDate($(this).val());
+function bindradioButtons() {
+    $("#IsUsingTermNo").prop("checked", true);
+    $("#IsUsingTermYes").prop("checked", false);
 
-            //if (!isValidDate(date)) {
-            //    //create date based on momentjs (we have that)
-            //    date = moment().format('DD.MM.YYYY');
-            //}
+    $('input[type=radio][name^=IsUsingTerm]').change(function() {
+        if (this.value === 'true'){
+            $('#finishDateBlock').hide();
+            $('#certificateTermBlock').show();
+        } 
+        else{
+            $('#certificateTermBlock').hide();
+            $('#finishDateBlock').show();
+        }
+    });
+}
 
-            $(this).val(date);
-        });
-    }
+function parseDate(value) {
+    var m = value.match(/^(\d{1,2})(\/|-)?(\d{1,2})(\/|-)?(\d{4})$/);
+    if (m)
+        value = m[5] + '-' + ("00" + m[3]).slice(-2) + '-' + ("00" + m[1]).slice(-2);
 
-    var bindradioButtons = function() {
-        $("#IsUsingTermNo").prop("checked", true);
-        $("#IsUsingTermYes").prop("checked", false);
+    return value;
+}
 
-        $('input[type=radio][name^=IsUsingTerm]').change(function() {
-            if (this.value === 'true'){
-                $('#finishDateBlock').hide();
-                $('#certificateTermBlock').show();
-            } 
-            else{
-                $('#certificateTermBlock').hide();
-                $('#finishDateBlock').show();
-            }
-        });
-    }
+function BindDateTimePickerReportForm() {
+    bindDatePicker();
+}
 
+function BindDateTimePickerMedicalCertificatesForm() {
+    
     var isValidDate = function (value, format) {
         format = format || false;
         // lets parse the date to the best of our knowledge
@@ -947,14 +1234,7 @@ function BindDateTimePickers() {
         return isNaN(timestamp) == false;
     }
 
-    var parseDate = function (value) {
-        var m = value.match(/^(\d{1,2})(\/|-)?(\d{1,2})(\/|-)?(\d{4})$/);
-        if (m)
-            value = m[5] + '-' + ("00" + m[3]).slice(-2) + '-' + ("00" + m[1]).slice(-2);
-
-        return value;
-    }
-
+    
     bindDatePicker();
     bindradioButtons();
 }

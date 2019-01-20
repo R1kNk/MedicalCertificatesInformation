@@ -5,8 +5,8 @@ namespace MedicalCertificates.Service.ReportModels.Common
 {
     public class CertificatePresenceStat<TEntity> where TEntity : class 
     {
-        public Stat<TEntity> Have { get; private set; }
-        public Stat<TEntity> DontHave { get; private set; }
+        public Stat<TEntity> Have { get;  set; }
+        public Stat<TEntity> DontHave { get;  set; }
 
 
         public IReadOnlyList<int> CountsInEachStat
@@ -26,12 +26,12 @@ namespace MedicalCertificates.Service.ReportModels.Common
 
         public int All { get; set; }
 
-        public CertificatePresenceStat(IReadOnlyList<TEntity> have, IReadOnlyList<TEntity> dontHave)
+        public CertificatePresenceStat(List<TEntity> have, List<TEntity> dontHave)
         {
             int haveCount = default(int);
             int dontHaveCount = default(int);
-            IReadOnlyList<TEntity> HaveList = new List<TEntity>();
-            IReadOnlyList<TEntity> DontHaveList = new List<TEntity>();
+            List<TEntity> HaveList = new List<TEntity>();
+            List<TEntity> DontHaveList = new List<TEntity>();
 
             if (have != null)
             {
@@ -61,13 +61,13 @@ namespace MedicalCertificates.Service.ReportModels.Common
             double percentageDontHave = 100.0 - percentageHave;
 
             Have = new Stat<TEntity>(haveCount, percentageHave, HaveList);
-            DontHave = new Stat<TEntity>(dontHaveCount, percentageHave,DontHaveList);
+            DontHave = new Stat<TEntity>(dontHaveCount, percentageDontHave, DontHaveList);
         }
 
-        public CertificatePresenceStat(IReadOnlyList<TEntity> have, IReadOnlyList<TEntity> dontHave, int haveCount, int dontHaveCount)
+        public CertificatePresenceStat(List<TEntity> have, List<TEntity> dontHave, int haveCount, int dontHaveCount)
         {
-            IReadOnlyList<TEntity> HaveList = new List<TEntity>();
-            IReadOnlyList<TEntity> DontHaveList = new List<TEntity>();
+            List<TEntity> HaveList = new List<TEntity>();
+            List<TEntity> DontHaveList = new List<TEntity>();
 
             if (have != null)
             {

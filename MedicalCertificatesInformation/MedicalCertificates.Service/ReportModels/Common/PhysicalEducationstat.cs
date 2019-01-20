@@ -8,7 +8,7 @@ namespace MedicalCertificates.Service.ReportModels.Common
     public class PhysicalEducationStat<TEntity> where TEntity : class
     {
 
-        public IReadOnlyList<RelatedStat<TEntity, PhysicalEducation>> PhysicalEducationStatistics { get; private set; }
+        public IReadOnlyList<RelatedStat<TEntity, PhysicalEducation>> PhysicalEducationStatistics { get;  set; }
 
         public int All { get; set; }
 
@@ -28,21 +28,25 @@ namespace MedicalCertificates.Service.ReportModels.Common
         }
 
 
-        public PhysicalEducationStat(IReadOnlyList<PhysicalEducation> physicalEducations, IReadOnlyList<IReadOnlyList<TEntity>> stats)
+        public PhysicalEducationStat(IReadOnlyList<PhysicalEducation> physicalEducations, List<List<TEntity>> stats)
         {
-            var result = new List<Stat<TEntity>>();
+            var result = new List<RelatedStat<TEntity, PhysicalEducation>>();
             var counts = new List<int>();
-            var lists = new List<IReadOnlyList<TEntity>>();
+            var lists = new List<List<TEntity>>();
 
-            foreach (var list in stats)
+            for (int i = 0; i < stats.Count; i++)
             {
-                if (list == null)
-                    result.Add(new RelatedStat<TEntity, PhysicalEducation>());
+                if (stats[i] == null || stats[i].Count == 0)
+                {
+                    All += 0;
+                    counts.Add(0);
+                    lists.Add(new List<TEntity>());
+                }
                 else
                 {
-                    All += list.Count;
-                    counts.Add(list.Count);
-                    lists.Add(list);
+                    All += stats[i].Count;
+                    counts.Add(stats[i].Count);
+                    lists.Add(stats[i]);
                 }
             }
             for (int i = 0; i < lists.Count; i++)
@@ -50,26 +54,27 @@ namespace MedicalCertificates.Service.ReportModels.Common
                 var count = counts[i];
                 var list = lists[i];
                 var physicalEducation = physicalEducations[i];
-                if (count == 0) result.Add(new RelatedStat<TEntity, PhysicalEducation>());
+                if (count == 0) result.Add(new RelatedStat<TEntity, PhysicalEducation>(0, 0, new List<TEntity>(), physicalEducations[i]));
                 else
                 {
                     var percentage = Math.Round((double)(100 * count) / All, 1);
                     result.Add(new RelatedStat<TEntity, PhysicalEducation>(count, percentage, list, physicalEducation));
                 }
             }
+            PhysicalEducationStatistics = result;
 
         }
 
-        public PhysicalEducationStat(IReadOnlyList<PhysicalEducation> physicalEducations, IReadOnlyList<IReadOnlyList<TEntity>> stats, IReadOnlyList<int> countInEachList)
+        public PhysicalEducationStat(IReadOnlyList<PhysicalEducation> physicalEducations, List<List<TEntity>> stats, IReadOnlyList<int> countInEachList)
         {
             var result = new List<Stat<TEntity>>();
             var counts = new List<int>();
-            var lists = new List<IReadOnlyList<TEntity>>();
+            var lists = new List<List<TEntity>>();
 
             for (int i = 0; i < countInEachList.Count; i++)
             {
                 if (stats[i] == null)
-                    result.Add(new RelatedStat<TEntity, PhysicalEducation>());
+                    result.Add(new RelatedStat<TEntity, PhysicalEducation>(0, 0, new List<TEntity>(), physicalEducations[i]));
                 else
                 {
                     All += countInEachList[i];
@@ -83,7 +88,7 @@ namespace MedicalCertificates.Service.ReportModels.Common
                 var count = counts[i];
                 var list = lists[i];
                 var physicalEducation = physicalEducations[i];
-                if (count == 0) result.Add(new RelatedStat<TEntity, PhysicalEducation>());
+                if (count == 0) result.Add(new RelatedStat<TEntity, PhysicalEducation>(0, 0, new List<TEntity>(), physicalEducations[i]));
                 else
                 {
                     var percentage = Math.Round((double)(100 * count) / All, 1);

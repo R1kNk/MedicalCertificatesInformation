@@ -274,7 +274,7 @@ namespace MedicalCertificates.Web.Controllers
                         ModelState.AddModelError("", "У этого студента нет справок");
                         break;
                     case BusinessLogicResultError.OverlappingDate:
-                        ModelState.AddModelError("", "Указанные даты не являются корректными по отношению к уже имеющимся справкам");
+                        ModelState.AddModelError("", "Указанная дата окончания справки меньше даты окончания последней (предпоследней) справки, принесенной учащимся");
                         break;
                     case BusinessLogicResultError.StudentNotFound:
                         ModelState.AddModelError("", "Такой студент не найден. Обновите страницу");
@@ -291,7 +291,7 @@ namespace MedicalCertificates.Web.Controllers
             return new List<CertificateTerm>()
             {
                 new CertificateTerm() { Months = 1, Text="1 месяц"},
-                new CertificateTerm() { Months = 3, Text="3 месяц"},
+                new CertificateTerm() { Months = 3, Text="3 месяца"},
                 new CertificateTerm() { Months = 6, Text="6 месяцев"},
                 new CertificateTerm() { Months = 12, Text="12 месяцев"}
             };

@@ -1,5 +1,6 @@
 ﻿using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.ReportModels.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -45,7 +46,7 @@ namespace MedicalCertificates.Service.ReportModels
             {
                 if (department != null)
                 {
-                    DepartmentReport report = new DepartmentReport(department, healthGroups, physicalEducations);
+                    DepartmentReport report = new DepartmentReport(department, healthGroups, physicalEducations, DateTime.Now);
                     reports.Add(report);
                 }
             }

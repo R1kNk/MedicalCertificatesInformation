@@ -1,0 +1,67 @@
+@model IReadOnlyList<MedicalCertificates.Service.ReportModels.StudentReport>
+
+    <table class="table table-hover table-condensed">
+
+        <!--Table head-->
+        <thead>
+            <tr>
+                <th>Студент</th>
+                <th>Группа</th>
+                <th>Курс</th>
+                <th>Отделение</th>
+                <th>Группа по физкультуре</th>
+                <th>Группа здоровья</th>
+                <th>Дата начала</th>
+                <th>Дата окончания</th>
+                <th>Дней до конца справки</th>
+                <th>Действительна ли справка</th>
+            </tr>
+        </thead>
+        <!--Table head-->
+        <!--Table body-->
+        <tbody>
+            @foreach (var student in Model)
+            {
+                var nameSurname = student.Surname + " "+ student.Name;
+                var start = "n/a";
+                var finish = "n/a";
+                var active = "Нет";
+                var tagClass = "danger";
+                var physName = "n/a";
+                var healthName = "n/a";
+                var daysBeforeEnd = 0;
+
+                if (student.CertificatePeriod!=0.0)
+                {
+                    start = student.StartDate?.ToString("dd.MM.yyyy");
+                    finish = student.FinishDate?.ToString("dd.MM.yyyy");
+                    active = student.CertificateValid ? "Да" : "Нет";
+                    physName = student.PhysicalEducation.Name;
+                    healthName = student.HealthGroup.Name;
+                    daysBeforeEnd = student.DaysBeforeEnd;
+                    tagClass = student.CertificateValid ? "success" : "danger";
+                    if (tagClass == "success" && student.DaysBeforeEnd <= 60)
+                    {
+                        tagClass = "warning";
+                    }
+                }
+
+
+
+
+            <tr onclick="GetDetailsStudentRequest(@student.Id)" class="@tagClass cursor-pointer">
+                <td>@nameSurname</td>
+                <td>@student.Group</td>
+                <td>@student.Course</td>
+                <td>@student.Department</td>
+                <td>@physName</td>
+                <td>@healthName</td>
+                <td>@start</td>
+                <td>@finish</td>
+                <td>@daysBeforeEnd</td>
+                <td>@active</td>
+            </tr>
+        }
+        </tbody>
+
+    </table>

@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using MedicalCertificates.Web.Models.ManageViewModels;
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.Interfaces.Auth;
+using MedicalCertificates.Web.Models.SharedViewModels;
+using MedicalCertificates.Web.Models.SharedEntities;
 
 namespace MedicalCertificates.Web.Controllers
 {
@@ -122,13 +124,14 @@ namespace MedicalCertificates.Web.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Пользователь не найден."));
+
             }
 
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (!changePasswordResult.Succeeded)
             {
-                AddErrors(changePasswordResult);
+                ModelState.AddModelError("", "Неправильный пароль.");
                 return View(model);
             }
 
@@ -136,7 +139,7 @@ namespace MedicalCertificates.Web.Controllers
             _logger.LogInformation("User changed their password successfully.");
             StatusMessage = "Your password has been changed.";
 
-            return RedirectToAction(nameof(ChangePassword));
+            return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
         }
 
         [HttpGet]

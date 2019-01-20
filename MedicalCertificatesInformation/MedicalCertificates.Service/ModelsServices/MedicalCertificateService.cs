@@ -38,11 +38,11 @@ namespace MedicalCertificates.Service.ModelsServices
 
             var lastCertificate = GetLastCertificate(foundedStudent);
 
-            //if (lastCertificate != null)
-            //{
-            //    if (lastCertificate.FinishDate > certificate.StartDate)
-            //        return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.OverlappingDate });
-            //}
+            if (lastCertificate != null)
+            {
+                if (lastCertificate.FinishDate > certificate.FinishDate)
+                    return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.OverlappingDate });
+            }
 
             certificate.StudentId = foundedStudent.Id;
             var result = await CreateAsync(certificate);
@@ -87,12 +87,12 @@ namespace MedicalCertificates.Service.ModelsServices
             }
             else
             {
-                //var penultimateCertificate = GetPenultimateCertificate(student);
-                //if (penultimateCertificate != null)
-                //{
-                //    if (penultimateCertificate.FinishDate > updateCertificate.StartDate)
-                //        return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.OverlappingDate });
-                //}
+                var penultimateCertificate = GetPenultimateCertificate(student);
+                if (penultimateCertificate != null)
+                {
+                    if (penultimateCertificate.FinishDate > updateCertificate.FinishDate)
+                        return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.OverlappingDate });
+                }
 
                 existingCertificate.StartDate = updateCertificate.StartDate;
                 existingCertificate.CertificateTerm = updateCertificate.CertificateTerm;
@@ -129,7 +129,7 @@ namespace MedicalCertificates.Service.ModelsServices
         {
             if (student != null && student.MedicalCertificates != null)
             {
-                var certs = student.MedicalCertificates.OrderBy(p => p.Id);
+                var certs = student.MedicalCertificates.OrderBy(p => p.Id).ToList();
                 return certs.LastOrDefault();
             }
             return null;

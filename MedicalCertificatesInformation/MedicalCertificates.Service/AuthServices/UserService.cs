@@ -247,5 +247,12 @@ namespace MedicalCertificates.Service.AuthServices
         {
             return await _userManager.Users.ToListAsync();
         }
+
+        public async Task<IReadOnlyList<ApplicationUser>> GetAllUsersSortedAsync()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            users = users.OrderBy(p => p.Pseudonim).ToList();
+            return users;
+        }
     }
 }

@@ -6,11 +6,12 @@ using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Repositories.Interfaces;
 using MedicalCertificates.Service.CommonServices;
 using MedicalCertificates.Service.ErrorsFetch;
+using MedicalCertificates.Service.Interfaces.Common;
 using MedicalCertificates.Service.Interfaces.Models;
 
 namespace MedicalCertificates.Service.ModelsServices
 {
-    public class CourseService : CRUDService<Course>, ICourseService
+    public class CourseService : CRUDService<Course>, ICourseService, IGetAllStudents<Course>
     {
         private readonly IRepository<Department> _departmentRepository;
 
@@ -34,5 +35,17 @@ namespace MedicalCertificates.Service.ModelsServices
             var result = await CreateAsync(newCourse);
             return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
         }
+
+        public IReadOnlyList<Student> GetAllStudents(Course course)
+        {
+            List<Student> studentList = new List<Student>();
+            if (course == null)
+                return studentList;
+
+            if (course != null)
+                studentList.AddRange(course.Groups.SelectMany(p=>p.Students).ToList());
+            return studentList;
+        }
+
     }
 }

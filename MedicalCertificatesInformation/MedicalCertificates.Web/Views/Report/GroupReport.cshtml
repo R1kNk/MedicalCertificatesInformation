@@ -1,0 +1,91 @@
+@model MedicalCertificates.Service.ReportModels.GroupOfStudentsReport
+
+<div>
+    <h1>Отчет по студентам групп</h1>
+    <hr />
+    <h2>Отчет составлен на @Model.OnDate.ToString("dd.MM.yyyy") число. Все описанные данные о сроках составлены на эту дату!</h2>
+    <hr />
+    @if (Model.All > 0)
+    {
+        <h3>Отчет по справкам</h3>
+        <hr />
+        <h4>Всего выбрано студентов: @Model.CertificatePresenceStatistics.All</h4>
+       
+            var fromWhat = default(string);
+            for(int i = 0; i< Model.FromWhatContainers.Count; i++)
+            {
+                if (i == Model.FromWhatContainers.Count - 1)
+                {
+                    fromWhat += Model.FromWhatContainers[i] + ".";
+                }
+                else
+                {
+                    fromWhat += Model.FromWhatContainers[i] + ", ";
+                }
+            }
+        
+        <h4>Cтуденты выбраны из групп: @fromWhat</h4>
+        <h4>Имеют действующие справки: @Model.CertificatePresenceStatistics.Have.Count (@Model.CertificatePresenceStatistics.Have.Percentage%)</h4>
+        <h4>Не имеют действующие справки: @Model.CertificatePresenceStatistics.DontHave.Count (@Model.CertificatePresenceStatistics.DontHave.Percentage%)</h4>
+        <hr />
+        @if (Model.CertificatePresenceStatistics.Have.EntityList.Count > 0)
+        {
+            <h5><strong>Табличный отчет о студентах с действующими справками</strong></h5>
+            <hr />
+            @Html.Partial("~/Views/Shared/StudentsReportsTable.cshtml", Model.CertificatePresenceStatistics.Have.EntityList);
+            <hr />
+        }
+        @if (Model.CertificatePresenceStatistics.DontHave.EntityList.Count > 0)
+        {
+            <h5><strong>Табличный отчет о студентах с недействующими справками</strong></h5>
+            <hr />
+            @Html.Partial("~/Views/Shared/StudentsReportsTable.cshtml", Model.CertificatePresenceStatistics.DontHave.EntityList);
+            <hr />
+        }
+        //
+        <h3>Отчет по группам по физкультуре</h3>
+        <hr />
+        <h4>Всего выбрано студентов: @Model.PhysicalEducationStat.All</h4>
+        foreach (var PEGroups in Model.PhysicalEducationStat.PhysicalEducationStatistics)
+        {
+            @if (PEGroups.EntityList.Count > 0)
+            {
+                <h4>Количество студентов с группой по физкультуре "@PEGroups.RelatedEntity.Name": @PEGroups.Count (@PEGroups.Percentage%)</h4>
+            }
+        }
+        <hr />
+        foreach (var PEGroups in Model.PhysicalEducationStat.PhysicalEducationStatistics)
+        {
+            <h5><strong>Табличный отчет о студентах с группой по физкультуре '@PEGroups.RelatedEntity.Name'</strong></h5>
+            <hr />
+            @Html.Partial("~/Views/Shared/StudentsReportsTable.cshtml", PEGroups.EntityList);
+            <hr />
+        }
+        <h3>Отчет по группам здоровья</h3>
+        <hr />
+        <h4>Всего выбрано студентов: @Model.HealthGroupStat.All</h4>
+        foreach (var HealthGroups in Model.HealthGroupStat.HealthGroupStatistics)
+        {
+            <h4>Количество студентов с группой здоровья "@HealthGroups.RelatedEntity.Name" : @HealthGroups.Count (@HealthGroups.Percentage%)</h4>
+        }
+        <hr />
+        foreach (var HealthGroups in Model.HealthGroupStat.HealthGroupStatistics)
+        {
+            @if (HealthGroups.EntityList.Count > 0)
+            {
+                <h5><strong>Табличный отчет о студентах с группой по физкультуре "@HealthGroups.RelatedEntity.Name"</strong></h5>
+                <hr />
+                @Html.Partial("~/Views/Shared/StudentsReportsTable.cshtml", HealthGroups.EntityList);
+                <hr />
+            }
+        }
+
+    }
+    else
+    {
+        <h5>Ни один студент не попал под выбранные критерии</h5>
+
+    }
+
+
+</div>

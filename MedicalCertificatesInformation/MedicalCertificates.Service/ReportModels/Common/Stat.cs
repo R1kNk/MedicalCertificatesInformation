@@ -8,9 +8,9 @@ namespace MedicalCertificates.Service.ReportModels.Common
     {
         public int Count { get; private set; }
         public double Percentage { get; private set; }
-        public IReadOnlyList<TEntity> EntityList { get; private set; }
+        public List<TEntity> EntityList { get;  set; }
 
-        public Stat(int count, double percentage, IReadOnlyList<TEntity> entityList)
+        public Stat(int count, double percentage, List<TEntity> entityList)
         {
             Count = count;
             Percentage = percentage;

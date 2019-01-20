@@ -1,0 +1,88 @@
+@model MedicalCertificates.Web.Models.ReportViewModels.ConfigureGroupReportViewModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <h3 class="modal-title" id="lineModalLabel">Генерация отчета</h3>
+        </div>
+        <div class="modal-body">
+            <form asp-action="ConfigureGroupReport" id="configureGroupReport">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <label class="control-label">Выберите одну или несколько групп</label>
+                <div id="formTree">
+                </div>
+                <span id="validationformTree" class="text-danger"></span>
+
+                <div class="form-group">
+                    @{
+                        var listTypes = new SelectList(new List<MedicalCertificates.Web.Models.ReportViewModels.ReportTypePair>(), "Value", "Text");
+                        if (Model.ReportTypes != null)
+                        {
+                            listTypes = new SelectList(Model.ReportTypes, "Value", "Text");
+                        }
+                    }
+                    <label asp-for="ReportType" class="control-label"></label>
+                    <select id="reportType" onchange="ChangeReportType();" asp-for="ReportType" class="form-control" asp-items="@listTypes">
+                        <option value="0">Выберите тип отчета</option>
+                    </select>
+                    <span asp-validation-for="ReportType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @{
+                        var listSorts = new SelectList(new List<MedicalCertificates.Web.Models.ReportViewModels.ReportSortPair>(), "Value", "Text");
+                        if (Model.ReportSorts != null)
+                        {
+                            listSorts = new SelectList(Model.ReportSorts, "Value", "Text");
+                        }
+                    }
+                    <label asp-for="SortBy" class="control-label"></label>
+                    <select asp-for="SortBy" class="form-control" asp-items="@listSorts">
+                        <option value="0">Выберите тип сортировки</option>
+                    </select>
+                    <span asp-validation-for="SortBy" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @{
+                        var listWhichChose = new SelectList(new List<MedicalCertificates.Web.Models.ReportViewModels.WhichPeopleChosePair>(), "Value", "Text");
+                        if (Model.ReportWhichPeopleChose != null)
+                        {
+                            listWhichChose = new SelectList(Model.ReportWhichPeopleChose, "Value", "Text");
+                        }
+                    }
+                    <label asp-for="WhichPeopleChose" class="control-label"></label>
+                    <select asp-for="WhichPeopleChose" class="form-control" asp-items="@listWhichChose">
+                        <option value="0">Выберите тип студентов</option>
+                    </select>
+                    <span asp-validation-for="WhichPeopleChose" class="text-danger"></span>
+                </div>
+                <div class="form-group" id="reportOnDate" hidden>
+                    <label asp-for="Date" class="control-label"></label>
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input asp-for="Date" type='text' class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+                <div class="form-group" id="reportMonthsCount" hidden>
+                    <label asp-for="MonthsCount" class="control-label"></label>
+                    <input asp-for="MonthsCount" class="form-control" />
+                    <span asp-validation-for="MonthsCount" class="text-danger"></span>
+                </div>
+                
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="btn-group btn-group-justified" role="group" aria-label="group button">
+                <div class="btn-group" role="group">
+                    <button onclick="SendConfigureGroupReportRequest();" class="btn btn-success">Сгенерировать</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

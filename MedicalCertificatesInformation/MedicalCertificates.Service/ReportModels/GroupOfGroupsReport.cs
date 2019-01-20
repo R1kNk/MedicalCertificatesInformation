@@ -1,5 +1,6 @@
 ﻿using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.ReportModels.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,14 +14,14 @@ namespace MedicalCertificates.Service.ReportModels
         public HealthGroupStat<GroupReport> HealthGroupStat { get; set; }
         public PhysicalEducationStat<GroupReport> PhysicalEducationStat { get; set; }
 
-        public GroupOfGroupsReport(IReadOnlyList<Group> groups, IReadOnlyList<HealthGroup> healthGroups, IReadOnlyList<PhysicalEducation> physicalEducations)
+        public GroupOfGroupsReport(IReadOnlyList<Group> groups, IReadOnlyList<HealthGroup> healthGroups, IReadOnlyList<PhysicalEducation> physicalEducations, DateTime dateTime)
         {
-            InitializeData(groups, healthGroups, physicalEducations);
+            InitializeData(groups, healthGroups, physicalEducations, dateTime);
         }
 
-        private void InitializeData(IReadOnlyList<Group> groups, IReadOnlyList<HealthGroup> healthGroups, IReadOnlyList<PhysicalEducation> physicalEducations)
+        private void InitializeData(IReadOnlyList<Group> groups, IReadOnlyList<HealthGroup> healthGroups, IReadOnlyList<PhysicalEducation> physicalEducations, DateTime dateTime)
         {
-            IReadOnlyList<GroupReport> groupReports = GenerateGroupReports(groups, healthGroups, physicalEducations);
+            IReadOnlyList<GroupReport> groupReports = GenerateGroupReports(groups, healthGroups, physicalEducations, dateTime);
             if (groupReports == null)
                 All = default(int);
             else
@@ -37,14 +38,14 @@ namespace MedicalCertificates.Service.ReportModels
         }
 
 
-        private IReadOnlyList<GroupReport> GenerateGroupReports(IReadOnlyList<Group> groups, IReadOnlyList<HealthGroup> healthGroups, IReadOnlyList<PhysicalEducation> physicalEducations)
+        private IReadOnlyList<GroupReport> GenerateGroupReports(IReadOnlyList<Group> groups, IReadOnlyList<HealthGroup> healthGroups, IReadOnlyList<PhysicalEducation> physicalEducations, DateTime dateTime)
         {
             List<GroupReport> reports = new List<GroupReport>();
             foreach (var group in groups)
             {
                 if (group != null)
                 {
-                    GroupReport report = new GroupReport(group, healthGroups, physicalEducations);
+                    GroupReport report = new GroupReport(group, healthGroups, physicalEducations, dateTime);
                     reports.Add(report);
                 }
             }

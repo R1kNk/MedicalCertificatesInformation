@@ -2,6 +2,7 @@
 using MedicalCertificates.Service.Interfaces.Business;
 using MedicalCertificates.Service.Interfaces.Models;
 using MedicalCertificates.Service.ReportModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,7 +41,7 @@ namespace MedicalCertificates.Service.BusinessServices
         {
             IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
             IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
-            DepartmentReport report = new DepartmentReport(department, healthGroups, physicalEducations);
+            DepartmentReport report = new DepartmentReport(department, healthGroups, physicalEducations, DateTime.Now);
             return report;
         }
 
@@ -56,7 +57,7 @@ namespace MedicalCertificates.Service.BusinessServices
         {
             IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
             IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
-            GroupOfGroupsReport report = new GroupOfGroupsReport(groups, healthGroups, physicalEducations);
+            GroupOfGroupsReport report = new GroupOfGroupsReport(groups, healthGroups, physicalEducations, DateTime.Now);
             return report;
         }
 
@@ -64,7 +65,7 @@ namespace MedicalCertificates.Service.BusinessServices
         {
             IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
             IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
-            GroupOfStudentsReport report = new GroupOfStudentsReport(students, healthGroups, physicalEducations);
+            GroupOfStudentsReport report = new GroupOfStudentsReport(students, healthGroups, physicalEducations, DateTime.Now);
             return report;
         }
 
@@ -72,14 +73,14 @@ namespace MedicalCertificates.Service.BusinessServices
         {
             IReadOnlyList<PhysicalEducation> physicalEducations = await GetPhysicalEducationsAsync();
             IReadOnlyList<HealthGroup> healthGroups = await GetHealthGroupsAsync();
-            GroupReport report = new GroupReport(group, healthGroups, physicalEducations);
+            GroupReport report = new GroupReport(group, healthGroups, physicalEducations, DateTime.Now);
             return report;
         }
 
         public StudentReport GenerateStudentStatistics(Student student)
         {
             MedicalCertificate lastMedicalCertificate = student.MedicalCertificates.LastOrDefault();
-            StudentReport report = new StudentReport(student, lastMedicalCertificate);
+            StudentReport report = new StudentReport(student, lastMedicalCertificate, DateTime.Now);
             return report;
         }
 

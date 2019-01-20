@@ -31,13 +31,27 @@
         <li>
             <button onclick="ExecUpdateActionAction()" class="btn btn-link navbar-btn navbar-link">Обновить</button>
         </li>
+        <li class="dropdown">
+                <a id="drop2" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    Отчеты
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureGroupReportRequest()">Отчет по группам</a></li>
+                    @if (await UserManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureDepartmentReportRequest()">Отчет по отделениям</a></li>
+                        <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureCourseReportRequest()">Отчет по курсам</a></li>
+                    }
+                </ul>
+            </li>
 
     </ul>
 
 
     <ul class="nav navbar-nav navbar-right" style="margin-right:20px;">
         <li>
-            <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">@pseudonim</a>
+            <a onclick="GetEditPasswordRequest();" class="cursor-pointer" >@pseudonim</a>
         </li>
         @if (await UserManager.IsInRoleAsync(user, "Admin"))
         {

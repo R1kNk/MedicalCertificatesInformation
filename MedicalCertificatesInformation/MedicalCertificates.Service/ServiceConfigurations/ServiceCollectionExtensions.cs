@@ -11,6 +11,7 @@ using MedicalCertificates.Service.CommonServices;
 using MedicalCertificates.Service.Interfaces.Models;
 using MedicalCertificates.Repositories.Interfaces;
 using MedicalCertificates.Service.ModelsServices;
+using MedicalCertificates.Service.BusinessServices;
 
 namespace MedicalCertificates.Service.ServiceConfigurations
 {
@@ -39,7 +40,9 @@ namespace MedicalCertificates.Service.ServiceConfigurations
             services.AddTransient(typeof(IUserManager<ApplicationUser>), typeof(ApplicationUserManager));
             services.AddTransient(typeof(IUserService<ApplicationUser>), typeof(UserService));
             services.AddTransient(typeof(IRoleManager<ApplicationRole>), typeof(ApplicationRoleManager));
-
+            services.AddTransient(typeof(GroupOfStudentReportService<Group, IGroupService>), typeof(GroupReportService));
+            services.AddTransient(typeof(GroupOfStudentReportService<Department, IDepartmentService>), typeof(DepartmentReportService));
+            services.AddTransient(typeof(GroupOfStudentReportService<Course, ICourseService>), typeof(CourseReportService));
 
             services.AddTransient(typeof(IRoleManager<ApplicationRole>), typeof(ApplicationRoleManager));
             services.AddScoped<IMedicalCertificatesUnitOfWork, MedicalCertificatesUnitOfWork>();
