@@ -14,7 +14,7 @@ function sendFormRequest(url, formId, method, replaceIntoId, promiseArray, param
             
         },
         error: function (data) {
-            console.log("error") 
+            console.log(data) 
                }
     });
 }
@@ -276,7 +276,9 @@ function GetEditMedicalCertificateRequest(id) {
 };
 
 function GetDeleteMedicalCertificateRequest(id) {
-  sendIdRequest('/MedicalCertificate/Delete', id, "GET", "#formModal");
+    var funcs = new Array();
+    funcs.push(toggleFormModal)
+  sendIdRequest('/MedicalCertificate/Delete', id, "GET", "#formModal", funcs);
 }
 
  function SendDeleteMedicalCertificateRequest() {
@@ -1194,7 +1196,7 @@ function BindDateTimePickerMedicalCertificatesForm() {
 
 
 function print() {
-    var element =  document.getElementById('main-content').firstElementChild.innerHTML;
+    var element = document.getElementById('main-content').firstElementChild.innerHTML;
     var title = '';
     if(element !=undefined){
        title = element;

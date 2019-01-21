@@ -19,7 +19,7 @@ namespace MedicalCertificates.Web.Models.ReportViewModels
         [Required]
         public IReadOnlyList<ReportSortPair> ReportSorts { get; set; }
 
-        [Display(Name = "каких студентов показать?")]
+        [Display(Name = "Каких студентов показать?")]
         [Required(ErrorMessage = "Выберите каких студентов нужно показать")]
         public int WhichPeopleChose { get; set; }
 

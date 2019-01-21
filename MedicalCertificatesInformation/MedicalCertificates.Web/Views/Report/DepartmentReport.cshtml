@@ -1,9 +1,8 @@
 @model MedicalCertificates.Service.ReportModels.GroupOfStudentsReport
 
-<div>
-    <h1>Отчет по студентам отделений</h1>
+    <h1>Отчет по студентам отделений на @Model.OnDate.ToString("dd.MM.yyyy") число</h1>
     <hr />
-    <h2>Отчет составлен на @Model.OnDate.ToString("dd.MM.yyyy") число. Все описанные данные о сроках составлены на эту дату!</h2>
+    <h2>Все описанные данные о сроках и действительности справок составлены на эту дату!</h2>
     <hr />
     @if (Model.All > 0)
     {
@@ -86,5 +85,3 @@
 
     }
 
-
-</div>

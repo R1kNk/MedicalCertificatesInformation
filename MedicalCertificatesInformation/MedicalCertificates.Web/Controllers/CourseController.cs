@@ -115,8 +115,15 @@ namespace MedicalCertificates.Web.Controllers
                         return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой курс не найден. Обновите страницу." });
 
                     var coursesWithSameNumber = existingCourse.Department.Courses.Where(p => p.Id != existingCourse.Id && p.Number == model.Number).ToList();
-                    if(coursesWithSameNumber ==null || coursesWithSameNumber.Count!=0)
-                        return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Курс с таким номером уже существует в этом отделении" });
+                    if (coursesWithSameNumber == null || coursesWithSameNumber.Count != 0)
+                    {
+                        ModelState.AddModelError("", "Курс с таким номером уже существует в этом отделении");
+                        model.DepartmentName = existingCourse.Department.Name;
+                        model.CourseNumbers = courseNumbers;
+                        return View(model);
+                    }
+
+                        //return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Курс с таким номером уже существует в этом отделении" });
 
                     existingCourse.Number = updateCourse.Number;
                     var result = await _courseService.UpdateAsync(existingCourse);
@@ -128,6 +135,7 @@ namespace MedicalCertificates.Web.Controllers
             {
                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
             }
+            model.CourseNumbers = courseNumbers;
             return View(model);
         }
 
