@@ -75,6 +75,7 @@ namespace MedicalCertificates.Web.Controllers
                     if (!result.IsSucceed)
                     {
                         AddOperationResultErrorsToModelState(result);
+                        model.CourseNumbers = courseNumbers;
                         return View(model);
                     }
                     return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));

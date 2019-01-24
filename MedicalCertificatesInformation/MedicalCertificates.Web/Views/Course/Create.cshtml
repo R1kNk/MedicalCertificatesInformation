@@ -10,9 +10,17 @@
         <div class="modal-body">
             <form asp-action="Create" id="createCourseForm">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @{ 
+                    var courseNumbers = new SelectList(new List<int>());
+                    if (Model.CourseNumbers != null)
+                    {
+                        courseNumbers = new SelectList(Model.CourseNumbers);
+
+                    }
+                }
                 <div class="form-group">
                     <label asp-for="Number" class="control-label"></label>
-                    <select asp-for="Number" class="form-control" asp-items=@(new SelectList(Model.CourseNumbers))>
+                    <select asp-for="Number" class="form-control" asp-items=@courseNumbers>
                         <option>Выберите номер курса</option>
                     </select>
                     <span asp-validation-for="Number" class="text-danger"></span>
