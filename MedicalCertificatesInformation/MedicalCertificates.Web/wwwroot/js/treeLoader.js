@@ -1,5 +1,4 @@
 ﻿$(function () {
-
     $("#tree").fancytree({
         extensions: ["edit", "filter"],
         source: {
@@ -69,3 +68,4 @@
 
         }
     });
+});

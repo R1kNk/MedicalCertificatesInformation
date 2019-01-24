@@ -97,7 +97,7 @@ namespace MedicalCertificates.Service.ModelsServices
                 existingCertificate.CertificateTerm = updateCertificate.CertificateTerm;
                 existingCertificate.FinishDate = updateCertificate.FinishDate;
 
-                var result = UpdateAsync(existingCertificate);
+                var result = await UpdateAsync(existingCertificate);
                 return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
             }
         }

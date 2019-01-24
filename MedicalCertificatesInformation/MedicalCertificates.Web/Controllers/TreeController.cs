@@ -77,15 +77,18 @@ namespace MedicalCertificates.Web.Controllers
                                 var certificateNode = MakeCertificateNode(student.MedicalCertificates[i], ("Медицинская справка № " + (i + 1)).ToString(), student.Id, isAdmin);
                                 studentNode.children.Add(certificateNode);
                             }
-
                             groupNode.children.Add(studentNode);
                         }
+                        groupNode.children = groupNode.children.OrderBy(p => p.title).ToList();
                         courseNode.children.Add(groupNode);
                     }
+                    courseNode.children = courseNode.children.OrderBy(p => p.title).ToList();
                     departmentNode.children.Add(courseNode);
                 }
+                departmentNode.children = departmentNode.children.OrderBy(p => p.title).ToList();
                 departmentNodes.Add(departmentNode);
             }
+            departmentNodes = departmentNodes.OrderBy(p => p.title).ToList();
             var json = Json(departmentNodes);
             return json;
         }
@@ -116,12 +119,15 @@ namespace MedicalCertificates.Web.Controllers
                     foreach (var group in course.Groups)
                     {
                         var groupNode = MakeGroupNode(group, course.Id, isAdmin);
+                        courseNode.children = courseNode.children.OrderBy(p => p.title).ToList();
                         courseNode.children.Add(groupNode);
                     }
                     departmentNode.children.Add(courseNode);
                 }
+                departmentNode.children = departmentNode.children.OrderBy(p => p.title).ToList();
                 departmentNodes.Add(departmentNode);
             }
+            departmentNodes = departmentNodes.OrderBy(p => p.title).ToList();
             var json = Json(departmentNodes);
             return json;
         }

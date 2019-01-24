@@ -45,16 +45,16 @@ namespace MedicalCertificates.Service.ServiceConfigurations
             services.AddTransient(typeof(GroupOfStudentReportService<Course, ICourseService>), typeof(CourseReportService));
 
             services.AddTransient(typeof(IRoleManager<ApplicationRole>), typeof(ApplicationRoleManager));
-            services.AddScoped<IMedicalCertificatesUnitOfWork, MedicalCertificatesUnitOfWork>();
+            services.AddTransient<IMedicalCertificatesUnitOfWork, MedicalCertificatesUnitOfWork>();
 
-            services.AddScoped<IPhysicalEducationService, PhysicalEducationService>();
-            services.AddScoped<IHealthGroupService, HealthGroupService>();
-            services.AddScoped<IMedicalCertificateService, MedicalCertificateService>();
-            services.AddScoped<IStudentService, StudentService>();
-            services.AddScoped<IGroupService, GroupService>();
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddScoped<IDepartmentService, DepartmentService>();
-            services.AddScoped<IStringConverterService, StringConverterService>();
+            services.AddTransient<IPhysicalEducationService, PhysicalEducationService>();
+            services.AddTransient<IHealthGroupService, HealthGroupService>();
+            services.AddTransient<IMedicalCertificateService, MedicalCertificateService>();
+            services.AddTransient<IStudentService, StudentService>();
+            services.AddTransient<IGroupService, GroupService>();
+            services.AddTransient<ICourseService, CourseService>();
+            services.AddTransient<IDepartmentService, DepartmentService>();
+            services.AddTransient<IStringConverterService, StringConverterService>();
 
             return services;
 

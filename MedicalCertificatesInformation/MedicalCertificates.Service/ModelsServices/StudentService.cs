@@ -33,8 +33,12 @@ namespace MedicalCertificates.Service.ModelsServices
             student.GroupId = group.Id;
             student.Group = group;
 
-            var result = CreateAsync(student);
+            var result = await CreateAsync(student);
+            if(result!=null)
             return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
+            else
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.StudentNotFound});
+
         }
 
         public async Task<OperationResult<BusinessLogicResultError>> MoveStudentAsync(int studentId, int groupId)
