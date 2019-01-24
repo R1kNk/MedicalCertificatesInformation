@@ -51,6 +51,7 @@ namespace MedicalCertificates.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
             seeder.Seed().Wait();
         }
     }
