@@ -17,7 +17,7 @@
         var days = 0;
         if (active == "Да")
         {
-            days = Convert.ToInt32(( DateTime.ParseExact(Model.FinishDate, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture)-DateTime.Now).TotalDays);
+            days = (DateTime.ParseExact(Model.FinishDate, "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture) - DateTime.Now).Days;
         }
     }
     @if (active == "Да")

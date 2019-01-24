@@ -8,6 +8,7 @@
             <th>Дата начала</th>
             <th>Дата окончания</th>
             <th>Срок действия</th>
+            <th>Дней до конца действия</th>
             <th>Группа здоровья</th>
             <th>Группа по физкультуре</th>
             <th>Действительна?</th>
@@ -22,7 +23,15 @@
             var start = certificate.StartDate.ToString("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture);
             var finish = certificate.FinishDate.ToString("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture);
             var active = DateTime.Now > certificate.FinishDate ? "Нет" : "Да";
+            var daysBeforeEnd = active == "Нет" ? 0 : (certificate.FinishDate - DateTime.Now).Days;
             var tagClass = DateTime.Now > certificate.FinishDate ? "danger" : "success";
+            if(tagClass=="success")
+            {
+                if (daysBeforeEnd <= 60)
+                {
+                    tagClass = "warning";
+                }
+            }
             double daysToMonths = 30.4368499;
             double months = certificate.CertificateTerm / daysToMonths;
             var daysString = "";
@@ -60,6 +69,7 @@
                 <td>@start</td>
                 <td>@finish</td>
                 <td>@term</td>
+                <td>@daysBeforeEnd</td>
                 <td>@certificate.HealthGroup.Name</td>
                 <td>@certificate.PhysicalEducation.Name</td>
                 <td>@active</td>

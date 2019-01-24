@@ -41,7 +41,7 @@ namespace MedicalCertificates.Service.ReportModels
             else CertificateValid = true;
             if (CertificateValid)
             {
-                DaysBeforeEnd = Convert.ToInt32((FinishDate - dateTime).Value.TotalDays);
+                DaysBeforeEnd = (FinishDate - dateTime).Value.Days;
             }
             PhysicalEducation = lastCertificate.PhysicalEducation;
             HealthGroup = lastCertificate.HealthGroup;
