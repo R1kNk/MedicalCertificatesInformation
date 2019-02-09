@@ -48,6 +48,7 @@ namespace MedicalCertificates.Web.Controllers
             return View(DetailsViewModel);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(int id)
         {
             var student = await _studentService.GetByIdAsync(id);
@@ -65,6 +66,7 @@ namespace MedicalCertificates.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateMedicalCertificateViewModel model)
         {
             try
@@ -126,6 +128,7 @@ namespace MedicalCertificates.Web.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var certificate = await _medicalCertificateService.GetByIdAsync(id);
@@ -141,6 +144,7 @@ namespace MedicalCertificates.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(EditMedicalCertificatesViewModel model)
         {
             try

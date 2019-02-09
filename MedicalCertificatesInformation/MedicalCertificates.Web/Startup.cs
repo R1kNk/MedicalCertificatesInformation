@@ -35,6 +35,7 @@ namespace MedicalCertificates.Web
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                seeder.Seed().Wait();
             }
             else
             {
@@ -52,7 +53,6 @@ namespace MedicalCertificates.Web
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            seeder.Seed().Wait();
         }
     }
 }

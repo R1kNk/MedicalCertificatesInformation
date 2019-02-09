@@ -62,11 +62,6 @@ namespace MedicalCertificates.Service.ServiceConfigurations
                 var role = new ApplicationRole() { Name = "User" };
                 await _roleManager.CreateAsync(role);
             }
-
-            //var userFinded = await _userManager.FindByIdAsync("de03cd8e-92fb-4d69-b95f-8a33d1f048e1");
-            //var group = _context.Groups.FirstOrDefault();
-            //userFinded.Groups.Add(group);
-            //_context.SaveChanges();
         }
 
         List<PhysicalEducation> GetDefaultPhysicalEducations()

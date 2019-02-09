@@ -61,6 +61,16 @@ namespace MedicalCertificates.Repositories.Configurations
             }
         }
 
+        public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
+        {
+            public void Configure(EntityTypeBuilder<ApplicationUser> builder)
+            {
+
+               builder.HasMany(b => b.Groups).WithOne(p => p.ApplicationUser).HasForeignKey(p => p.ApplicationUserId).OnDelete(DeleteBehavior.SetNull);
+                //builder.HasOne(p => p.Curator).WithMany(p => p.Groups).HasForeignKey(p => p.CuratorId);
+            }
+        }
+
         public class CourseConfiguration : IEntityTypeConfiguration<Course>
         {
 

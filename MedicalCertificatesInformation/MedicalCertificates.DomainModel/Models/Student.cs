@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MedicalCertificates.DomainModel.Models
 {
@@ -7,6 +8,8 @@ namespace MedicalCertificates.DomainModel.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+
+        public DateTime BirthDate { get; set; }
 
         public string SecondName { get; set; }
 

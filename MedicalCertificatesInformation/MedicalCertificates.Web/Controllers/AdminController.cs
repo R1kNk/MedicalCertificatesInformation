@@ -120,7 +120,7 @@ namespace MedicalCertificates.Web.Controllers
                 }
                 return View(model);
             }
-            catch
+            catch(Exception e)
             {
                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Delete, "Произошла неизвестная ошибка"));
             }

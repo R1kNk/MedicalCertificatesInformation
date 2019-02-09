@@ -33,6 +33,9 @@ namespace MedicalCertificates.Service.ModelsServices
             student.GroupId = group.Id;
             student.Group = group;
 
+            if(student.BirthDate > DateTime.Now)
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.InvalidDate });
+
             var result = await CreateAsync(student);
             if(result!=null)
             return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();

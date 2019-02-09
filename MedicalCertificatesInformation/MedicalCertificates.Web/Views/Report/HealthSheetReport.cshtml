@@ -1,0 +1,54 @@
+@model MedicalCertificates.Service.ReportModels.GroupOfStudentsReport
+
+@{
+    var fromWhat = default(string);
+    var course = default(int);
+    var educationYearString = default(string);
+    if (DateTime.Now.Month >= 9)
+    {
+        int year = DateTime.Now.Year;
+        educationYearString = year.ToString() + "/" + (++year).ToString();
+    }
+    else
+    {
+        int year = DateTime.Now.Year - 1;
+        educationYearString = year.ToString() + "/" + (++year).ToString();
+
+    }
+    if (Model.CertificatePresenceStatistics.Have.EntityList.Count != 0)
+    {
+        course = Model.CertificatePresenceStatistics.Have.EntityList[0].Course;
+    }
+    else if (Model.CertificatePresenceStatistics.DontHave.EntityList.Count != 0)
+    {
+        course = Model.CertificatePresenceStatistics.DontHave.EntityList[0].Course;
+    }
+    for (int i = 0; i < Model.FromWhatContainers.Count; i++)
+    {
+        if (i == Model.FromWhatContainers.Count - 1)
+        {
+            fromWhat += Model.FromWhatContainers[i];
+        }
+    }
+}
+<br />
+<h5 class="text-center">Частное учреждение образования</h5>
+<h5 class="text-center">"Колледж бизнеса и права"</h5>
+<br />
+<h5 class="text-center"><strong>Листок здоровья группы <u>@fromWhat</u> (@course курс)</strong></h5>
+<h5 class="text-center"><strong>на @educationYearString учебный год</strong></h5>
+
+<br />
+@if (Model.All > 0)
+{
+    var list = Model.CertificatePresenceStatistics.Have.EntityList;
+    list.AddRange(Model.CertificatePresenceStatistics.DontHave.EntityList);
+    list = list.OrderBy(p => p.Surname).ThenBy(p => p.Name).ThenBy(p => p.SecondName).ToList();
+    @Html.Partial("~/Views/Shared/HealthSheetTable.cshtml", list);
+
+}
+else
+{
+    <h5>Ни один студент не попал под выбранные критерии</h5>
+
+}

@@ -444,11 +444,6 @@ namespace MedicalCertificates.Web.Controllers
             }
         }
 
-        //public ActionResult PrintIndex()
-        //{
-        //    return new ViewAsPdf("Index", new { name = "Giorgio" }) { FileName = "Test.pdf" };
-        //}
-
         [HttpPost]
         public async Task<IActionResult> CourseReport(ConfigureCourseReportViewModel model)
         {
@@ -534,6 +529,100 @@ namespace MedicalCertificates.Web.Controllers
             catch (Exception e)
             {
                 return View("~/Views/Shared/OperationResultNotModal.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
+            }
+        }
+
+        //health sheet report
+
+        public IActionResult ConfigureHealthSheetReport()
+        {
+            ConfigureHealthSheetReport model = new ConfigureHealthSheetReport();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfigureHealthSheetReport(ConfigureHealthSheetReport model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (model.GroupsId == null || model.GroupsId.Count == 0)
+                    {
+                        ModelState.AddModelError("", "Ошибка");
+                        if (model.GroupsId == null)
+                        {
+                            ModelState.AddModelError("", "Выберите 1 группу");
+                        }
+                        return View(model);
+                    }
+                    var groups = model.GroupsId;
+                    if(groups.Count > 1)
+                    {
+                        ModelState.AddModelError("", "Ошибка");
+                        ModelState.AddModelError("", "Выберите одну группу. Попробуйте ещё раз");
+                        return View(model);
+                    }
+                    foreach (var groupId in groups)
+                    {
+                        var group = await _groupService.GetByIdAsync(groupId);
+                        if (group == null)
+                        {
+                            ModelState.AddModelError("", "Ошибка");
+                            ModelState.AddModelError("", "Такая группа не существует. Попробуйте ещё раз");
+                            return View(model);
+                        }
+                        if (group.Students.Count == 0)
+                        {
+                            ModelState.AddModelError("", "Ошибка");
+                            ModelState.AddModelError("", "В выбранной группе нет ни одного учащегося. Выберите другую группу");
+                            return View(model);
+                        }
+
+                    }
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
+                }
+                return View(model);
+
+            }
+            catch
+            {
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HealthSheetReport(ConfigureHealthSheetReport model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    List<Group> groups = new List<Group>();
+                    DateTime date = DateTime.Now;
+                    GroupOfStudentsReport groupOfStudentsReport = new GroupOfStudentsReport();
+                    foreach (var groupId in model.GroupsId)
+                    {
+                        var group = await _groupService.GetByIdAsync(groupId);
+                        if (group != null)
+                            groups.Add(group);
+
+                    }
+                    groupOfStudentsReport = await _groupReportService.GetAllFromOnDateAsync(groups, date);
+                    groupOfStudentsReport.SortBySurnameName();
+
+                    foreach (var group in groups)
+                    {
+                        groupOfStudentsReport.FromWhatContainers.Add(group.Name);
+                    }
+                    return View(groupOfStudentsReport);
+                }
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
+            }
+            catch (Exception e)
+            {
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
             }
         }
 

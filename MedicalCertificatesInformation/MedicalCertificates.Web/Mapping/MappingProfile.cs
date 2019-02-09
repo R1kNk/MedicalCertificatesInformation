@@ -93,6 +93,7 @@ namespace MedicalCertificates.Web.Mapping
             //Student
             CreateMap<Student, CreateStudentViewModel>()
                 .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
+                .ForMember(p => p.BirthDate, map => map.MapFrom(p => p.BirthDate.ToString("dd.MM.yyyy")))
                 .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
                 .ForMember(p => p.GroupId, map => map.MapFrom(p => p.GroupId))
                 .ForMember(p => p.SecondName, map => map.MapFrom(p => p.SecondName))
@@ -100,12 +101,13 @@ namespace MedicalCertificates.Web.Mapping
 
             CreateMap<Student, DetailsStudentViewModel>()
                .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+               .ForMember(p => p.BirthDate, map => map.MapFrom(p => p.BirthDate.ToString("dd.MM.yyyy")))
                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
-                .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
-                .ForMember(p => p.Group, map => map.MapFrom(p => p.Group))
-                .ForMember(p => p.MedicalCertificates, map => map.MapFrom(p => p.MedicalCertificates))
-                .ForMember(p => p.SecondName, map => map.MapFrom(p => p.SecondName))
-                .ReverseMap();
+               .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
+               .ForMember(p => p.Group, map => map.MapFrom(p => p.Group))
+               .ForMember(p => p.MedicalCertificates, map => map.MapFrom(p => p.MedicalCertificates))
+               .ForMember(p => p.SecondName, map => map.MapFrom(p => p.SecondName))
+               .ReverseMap();
 
             CreateMap<Student, DeleteStudentViewModel>()
                 .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
@@ -116,6 +118,7 @@ namespace MedicalCertificates.Web.Mapping
 
             CreateMap<Student, EditStudentViewModel>()
                 .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+                .ForMember(p => p.BirthDate, map => map.MapFrom(p => p.BirthDate.ToString("dd.MM.yyyy")))
                 .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
                 .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
                 .ForMember(p => p.SecondName, map => map.MapFrom(p => p.SecondName))
@@ -123,6 +126,7 @@ namespace MedicalCertificates.Web.Mapping
 
             CreateMap<Student, MoveStudentViewModel>()
                .ForMember(p => p.Id, map => map.MapFrom(p => p.Id))
+               .ForMember(p => p.BirthDate, map => map.MapFrom(p => p.BirthDate.ToString("dd.MM.yyyy")))
                .ForMember(p => p.Name, map => map.MapFrom(p => p.Name))
                .ForMember(p => p.Surname, map => map.MapFrom(p => p.Surname))
                .ForMember(p => p.GroupId, map => map.MapFrom(p => p.GroupId))

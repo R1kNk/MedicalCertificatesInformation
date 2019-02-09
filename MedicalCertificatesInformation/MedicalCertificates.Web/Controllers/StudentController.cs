@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Globalization;
+using System.Threading.Tasks;
 using AutoMapper;
 using MedicalCertificates.Common;
 using MedicalCertificates.DomainModel.Models;
@@ -26,13 +28,6 @@ namespace MedicalCertificates.Web.Controllers
             _groupService = groupService;
             _mapper = mapper;
         }
-        //// GET: Student
-        //public Task<IActionResult> Index()
-        //{
-        //    return View();
-        //}
-
-        // GET: Student/Details/5
 
         public async Task<IActionResult> Details(int id)
         {
@@ -44,7 +39,7 @@ namespace MedicalCertificates.Web.Controllers
             return View(DetailsViewModel);
         }
 
-        // GET: Student/Create
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(int id)
         {
             var group = await _groupService.GetByIdAsync(id);
@@ -56,9 +51,9 @@ namespace MedicalCertificates.Web.Controllers
             return View(CreateViewModel);
         }
 
-        // POST: Student/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateStudentViewModel model)
         {
             try
@@ -84,7 +79,7 @@ namespace MedicalCertificates.Web.Controllers
             }
         }
 
-        // GET: Student/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var student = await _studentService.GetByIdAsync(id);
@@ -94,9 +89,9 @@ namespace MedicalCertificates.Web.Controllers
             return View(EditViewModel);
         }
 
-        // POST: Student/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(EditStudentViewModel model)
         {
             try
@@ -105,12 +100,20 @@ namespace MedicalCertificates.Web.Controllers
                 {
                     Student updateStudent = _mapper.Map<Student>(model);
 
+                    if (updateStudent.BirthDate > DateTime.Now)
+                    {
+                        ModelState.AddModelError("BirthDate", "Дата рождения не должна быть больше текущей");
+                        return View(model);
+                    }
+
                     var existingStudent = await _studentService.GetByIdAsync(updateStudent.Id);
                     if (existingStudent == null)
                         return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой студент не найден. Обновите страницу." });
 
                     existingStudent.Name = updateStudent.Name;
                     existingStudent.Surname = updateStudent.Surname;
+                    existingStudent.SecondName = updateStudent.SecondName;
+                    existingStudent.BirthDate = DateTime.ParseExact(model.BirthDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     var result = await _studentService.UpdateAsync(existingStudent);
                     if(result.IsSucceed)
                     return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
@@ -135,7 +138,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(DeleteViewModel);
         }
 
-        // POST: Student/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -162,7 +164,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(model);
         }
 
-        // GET: Student/Create
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Move(int id)
         {
@@ -174,7 +175,6 @@ namespace MedicalCertificates.Web.Controllers
             return View(MoveViewModel);
         }
 
-        // POST: Student/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]

@@ -14,6 +14,7 @@ namespace MedicalCertificates.Web.Models.HealthGroupViewModels
 
         [Required(ErrorMessage = "Поле 'Группа здоровья' должно быть заполнено")]
         [Display(Name = "Группа здоровья")]
+        [RegularExpression(@"^[^\\/:?""<>|!]+$", ErrorMessage = "Группа здоровья не должна содержать следующие символы: ^ \\ / : *! ? \" < > |")]
         [StringLength(50, ErrorMessage = "{0} должна иметь хотя бы {2} и максимально {1} знаков.", MinimumLength = 1)]
         public string Name { get; set; }
 

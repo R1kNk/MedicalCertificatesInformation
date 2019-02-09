@@ -29,14 +29,12 @@
         @if (Model.CertificatePresenceStatistics.Have.EntityList.Count > 0)
         {
             <h5><strong>Табличный отчет о студентах с действующими справками</strong></h5>
-            <hr />
             @Html.Partial("~/Views/Shared/StudentsReportsTable.cshtml", Model.CertificatePresenceStatistics.Have.EntityList);
             <hr />
         }
         @if (Model.CertificatePresenceStatistics.DontHave.EntityList.Count > 0)
         {
             <h5><strong>Табличный отчет о студентах с недействующими справками</strong></h5>
-            <hr />
             @Html.Partial("~/Views/Shared/StudentsReportsTable.cshtml", Model.CertificatePresenceStatistics.DontHave.EntityList);
             <hr />
         }
@@ -55,7 +53,6 @@
         foreach (var PEGroups in Model.PhysicalEducationStat.PhysicalEducationStatistics)
         {
             <h5><strong>Табличный отчет о студентах с группой по физкультуре '@PEGroups.RelatedEntity.Name'</strong></h5>
-            <hr />
             @Html.Partial("~/Views/Shared/StudentsReportsTable.cshtml", PEGroups.EntityList);
             <hr />
         }
@@ -72,7 +69,6 @@
             @if (HealthGroups.EntityList.Count > 0)
             {
                 <h5><strong>Табличный отчет о студентах с группой по физкультуре "@HealthGroups.RelatedEntity.Name"</strong></h5>
-                <hr />
                 @Html.Partial("~/Views/Shared/StudentsReportsTable.cshtml", HealthGroups.EntityList);
                 <hr />
             }

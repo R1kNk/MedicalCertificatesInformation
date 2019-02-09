@@ -1,0 +1,53 @@
+@model IReadOnlyList<MedicalCertificates.Service.ReportModels.StudentReport>
+
+<table class="table table-striped table-bordered table-condensed table-hover">
+
+    <!--Table head-->
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>ФИО учащегося</th>
+            <th>Дата рождения</th>
+            <th>Группа здоровья</th>
+            <th>Группа по физкультуре</th>
+            <th>Справка годна</th>
+            <th>Примечание</th>
+        </tr>
+    </thead>
+    <!--Table head-->
+    <!--Table body-->
+    <tbody>
+        @{
+            var counter = 1;
+        }
+        @foreach (var student in Model)
+        {
+            var nameSurname = student.Surname + " " + student.Name.First() + "." + student.SecondName.First() + ".";
+            var currentStringCounter = counter.ToString() + ".";
+            var finish = "н/д";
+            var physName = "н/д";
+            var healthName = "н/д";
+            var birthDay = student.BirthDate.ToString("dd.MM.yyyy");
+
+
+            if (student.CertificatePeriod != 0.0)
+            {
+                finish = student.FinishDate?.ToString("dd.MM.yyyy");
+                physName = student.PhysicalEducation.Name;
+                healthName = student.HealthGroup.Name;
+            }
+
+            <tr onclick="GetDetailsStudentRequest(@student.Id)" class="cursor-pointer">
+                <td>@currentStringCounter</td>
+                <td>@nameSurname</td>
+                <td>@birthDay</td>
+                <td>@healthName</td>
+                <td>@physName</td>
+                <td>@finish</td>
+                <td>         </td>
+            </tr>
+            counter++;
+        }
+    </tbody>
+
+</table>

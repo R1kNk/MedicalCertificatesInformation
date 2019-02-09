@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MedicalCertificates.Repositories.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Initialv2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,7 +40,8 @@ namespace MedicalCertificates.Repositories.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Pseudonim = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -71,20 +72,6 @@ namespace MedicalCertificates.Repositories.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HealthGroups", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Hospitals",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
-                    TelephoneNumber = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hospitals", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -235,23 +222,23 @@ namespace MedicalCertificates.Repositories.Migrations
                     Name = table.Column<string>(maxLength: 5, nullable: false),
                     GoogleDriveFolderId = table.Column<string>(nullable: true),
                     CourseId = table.Column<int>(nullable: false),
-                    CuratorId = table.Column<string>(nullable: true)
+                    ApplicationUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Groups", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Groups_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Groups_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Groups_AspNetUsers_CuratorId",
-                        column: x => x.CuratorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -262,6 +249,7 @@ namespace MedicalCertificates.Repositories.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Surname = table.Column<string>(maxLength: 60, nullable: false),
+                    SecondName = table.Column<string>(nullable: true),
                     GoogleDriveFolderId = table.Column<string>(nullable: true),
                     GroupId = table.Column<int>(nullable: false)
                 },
@@ -284,12 +272,11 @@ namespace MedicalCertificates.Repositories.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     StartDate = table.Column<DateTime>(nullable: false),
                     FinishDate = table.Column<DateTime>(nullable: false),
-                    CertificateTerm = table.Column<TimeSpan>(nullable: false),
+                    CertificateTerm = table.Column<double>(nullable: false),
                     GoogleDriveImageId = table.Column<string>(nullable: true),
                     StudentId = table.Column<int>(nullable: false),
                     HealthGroupId = table.Column<int>(nullable: false),
-                    PhysicalEducationId = table.Column<int>(nullable: false),
-                    HospitalId = table.Column<int>(nullable: false)
+                    PhysicalEducationId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -298,12 +285,6 @@ namespace MedicalCertificates.Repositories.Migrations
                         name: "FK_MedicalCertificates_HealthGroups_HealthGroupId",
                         column: x => x.HealthGroupId,
                         principalTable: "HealthGroups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MedicalCertificates_Hospitals_HospitalId",
-                        column: x => x.HospitalId,
-                        principalTable: "Hospitals",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -365,14 +346,20 @@ namespace MedicalCertificates.Repositories.Migrations
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Departments_Name",
+                table: "Departments",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Groups_ApplicationUserId",
+                table: "Groups",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Groups_CourseId",
                 table: "Groups",
                 column: "CourseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Groups_CuratorId",
-                table: "Groups",
-                column: "CuratorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Groups_Name",
@@ -387,20 +374,9 @@ namespace MedicalCertificates.Repositories.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Hospitals_Name",
-                table: "Hospitals",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MedicalCertificates_HealthGroupId",
                 table: "MedicalCertificates",
                 column: "HealthGroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MedicalCertificates_HospitalId",
-                table: "MedicalCertificates",
-                column: "HospitalId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalCertificates_PhysicalEducationId",
@@ -451,9 +427,6 @@ namespace MedicalCertificates.Repositories.Migrations
                 name: "HealthGroups");
 
             migrationBuilder.DropTable(
-                name: "Hospitals");
-
-            migrationBuilder.DropTable(
                 name: "PhysicalEducations");
 
             migrationBuilder.DropTable(
@@ -463,10 +436,10 @@ namespace MedicalCertificates.Repositories.Migrations
                 name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "Courses");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Courses");
 
             migrationBuilder.DropTable(
                 name: "Departments");

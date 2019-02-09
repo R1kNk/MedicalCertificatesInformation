@@ -7,10 +7,12 @@ namespace MedicalCertificates.Service.ReportModels
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
+        public string SecondName { get; private set; }
         public string Surname { get; private set; }
         public string Group { get; private set; }
         public int Course { get; private set; }
         public string Department { get; private set; }
+        public DateTime BirthDate { get; private set; }
         public DateTime? StartDate { get; private set;}
         public DateTime? FinishDate { get; private set; }
         public double CertificatePeriod { get; private set; }
@@ -24,7 +26,9 @@ namespace MedicalCertificates.Service.ReportModels
         {
             Id = student.Id;
             Name = student.Name;
+            SecondName = student.SecondName;
             Surname = student.Surname;
+            BirthDate = student.BirthDate;
             Group = student.Group.Name;
             Course = student.Group.Course.Number;
             Department = student.Group.Course.Department.Name;

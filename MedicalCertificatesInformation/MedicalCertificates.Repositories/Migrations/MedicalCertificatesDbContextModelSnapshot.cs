@@ -232,6 +232,8 @@ namespace MedicalCertificates.Repositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("BirthDate");
+
                     b.Property<string>("GoogleDriveFolderId");
 
                     b.Property<int>("GroupId");
@@ -349,9 +351,10 @@ namespace MedicalCertificates.Repositories.Migrations
 
             modelBuilder.Entity("MedicalCertificates.DomainModel.Models.Group", b =>
                 {
-                    b.HasOne("MedicalCertificates.DomainModel.Models.ApplicationUser")
+                    b.HasOne("MedicalCertificates.DomainModel.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Groups")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("MedicalCertificates.DomainModel.Models.Course", "Course")
                         .WithMany("Groups")

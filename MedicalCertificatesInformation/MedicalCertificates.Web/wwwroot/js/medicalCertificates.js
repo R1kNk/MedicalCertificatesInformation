@@ -19,19 +19,21 @@ function sendFormRequest(url, formId, method, replaceIntoId, promiseArray, param
     });
 }
 
-function SetButtonsAvailability(type ,role){
+function SetButtonsAvailability(type, role) {
+
+    if (role !== 'admin') {
+        DisableCreateBtn();
+        DisableEditBtn();
+        DisableDeleteBtn();
+        DisableMoveBtn();
+    }
+
     switch (type) {
         case 'department':
             if (role === 'admin') {
                 EnableCreateBtn();
                 EnableEditBtn();
                 EnableDeleteBtn();
-                DisableMoveBtn();
-            }
-            else {
-                DisableCreateBtn();
-                DisableEditBtn();
-                DisableDeleteBtn();
                 DisableMoveBtn();
             }
             break;
@@ -42,24 +44,12 @@ function SetButtonsAvailability(type ,role){
                 EnableDeleteBtn();
                 DisableMoveBtn();
             }
-            else {
-                DisableCreateBtn();
-                DisableEditBtn();
-                DisableDeleteBtn();
-                DisableMoveBtn();
-            }
             break;
         case 'group':
             if (role === 'admin') {
                 EnableCreateBtn();
                 EnableEditBtn();
                 EnableDeleteBtn();
-                DisableMoveBtn();
-            }
-            else {
-                EnableCreateBtn();
-                DisableEditBtn();
-                DisableDeleteBtn();
                 DisableMoveBtn();
             }
             break;
@@ -70,21 +60,9 @@ function SetButtonsAvailability(type ,role){
                 EnableDeleteBtn();
                 EnableMoveBtn();
             }
-            else {
-                EnableCreateBtn();
-                EnableEditBtn();
-                DisableDeleteBtn();
-                DisableMoveBtn();
-            }
             break;
         case 'certificate':
             if (role === 'admin') {
-                DisableCreateBtn();
-                EnableEditBtn();
-                EnableDeleteBtn();
-                DisableMoveBtn();
-            }
-            else {
                 DisableCreateBtn();
                 EnableEditBtn();
                 EnableDeleteBtn();
@@ -295,24 +273,28 @@ function GetDetailsStudentRequest(id) {
 
 function GetCreateStudentRequest(id) {
     var funcs = new Array();
+    funcs.push(BindDateTimePickerStudentForm);
     funcs.push(toggleFormModal);
     sendIdRequest('/Student/Create', id, "GET", "#formModal", funcs);
 }
 
  function SendCreateStudentRequest() {
     var funcs = new Array();
+    funcs.push(BindDateTimePickerStudentForm);
     funcs.push(ExecUpdateActionAction);
   sendFormRequest('/Student/Create', '#createStudentForm', 'POST', "#formModal", funcs);
 }
 
 function GetEditStudentRequest(id) {
     var funcs = new Array();
+    funcs.push(BindDateTimePickerStudentForm);
     funcs.push(toggleFormModal);
    sendIdRequest('/Student/Edit', id, "GET", "#formModal", funcs);
 }
 
 function SendEditStudentRequest() {
     var funcs = new Array();
+    funcs.push(BindDateTimePickerStudentForm);
     funcs.push(ExecUpdateActionAction);
    sendFormRequest('/Student/Edit', '#editStudentForm', 'POST', "#formModal", funcs);
 };
@@ -758,6 +740,68 @@ function GetCourseReportRequest(data){
     });
 }
 
+//HealthSheetReport
+
+function GetConfigureHealthSheetReportRequest() {
+    var funcs = new Array();
+    funcs.push(BindFormTreeReportHealthSheet)
+    funcs.push(toggleFormModal);
+    sendRequest('/Report/ConfigureHealthSheetReport', "GET", "#formModal", funcs);
+}
+
+async function SendConfigureHealthSheetReportRequest() {
+    var dataArray = $('#configureHealthSheetReport').serialize();
+    var formTree = $('#formTree').fancytree('getTree');
+
+    var counter = 0;
+    formTree.visit(function(n){
+        console.log(n);
+        if(n.type=='group'){
+            if(n.selected == true){
+                dataArray+= '&GroupsId['+counter+']='+n.data.modelId;
+                counter++;
+            }
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/ConfigureHealthSheetReport',
+        data: dataArray,
+        success: function (data) {      
+            var substring = '&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430';
+            if(data.indexOf(substring)!=-1){
+                var funcs = [];
+                funcs.push(BindFormTreeReportHealthSheet);
+                SetHtml('#formModal',data, funcs);
+            }
+            else{
+                SetHtml('#formModal',data);
+                GetHealthSheetReportRequest(dataArray)
+            }
+        },
+        error: function (data) {
+            console.log(data) 
+        }
+    });
+}
+
+function GetHealthSheetReportRequest(data){
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/HealthSheetReport',
+        data: data,
+        success: function (data) {      
+            SetHtml(undefined,data);
+        },
+        error: function (data) {
+            console.log(data); 
+        }
+    });
+}
+
+
 function ChangeReportType(){
     var value = $('#reportType').val();
     switch(+value){
@@ -796,6 +840,13 @@ function BindFormTreeReportGroups(){
         var parameters = [];
         parameters[1] = '#formTree';
         LoadFormTree(funcs, parameters);    
+}
+
+function BindFormTreeReportHealthSheet(){
+    var funcs = [];
+    funcs.push(SetCheckboxesOnGroups);
+    var parameters = [];
+    LoadFormTree(funcs, parameters);    
 }
 
 function BindFormTreeReportDepartments(){
@@ -1175,8 +1226,7 @@ function BindDateTimePickerReportForm() {
     bindDatePicker();
 }
 
-function BindDateTimePickerMedicalCertificatesForm() {
-    
+function BindDateTimePickerMedicalCertificatesForm() { 
     var isValidDate = function (value, format) {
         format = format || false;
         // lets parse the date to the best of our knowledge
@@ -1188,10 +1238,25 @@ function BindDateTimePickerMedicalCertificatesForm() {
 
         return isNaN(timestamp) == false;
     }
-
-    
+  
     bindDatePicker();
     bindradioButtons();
+}
+
+function BindDateTimePickerStudentForm() { 
+    var isValidDate = function (value, format) {
+        format = format || false;
+        // lets parse the date to the best of our knowledge
+        if (format) {
+            value = parseDate(value);
+        }
+
+        var timestamp = Date.parse(value);
+
+        return isNaN(timestamp) == false;
+    }
+  
+    bindDatePicker();
 }
 
 
@@ -1204,9 +1269,13 @@ function print() {
     title = transliterate(title);
     var size = Math.floor(($('#main-content').width()*0.26458333333719))
     console.log(title);
-    size = size + 'mm';
+    if (+size < 210) {
+        size = '210mm';
+    } else {
+        size = size + 'mm';
+    }
     return xepOnline.Formatter.Format('main-content',
-    {pageWidth:size, pageHeight:'279mm', render: 'download', pageMargin: '0.1in', filename:  title}
+    {pageWidth: size, pageHeight:'297mm', render: 'download', pageMargin: '0in', filename:  title}
     //{render:'download'}
      );
 }

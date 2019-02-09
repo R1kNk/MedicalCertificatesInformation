@@ -7,6 +7,7 @@
             <th>Фамилия</th>
             <th>Имя</th>
             <th>Отчество</th>
+            <th>Дата рождения</th>
             <th>Группа</th>
             <th>Количество справок</th>
             <th>Действительна ли справка?</th>
@@ -24,6 +25,7 @@
         {
             var studentsCount = student.MedicalCertificates.Count;
             var lastCert = student.MedicalCertificates.LastOrDefault();
+            var birthDay = student.BirthDate.ToString("dd.MM.yyyy");
             var isCertValid = "Нет";
             var tagClass = "danger";
             if (lastCert != null)
@@ -39,6 +41,7 @@
                 <td>@student.Surname</td>
                 <td>@student.Name</td>
                 <td>@student.SecondName</td>
+                <td>@birthDay</td>
                 <td>@student.Group.Name</td>
                 <td>@student.MedicalCertificates.Count</td>
                 <td>@isCertValid</td>
