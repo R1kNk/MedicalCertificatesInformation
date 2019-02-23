@@ -6,6 +6,7 @@ using MedicalCertificates.Service.Interfaces.Models;
 using MedicalCertificates.Web.Models.MedicalCertificatesViewModels;
 using MedicalCertificates.Web.Models.SharedEntities;
 using MedicalCertificates.Web.Models.SharedViewModels;
+using MedicalCertificates.Web.Models.TreeModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -113,7 +114,7 @@ namespace MedicalCertificates.Web.Controllers
                         model.IsUsingTerm = false;
                         return View(model);
                     }
-                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create, node: new GenericNode(newMedicalCertificate.Id.ToString(), newMedicalCertificate.Id, true, "admin", "certificate", false, newMedicalCertificate.StudentId)));
                 }
                 model.HealthGroups = await GetAllHealthGroupsAsync();
                 model.PhysicalEducations = await GetAllPhysicalEducationsAsync();

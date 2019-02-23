@@ -10,6 +10,7 @@ using MedicalCertificates.Service.Interfaces.Models;
 using MedicalCertificates.Web.Models.CourseViewModels;
 using MedicalCertificates.Web.Models.SharedEntities;
 using MedicalCertificates.Web.Models.SharedViewModels;
+using MedicalCertificates.Web.Models.TreeModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -78,7 +79,7 @@ namespace MedicalCertificates.Web.Controllers
                         model.CourseNumbers = courseNumbers;
                         return View(model);
                     }
-                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create, node: new GenericNode(newCourse.Number.ToString() + " курс", newCourse.Id, true, "admin", "course", true, newCourse.DepartmentId)));
                 }
                 return View(model);
 
@@ -129,7 +130,7 @@ namespace MedicalCertificates.Web.Controllers
                     existingCourse.Number = updateCourse.Number;
                     var result = await _courseService.UpdateAsync(existingCourse);
                     if (result.IsSucceed)
-                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
+                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit, node: new GenericNode(existingCourse.Number.ToString() + " курс", existingCourse.Id, true, "admin", "course", true, existingCourse.DepartmentId)));
                 }
             }
             catch

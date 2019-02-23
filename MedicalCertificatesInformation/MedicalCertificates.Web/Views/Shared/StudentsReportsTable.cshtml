@@ -22,7 +22,11 @@
         <tbody>
             @foreach (var student in Model)
             {
-                var nameSurname = student.Surname + " "+ student.Name;
+                var nameSurname = student.Surname + " " + student.Name.First() + ".";
+                if (student.SecondName != null && student.SecondName.Trim() != "")
+                {
+                    nameSurname += student.SecondName.First() + ".";
+                }
                 var start = "n/a";
                 var finish = "n/a";
                 var active = "Нет";

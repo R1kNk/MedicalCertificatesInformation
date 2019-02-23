@@ -7,6 +7,7 @@ using MedicalCertificates.Service.Interfaces.Models;
 using MedicalCertificates.Web.Models.GroupViewModels;
 using MedicalCertificates.Web.Models.SharedEntities;
 using MedicalCertificates.Web.Models.SharedViewModels;
+using MedicalCertificates.Web.Models.TreeModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -69,7 +70,7 @@ namespace MedicalCertificates.Web.Controllers
                         AddOperationResultErrorsToModelState(result);
                         return View(model);
                     }
-                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create, node: new GenericNode(newGroup.Name, newGroup.Id, true, "admin", "group", true, newGroup.CourseId)));
                 }
                 return View(model);
 
@@ -109,7 +110,7 @@ namespace MedicalCertificates.Web.Controllers
                     existingGroup.Name = updateGroup.Name;
                     var result = await _groupService.UpdateAsync(existingGroup);
                     if (result.IsSucceed)
-                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
+                        return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit, node: new GenericNode(existingGroup.Name, existingGroup.Id, true, "admin", "group", true, existingGroup.CourseId)));
                 }
             }
             catch

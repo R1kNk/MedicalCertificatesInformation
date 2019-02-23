@@ -19,13 +19,26 @@
             break;
     }
 
+    bool isSuccessful = false;
+
     if (Model.IsSuccessfully)
     {
         Message += "завершена успешно!";
+        isSuccessful = true;
     }
     else
     {
         Message += "завершена неудачно.";
+    }
+    string nodeTitle = default(string);
+    string nodeModelId = default(string);
+    string nodeParentId = default(string);
+    string nodeUserRole = default(string);
+    string nodeType = default(string);
+    string nodeFolder = default(string);
+    if(Model.Node.isHaveParent)
+    {
+        nodeParentId = Model.Node.parentId.ToString();
     }
 
 }
@@ -56,5 +69,17 @@
             </div>
         </div>
     </div>
+    <span id="isSuccessful" hidden>@isSuccessful.ToString()</span>
+    @if (isSuccessful)
+    {
+        <span id="nodeTitle" hidden>@Model.Node.title</span>
+        <span id="nodeModelId" hidden>@Model.Node.modelId</span>
+        <span id="nodeParentId" hidden>@nodeParentId</span>
+        <span id="nodeUserRole" hidden>@Model.Node.userRole</span>
+        <span id="nodeType" hidden>@Model.Node.type</span>
+        <span id="nodeFolder" hidden>@Model.Node.folder</span>
+    }
+
+
 </div>
 

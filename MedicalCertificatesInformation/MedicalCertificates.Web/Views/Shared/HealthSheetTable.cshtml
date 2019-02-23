@@ -22,7 +22,11 @@
         }
         @foreach (var student in Model)
         {
-            var nameSurname = student.Surname + " " + student.Name.First() + "." + student.SecondName.First() + ".";
+            var nameSurname = student.Surname + " " + student.Name.First() + ".";
+            if (student.SecondName != null && student.SecondName.Trim() != "")
+            {
+                nameSurname += student.SecondName.First() + ".";
+            }
             var currentStringCounter = counter.ToString() + ".";
             var finish = "н/д";
             var physName = "н/д";

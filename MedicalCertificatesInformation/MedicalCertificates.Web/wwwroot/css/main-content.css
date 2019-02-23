@@ -32,6 +32,10 @@
     
 }
 
+.main-content__health-sheet {
+    height: 1123px;
+}
+
 .main-content__body {
     display: inline-block;
     grid-column: 2;
