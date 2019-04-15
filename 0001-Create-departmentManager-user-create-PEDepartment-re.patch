@@ -1,0 +1,1945 @@
+From 8f6f469e77e2b55a985ecec3314003fa65fdb827 Mon Sep 17 00:00:00 2001
+From: PosledNikita <posled.nikita@gmail.com>
+Date: Mon, 15 Apr 2019 13:51:33 +0300
+Subject: [PATCH] Create departmentManager user, create PEDepartment report
+
+---
+ .../Interfaces/IPseudonim.cs                  |  11 +
+ .../Models/ApplicationDepartmentManager.cs    |  11 +
+ .../Models/ApplicationUser.cs                 |   7 +-
+ .../Models/DefaultUser.cs                     |  11 +
+ .../Models/Department.cs                      |   5 +
+ .../Models/Group.cs                           |   2 +-
+ .../MedicalCertificatesConfiguration.cs       |  14 +-
+ .../MedicalCertificatesDbContext.cs           |  24 ++-
+ .../AuthServices/UserService.cs               | 130 +++++++-----
+ .../ErrorsFetch/BusinessLogicResultError.cs   |   2 +
+ .../Interfaces/Auth/ISignInManager.cs         |   2 +-
+ .../Interfaces/Auth/IUserManager.cs           |   2 +-
+ .../Interfaces/Models/IDepartmentService.cs   |   3 +
+ .../Interfaces/Models/IUserService.cs         |   3 +-
+ .../ModelsServices/DepartmentService.cs       |  42 +++-
+ .../ModelsServices/GroupService.cs            |  84 +++++---
+ .../MedicalCertificatesDBConfiguration.cs     |   4 +-
+ .../Controllers/AdminController.cs            |  88 +++++++-
+ .../Controllers/ReportController.cs           | 121 +++++++++++
+ .../Controllers/TreeController.cs             |  12 +-
+ .../AccountViewModels/RegisterViewModel.cs    |   4 +
+ .../EditManagerUserDepartmentViewModel.cs     |  13 ++
+ .../ConfigureCourseReportViewModel.cs         |   1 -
+ .../ConfigureDepartmentReportViewModel.cs     |   1 -
+ .../ConfigurePEDepartmentReport.cs            |  10 +
+ .../PEDepartmentReportModel.cs                |  16 ++
+ ...mentReportPhusicalEducationGroupCourses.cs |  10 +
+ ...DepartmentReportPhysicalEducationGroups.cs |  14 ++
+ .../Views/Account/Login.cshtml                |   2 +-
+ .../Admin/EditManagerUserDepartment.cshtml    |  31 +++
+ .../Views/Admin/Register.cshtml               |   5 +
+ .../Views/Admin/Users.cshtml                  |  35 +++-
+ .../Views/MedicalCertificate/Create.cshtml    |   2 +-
+ .../Report/ConfigurePEDepartmentReport.cshtml |  29 +++
+ .../Views/Report/CourseReport.cshtml          |   4 +-
+ .../Views/Report/DepartmentReport.cshtml      |   4 +-
+ .../Views/Report/GroupReport.cshtml           |   4 +-
+ .../Views/Report/HealthSheetReport.cshtml     |   3 +
+ .../Views/Report/PEDepartmentReport.cshtml    |  13 ++
+ .../Views/Shared/HealthSheetTable.cshtml      |   5 +-
+ .../Shared/PEDepartmentReportTable.cshtml     |  38 ++++
+ .../Views/Shared/StudentsReportsTable.cshtml  |   7 +-
+ .../Views/Shared/_Layout.cshtml               |  19 ++
+ .../Views/Shared/_LoginPartial.cshtml         |  38 ++--
+ .../wwwroot/css/main-content.css              |   1 +
+ .../wwwroot/js/medicalCertificates.js         | 197 ++++++++++++++++--
+ .../wwwroot/js/treeLoader.js                  |   4 +-
+ 47 files changed, 912 insertions(+), 176 deletions(-)
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.DomainModel/Interfaces/IPseudonim.cs
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/ApplicationDepartmentManager.cs
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/DefaultUser.cs
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.Web/Models/AdminViewModels/EditManagerUserDepartmentViewModel.cs
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigurePEDepartmentReport.cs
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportModel.cs
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportPhusicalEducationGroupCourses.cs
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportPhysicalEducationGroups.cs
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/EditManagerUserDepartment.cshtml
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/ConfigurePEDepartmentReport.cshtml
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/PEDepartmentReport.cshtml
+ create mode 100644 MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/PEDepartmentReportTable.cshtml
+
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Interfaces/IPseudonim.cs b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Interfaces/IPseudonim.cs
+new file mode 100644
+index 0000000..cc00b42
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Interfaces/IPseudonim.cs
+@@ -0,0 +1,11 @@
++﻿using System;
++using System.Collections.Generic;
++using System.Text;
++
++namespace MedicalCertificates.DomainModel.Interfaces
++{
++    interface IPseudonim
++    {
++        string Pseudonim { get; set; }
++    }
++}
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/ApplicationDepartmentManager.cs b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/ApplicationDepartmentManager.cs
+new file mode 100644
+index 0000000..e8d5200
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/ApplicationDepartmentManager.cs
+@@ -0,0 +1,11 @@
++﻿using MedicalCertificates.DomainModel.Interfaces;
++using Microsoft.AspNetCore.Identity;
++using System.Collections.Generic;
++
++namespace MedicalCertificates.DomainModel.Models
++{
++    public class DepartmentManagerUser : ApplicationUser
++    {
++        public virtual Department Department { get; set; }
++    }
++}
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/ApplicationUser.cs b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/ApplicationUser.cs
+index 0180fb0..d9a04c5 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/ApplicationUser.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/ApplicationUser.cs
+@@ -1,12 +1,11 @@
+-﻿using Microsoft.AspNetCore.Identity;
++﻿using MedicalCertificates.DomainModel.Interfaces;
++using Microsoft.AspNetCore.Identity;
+ using System.Collections.Generic;
+ 
+ namespace MedicalCertificates.DomainModel.Models
+ {
+-    public class ApplicationUser : IdentityUser
++    public class ApplicationUser : IdentityUser, IPseudonim
+     {
+         public string Pseudonim { get; set; }
+-
+-        public virtual List<Group> Groups { get; set; }
+     }
+ }
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/DefaultUser.cs b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/DefaultUser.cs
+new file mode 100644
+index 0000000..2736fdd
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/DefaultUser.cs
+@@ -0,0 +1,11 @@
++﻿using System;
++using System.Collections.Generic;
++using System.Text;
++
++namespace MedicalCertificates.DomainModel.Models
++{
++    public class DefaultUser : ApplicationUser
++    {
++        public virtual List<Group> Groups { get; set; }
++    }
++}
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/Department.cs b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/Department.cs
+index 45b0365..576a968 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/Department.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/Department.cs
+@@ -8,5 +8,10 @@ namespace MedicalCertificates.DomainModel.Models
+         public string Name { get; set; }
+ 
+         public virtual List<Course> Courses { get; set; }
++
++        public virtual string DepartmentManagerId { get; set; }
++        public virtual DepartmentManagerUser DepartmentManager { get; set; }
++
++
+     }
+ }
+\ No newline at end of file
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/Group.cs b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/Group.cs
+index b19dc64..8c62dfc 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/Group.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.DomainModel/Models/Group.cs
+@@ -12,7 +12,7 @@ namespace MedicalCertificates.DomainModel.Models
+         public virtual Course Course { get; set; }
+ 
+         public string ApplicationUserId { get; set; }
+-        public virtual ApplicationUser ApplicationUser { get; set; }
++        public virtual DefaultUser ApplicationUser { get; set; }
+ 
+         public virtual List<Student> Students { get; set; }
+     }
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Repositories/Configurations/MedicalCertificatesConfiguration.cs b/MedicalCertificatesInformation/MedicalCertificates.Repositories/Configurations/MedicalCertificatesConfiguration.cs
+index 5f91be4..34a5504 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Repositories/Configurations/MedicalCertificatesConfiguration.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Repositories/Configurations/MedicalCertificatesConfiguration.cs
+@@ -61,9 +61,9 @@ namespace MedicalCertificates.Repositories.Configurations
+             }
+         }
+ 
+-        public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
++        public class DefaultUserConfiguration : IEntityTypeConfiguration<DefaultUser>
+         {
+-            public void Configure(EntityTypeBuilder<ApplicationUser> builder)
++            public void Configure(EntityTypeBuilder<DefaultUser> builder)
+             {
+ 
+                builder.HasMany(b => b.Groups).WithOne(p => p.ApplicationUser).HasForeignKey(p => p.ApplicationUserId).OnDelete(DeleteBehavior.SetNull);
+@@ -71,6 +71,16 @@ namespace MedicalCertificates.Repositories.Configurations
+             }
+         }
+ 
++        public class DepartmentManagerUserConfiguration : IEntityTypeConfiguration<DepartmentManagerUser>
++        {
++            public void Configure(EntityTypeBuilder<DepartmentManagerUser> builder)
++            {
++
++                builder.HasOne(b => b.Department).WithOne(p => p.DepartmentManager).HasForeignKey<Department>(p => p.DepartmentManagerId).OnDelete(DeleteBehavior.SetNull);
++                //builder.HasOne(p => p.Curator).WithMany(p => p.Groups).HasForeignKey(p => p.CuratorId);
++            }
++        }
++
+         public class CourseConfiguration : IEntityTypeConfiguration<Course>
+         {
+ 
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Repositories/MedicalCertificatesDbContext.cs b/MedicalCertificatesInformation/MedicalCertificates.Repositories/MedicalCertificatesDbContext.cs
+index 06eb667..fe15a5c 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Repositories/MedicalCertificatesDbContext.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Repositories/MedicalCertificatesDbContext.cs
+@@ -18,6 +18,9 @@ namespace MedicalCertificates.Repositories
+             
+         }
+ 
++        public DbSet<DefaultUser> DefaultUsers { get; set; }
++        public DbSet<DepartmentManagerUser> DepartmentManagerUsers { get; set; }
++
+         public DbSet<HealthGroup> HealthGroups { get; set; }
+         public DbSet<PhysicalEducation> PhysicalEducations { get; set; }
+         public DbSet<Student> Students { get; set; }
+@@ -35,7 +38,8 @@ namespace MedicalCertificates.Repositories
+             modelBuilder.ApplyConfiguration(new GroupConfiguration());
+             modelBuilder.ApplyConfiguration(new CourseConfiguration());
+             modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
+-            modelBuilder.ApplyConfiguration(new UserConfiguration());
++            modelBuilder.ApplyConfiguration(new DefaultUserConfiguration());
++            modelBuilder.ApplyConfiguration(new DepartmentManagerUserConfiguration());
+             base.OnModelCreating(modelBuilder);
+         }
+ 
+@@ -46,21 +50,23 @@ namespace MedicalCertificates.Repositories
+             base.OnConfiguring(optionsBuilder);
+         }
+ 
+-        public static DbContextOptionsBuilder<MedicalCertificatesDbContext> GetOptionsBuilder()
+-        {
+-            var builder = new DbContextOptionsBuilder<MedicalCertificatesDbContext>();
+-            builder.UseSqlServer(connectionString);
+-            builder.UseLazyLoadingProxies();
+-            return builder;
+-        }
++
+     }
+ 
+     internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MedicalCertificatesDbContext>
+     {
+         public MedicalCertificatesDbContext CreateDbContext(string[] args)
+         {
+-            var context = new MedicalCertificatesDbContext(MedicalCertificatesDbContext.GetOptionsBuilder().Options);
++            var context = new MedicalCertificatesDbContext(GetOptionsBuilder().Options);
+             return context;
+         }
++
++        static DbContextOptionsBuilder<MedicalCertificatesDbContext> GetOptionsBuilder()
++        {
++            var builder = new DbContextOptionsBuilder<MedicalCertificatesDbContext>();
++            builder.UseSqlServer(MedicalCertificatesDbContext.connectionString);
++            builder.UseLazyLoadingProxies();
++            return builder;
++        }
+     }
+ }
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Service/AuthServices/UserService.cs b/MedicalCertificatesInformation/MedicalCertificates.Service/AuthServices/UserService.cs
+index 0beea51..5397693 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Service/AuthServices/UserService.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Service/AuthServices/UserService.cs
+@@ -169,78 +169,96 @@ namespace MedicalCertificates.Service.AuthServices
+         {
+             if (user == null)
+                 return null;
+-
+-            List<Department> departmentsResult = new List<Department>();
+-            List<Group> groups = user.Groups;
+-            foreach (var group in groups)
++            if(user is DefaultUser)
+             {
+-                var department = group.Course.Department;
+-                Department findedDep = departmentsResult.Where(p => p.Id == department.Id).SingleOrDefault();
+-                if (findedDep == null)
++                var defaultUser = user as DefaultUser;
++                List<Department> departmentsResult = new List<Department>();
++                List<Group> groups = defaultUser.Groups;
++                foreach (var group in groups)
+                 {
+-                    findedDep = new Department()
++                    var department = group.Course.Department;
++                    Department findedDep = departmentsResult.Where(p => p.Id == department.Id).SingleOrDefault();
++                    if (findedDep == null)
+                     {
+-                        Id = department.Id,
+-                        Name = department.Name,
+-                        Courses = new List<Course>()
+-                    };
+-                    departmentsResult.Add(findedDep);
+-                }
+-                Course findedCourse = findedDep.Courses.Where(p => p.Id == group.CourseId).SingleOrDefault();
+-                if (findedCourse == null)
+-                {
+-                    findedCourse = new Course()
+-                    {
+-                        Id = group.CourseId,
+-                        Number = group.Course.Number,
+-                        Department = findedDep,
+-                        DepartmentId = findedDep.Id,
+-                        Groups = new List<Group>()
+-                    };
+-                    findedDep.Courses.Add(findedCourse);
+-                }
+-                Group findedGroup = findedCourse.Groups.Where(p => p.Id == group.Id).SingleOrDefault();
+-                if (findedGroup == null)
+-                {
+-                    findedGroup = new Group()
++                        findedDep = new Department()
++                        {
++                            Id = department.Id,
++                            Name = department.Name,
++                            Courses = new List<Course>()
++                        };
++                        departmentsResult.Add(findedDep);
++                    }
++                    Course findedCourse = findedDep.Courses.Where(p => p.Id == group.CourseId).SingleOrDefault();
++                    if (findedCourse == null)
+                     {
+-                        Id = group.Id,
+-                        Name = group.Name,
+-                        GoogleDriveFolderId = "",
+-                        CourseId = findedCourse.Id,
+-                        Course = findedCourse,
+-                        Students = new List<Student>()
+-                    };
+-
+-                    foreach (var student in group.Students)
++                        findedCourse = new Course()
++                        {
++                            Id = group.CourseId,
++                            Number = group.Course.Number,
++                            Department = findedDep,
++                            DepartmentId = findedDep.Id,
++                            Groups = new List<Group>()
++                        };
++                        findedDep.Courses.Add(findedCourse);
++                    }
++                    Group findedGroup = findedCourse.Groups.Where(p => p.Id == group.Id).SingleOrDefault();
++                    if (findedGroup == null)
+                     {
+-                        Student newStudent = new Student()
++                        findedGroup = new Group()
+                         {
+-                            Id = student.Id,
+-                            Name = student.Name,
+-                            Surname = student.Surname,
++                            Id = group.Id,
++                            Name = group.Name,
+                             GoogleDriveFolderId = "",
+-                            GroupId = findedGroup.Id,
+-                            Group = findedGroup,
+-                            MedicalCertificates = new List<MedicalCertificate>()
++                            CourseId = findedCourse.Id,
++                            Course = findedCourse,
++                            Students = new List<Student>()
+                         };
+ 
+-                        foreach (var certificate in student.MedicalCertificates)
++                        foreach (var student in group.Students)
+                         {
+-                            MedicalCertificate newMedicalCertificate = new MedicalCertificate()
++                            Student newStudent = new Student()
+                             {
+-                                Id = certificate.Id,
+-                                StudentId = newStudent.Id,
+-                                Student = newStudent
++                                Id = student.Id,
++                                Name = student.Name,
++                                Surname = student.Surname,
++                                GoogleDriveFolderId = "",
++                                GroupId = findedGroup.Id,
++                                Group = findedGroup,
++                                MedicalCertificates = new List<MedicalCertificate>()
+                             };
+-                            newStudent.MedicalCertificates.Add(newMedicalCertificate);
++
++                            foreach (var certificate in student.MedicalCertificates)
++                            {
++                                MedicalCertificate newMedicalCertificate = new MedicalCertificate()
++                                {
++                                    Id = certificate.Id,
++                                    StudentId = newStudent.Id,
++                                    Student = newStudent
++                                };
++                                newStudent.MedicalCertificates.Add(newMedicalCertificate);
++                            }
++                            findedGroup.Students.Add(newStudent);
+                         }
+-                        findedGroup.Students.Add(newStudent);
++                        findedCourse.Groups.Add(findedGroup);
+                     }
+-                    findedCourse.Groups.Add(findedGroup);
+                 }
++                return new UserManagementHierarchy(departmentsResult);
++            }
++            else if(user is DepartmentManagerUser)
++            {
++                var departmentManagerUser = user as DepartmentManagerUser;
++                var departmentsList = new List<Department>();
++                if (departmentManagerUser.Department != null)
++                {
++                    departmentsList.Add(departmentManagerUser.Department);
++                }
++                return new UserManagementHierarchy(departmentsList);
++            }
++            else
++            {
++                return new UserManagementHierarchy(new List<Department>());
+             }
+-            return new UserManagementHierarchy(departmentsResult);
++            
+         }
+ 
+         public async Task<IReadOnlyList<ApplicationUser>> GetAllUsersAsync()
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Service/ErrorsFetch/BusinessLogicResultError.cs b/MedicalCertificatesInformation/MedicalCertificates.Service/ErrorsFetch/BusinessLogicResultError.cs
+index f3382bb..5608f40 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Service/ErrorsFetch/BusinessLogicResultError.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Service/ErrorsFetch/BusinessLogicResultError.cs
+@@ -13,6 +13,8 @@ namespace MedicalCertificates.Service.ErrorsFetch
+         StudentNotFound,
+         GroupNotFound,
+         CourseNotFound,
++        UserNotFound,
++        InvalidUserType,
+         DepartmentNotFound,
+         ExpiredCertificate,
+         AlreadyInThisGroup,
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Auth/ISignInManager.cs b/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Auth/ISignInManager.cs
+index a1b306d..0272f17 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Auth/ISignInManager.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Auth/ISignInManager.cs
+@@ -5,7 +5,7 @@ using System.Threading.Tasks;
+ 
+ namespace MedicalCertificates.Service.Interfaces.Auth
+ {
+-    public interface ISignInManager<TUser> where TUser : class
++    public interface ISignInManager<TUser> where TUser : IdentityUser
+     {
+        
+         Task<SignInResult> PasswordSignInAsync(TUser user, string password, bool isPersistent, bool lockoutOnFailure);
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Auth/IUserManager.cs b/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Auth/IUserManager.cs
+index 64d9f07..62520b1 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Auth/IUserManager.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Auth/IUserManager.cs
+@@ -8,7 +8,7 @@ using System.Threading.Tasks;
+ 
+ namespace MedicalCertificates.Service.Interfaces.Auth
+ {
+-    public interface IUserManager<TUser> where TUser : class
++    public interface IUserManager<TUser> where TUser : IdentityUser
+     {
+         IQueryable<TUser> Users { get; }
+ 
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Models/IDepartmentService.cs b/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Models/IDepartmentService.cs
+index 771b65c..d2bdd22 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Models/IDepartmentService.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Models/IDepartmentService.cs
+@@ -12,6 +12,9 @@ namespace MedicalCertificates.Service.Interfaces.Models
+         Task<OperationResult<BusinessLogicResultError>> AddDepartmentAsync(Department newDepartment);
+ 
+         Task<OperationResult<BusinessLogicResultError>> EditDepartmentAsync(Department updateDepartment);
++
++        Task<OperationResult<BusinessLogicResultError>> EditManagerDepartmentAsync(string userId, IReadOnlyList<int> DepartmentsId);
++
+     }
+ }
+ 
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Models/IUserService.cs b/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Models/IUserService.cs
+index 1ef65d0..9fb9f77 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Models/IUserService.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Service/Interfaces/Models/IUserService.cs
+@@ -2,13 +2,14 @@
+ using MedicalCertificates.DomainModel.Models;
+ using MedicalCertificates.Service.ErrorsFetch;
+ using MedicalCertificates.Service.ReportModels;
++using Microsoft.AspNetCore.Identity;
+ using System.Collections.Generic;
+ using System.Security.Claims;
+ using System.Threading.Tasks;
+ 
+ namespace MedicalCertificates.Service.Interfaces.Models
+ {
+-    public interface IUserService<TUser> where TUser : class
++    public interface IUserService<TUser> where TUser : IdentityUser
+     {
+         Task<IList<string>> GetRolesAsync(TUser user);
+ 
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Service/ModelsServices/DepartmentService.cs b/MedicalCertificatesInformation/MedicalCertificates.Service/ModelsServices/DepartmentService.cs
+index c9fe74d..1ffb9a2 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Service/ModelsServices/DepartmentService.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Service/ModelsServices/DepartmentService.cs
+@@ -3,8 +3,9 @@ using MedicalCertificates.DomainModel.Models;
+ using MedicalCertificates.Repositories.Interfaces;
+ using MedicalCertificates.Service.CommonServices;
+ using MedicalCertificates.Service.ErrorsFetch;
+-using MedicalCertificates.Service.Interfaces.Common;
++using MedicalCertificates.Service.Interfaces.Auth;
+ using MedicalCertificates.Service.Interfaces.Models;
++using System;
+ using System.Collections.Generic;
+ using System.Linq;
+ using System.Threading.Tasks;
+@@ -13,8 +14,11 @@ namespace MedicalCertificates.Service.ModelsServices
+ {
+     class DepartmentService : CRUDService<Department>, IDepartmentService
+     {
+-        public DepartmentService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
++        private readonly IUserManager<ApplicationUser> _userManager;
++
++        public DepartmentService(IMedicalCertificatesUnitOfWork unitOfWork, IUserManager<ApplicationUser> userManager) : base(unitOfWork)
+         {
++            _userManager = userManager;
+         }
+ 
+         public async Task<OperationResult<BusinessLogicResultError>> AddDepartmentAsync(Department newDepartment)
+@@ -43,6 +47,40 @@ namespace MedicalCertificates.Service.ModelsServices
+             return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
+         }
+ 
++        public async Task<OperationResult<BusinessLogicResultError>> EditManagerDepartmentAsync(string userId, IReadOnlyList<int> DepartmentsId)
++        {
++            try
++            {
++                DepartmentManagerUser user = await _userManager.FindByIdAsync(userId) as DepartmentManagerUser;
++                if (user == null)
++                    return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.UserNotFound });
++                if(DepartmentsId == null || DepartmentsId.Count == 0)
++                {
++                    if(user.Department !=null)
++                    {
++                        user.Department.DepartmentManager = null;
++                        user.Department = null;
++                        await _unitOfWork.SaveAsync();
++                    }
++                    return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
++                }
++                var department = await GetByIdAsync(DepartmentsId.First());
++                if (department == null)
++                    return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.DepartmentNotFound });
++                if(user.Department !=null)
++                {
++                    user.Department.DepartmentManager = null;
++                }
++                user.Department = department;
++                await _unitOfWork.SaveAsync();
++                return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
++            }
++            catch (InvalidCastException e)
++            {
++                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.InvalidUserType });
++            }
++        }
++
+         public IReadOnlyList<Student> GetAllStudents(Department department)
+         {
+             List<Student> studentList = new List<Student>();
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Service/ModelsServices/GroupService.cs b/MedicalCertificatesInformation/MedicalCertificates.Service/ModelsServices/GroupService.cs
+index b3bac59..3e2866e 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Service/ModelsServices/GroupService.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Service/ModelsServices/GroupService.cs
+@@ -1,4 +1,5 @@
+-﻿using System.Collections.Generic;
++﻿using System;
++using System.Collections.Generic;
+ using System.Linq;
+ using System.Threading.Tasks;
+ using MedicalCertificates.Common;
+@@ -56,51 +57,69 @@ namespace MedicalCertificates.Service.ModelsServices
+ 
+         public async Task<OperationResult<string>> SwitchGroupAsync(string userId, int groupId)
+         {
+-            var user = await _userManager.FindByIdAsync(userId);
+-            if (user == null)
+-                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() {"Такой пользователь не найден. Обновите страницу."});
++            try
++            {
++                DefaultUser user = await _userManager.FindByIdAsync(userId) as DefaultUser;
++                if (user == null)
++                    return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Такой пользователь не найден. Обновите страницу." });
+ 
+-            var group = await GetByIdAsync(groupId);
+-            if(group == null)
+-                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Одна или несколько групп не найдено. Обновите страницу." });
++                var group = await GetByIdAsync(groupId);
++                if (group == null)
++                    return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Одна или несколько групп не найдены. Обновите страницу." });
+ 
+-            if (!user.Groups.Contains(group))
+-            {
+-                user.Groups.Add(group);
++                if (!user.Groups.Contains(group))
++                {
++                    user.Groups.Add(group);
++                }
++                else
++                {
++                    user.Groups.Remove(group);
++                }
++                await _unitOfWork.SaveAsync();
++                return OperationResult<string>.CreateSuccessfulResult();
+             }
+-            else
++            catch (InvalidCastException e)
+             {
+-                user.Groups.Remove(group);
++                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Этот пользователь не может иметь подконтрольные группы. Обновите страницу." });
+             }
+-            await _unitOfWork.SaveAsync();
+-            return OperationResult<string>.CreateSuccessfulResult();
++           
+         }
+ 
+         public async Task<OperationResult<string>> EditUserGroupsAsync(string userId, IReadOnlyList<int> activeGroupsId, IReadOnlyList<int> inactiveGroupsId)
+         {
+-            var user = await _userManager.FindByIdAsync(userId);
+-            if (user == null)
+-                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "UserNotFound" });
+-
+-            for (int i = 0; i < activeGroupsId.Count; i++)
++            try
+             {
+-                if (user.Groups.Where(p=>p.Id == activeGroupsId[i]).SingleOrDefault() == null)
++                DefaultUser user = await _userManager.FindByIdAsync(userId) as DefaultUser;
++                if (user == null)
++                    return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "UserNotFound" });
++
++                for (int i = 0; i < activeGroupsId.Count; i++)
+                 {
+-                    var group = await GetByIdAsync(activeGroupsId[i]);
+-                    if (group == null)
+-                        return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "GroupNotFound" });
+-                    user.Groups.Add(group);
++                    if (user.Groups.Where(p => p.Id == activeGroupsId[i]).SingleOrDefault() == null)
++                    {
++                        var group = await GetByIdAsync(activeGroupsId[i]);
++                        if (group == null)
++                            return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "GroupNotFound" });
++                        user.Groups.Add(group);
++                    }
+                 }
+-            }
+-            for (int i = inactiveGroupsId.Count - 1; i >= 0; i--)
+-            {
+-                var group = user.Groups.Where(p => p.Id == inactiveGroupsId[i]).SingleOrDefault();
+-                if (group != null)
++                for (int i = inactiveGroupsId.Count - 1; i >= 0; i--)
+                 {
+-                   
+-                    user.Groups.Remove(group);
++                    var group = user.Groups.Where(p => p.Id == inactiveGroupsId[i]).SingleOrDefault();
++                    if (group != null)
++                    {
++
++                        user.Groups.Remove(group);
++                    }
+                 }
++                await _unitOfWork.SaveAsync();
++                return OperationResult<string>.CreateSuccessfulResult();
++            }
++            catch(InvalidCastException e)
++            {
++                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Этот пользователь не может иметь подконтрольные группы. Обновите страницу." });
+             }
++            
+             //foreach (var groupId in activeGroupsId)
+             //{
+             //    var group = await GetByIdAsync(groupId);
+@@ -116,8 +135,7 @@ namespace MedicalCertificates.Service.ModelsServices
+             //        user.Groups.Remove(group);
+             //    }
+             //}
+-            await _unitOfWork.SaveAsync();
+-            return OperationResult<string>.CreateSuccessfulResult();
++            
+         }
+ 
+         public IReadOnlyList<Student> GetAllStudents(Group group)
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Service/ServiceConfigurations/MedicalCertificatesDBConfiguration.cs b/MedicalCertificatesInformation/MedicalCertificates.Service/ServiceConfigurations/MedicalCertificatesDBConfiguration.cs
+index 2080f41..9bcbd5b 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Service/ServiceConfigurations/MedicalCertificatesDBConfiguration.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Service/ServiceConfigurations/MedicalCertificatesDBConfiguration.cs
+@@ -48,7 +48,7 @@ namespace MedicalCertificates.Service.ServiceConfigurations
+                 var role = new ApplicationRole() { Name = "Admin" };
+                 await _roleManager.CreateAsync(role);
+ 
+-                var user = new ApplicationUser() { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish("Администратор")), Pseudonim= "Администратор", Email = "office@kbp.by" };
++                var user = new ApplicationUser() { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish("Администратор")), Pseudonim = "Администратор", Email = "office@kbp.by" };
+                 string userPassword = "Adminpassword_1";
+                 var result = await _userManager.CreateAsync(user, userPassword);
+                 if (result.Succeeded)
+@@ -62,6 +62,8 @@ namespace MedicalCertificates.Service.ServiceConfigurations
+                 var role = new ApplicationRole() { Name = "User" };
+                 await _roleManager.CreateAsync(role);
+             }
++
++
+         }
+ 
+         List<PhysicalEducation> GetDefaultPhysicalEducations()
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/AdminController.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/AdminController.cs
+index 0e599f6..c454d1b 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/AdminController.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/AdminController.cs
+@@ -31,6 +31,7 @@ namespace MedicalCertificates.Web.Controllers
+         private readonly IUserService<ApplicationUser> _userService;
+         private readonly IHttpContextAccessor _httpContextAccessor;
+         private readonly IGroupService _groupService;
++        private readonly IDepartmentService _departmentService;
+ 
+ 
+         public AdminController(
+@@ -40,7 +41,8 @@ namespace MedicalCertificates.Web.Controllers
+             IStringConverterService converter,
+             IUserService<ApplicationUser> userService,
+             IHttpContextAccessor httpContextAccessor,
+-            IGroupService groupService)
++            IGroupService groupService,
++            IDepartmentService departmentService)
+         {
+             _userManager = userManager;
+             _signInManager = signInManager;
+@@ -49,6 +51,7 @@ namespace MedicalCertificates.Web.Controllers
+             _converter = converter;
+             _httpContextAccessor = httpContextAccessor;
+             _groupService = groupService;
++            _departmentService = departmentService;
+         }
+ 
+ 
+@@ -64,7 +67,15 @@ namespace MedicalCertificates.Web.Controllers
+         {
+             if (ModelState.IsValid)
+             {
+-                var user = new ApplicationUser { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish(model.Username)), Pseudonim = model.Username, Email = "office@kbp.by" };
++                ApplicationUser user = null;
++                if(model.IsDepartmentManager)
++                {
++                    user = new DepartmentManagerUser { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish(model.Username)), Pseudonim = model.Username, Email = "office@kbp.by" };
++                }
++                else
++                {
++                    user = new DefaultUser { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish(model.Username)), Pseudonim = model.Username, Email = "office@kbp.by" };
++                }
+                 var result = await _userManager.CreateAsync(user, model.Password);
+                 if (result.Succeeded)
+                 {
+@@ -134,6 +145,9 @@ namespace MedicalCertificates.Web.Controllers
+             if (user == null)
+                 return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой пользователь не найден. Обновите страницу." });
+ 
++            if (!(user is DefaultUser))
++                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Данный пользователь не может иметь подконтролных групп. Обновите страницу" });
++
+             EditUserGroupsViewModel model = new EditUserGroupsViewModel();
+             model.UserId = id;
+             return View(model);
+@@ -148,7 +162,9 @@ namespace MedicalCertificates.Web.Controllers
+                 var user = await _userManager.FindByIdAsync(model.UserId);
+                 if (user == null)
+                     return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой пользователь не найден. Обновите страницу." });
+-
++                if (!(user is DefaultUser))
++                    return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Данный пользователь не может иметь подконтролных групп. Обновите страницу" });
++     
+                 var result = await _groupService.EditUserGroupsAsync(model.UserId, model.ActiveGroupsId, model.InactiveGroupId);
+                 if(result.IsSucceed)
+                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
+@@ -168,7 +184,51 @@ namespace MedicalCertificates.Web.Controllers
+ 
+         }
+ 
+-       
++        public async Task<IActionResult> EditManagerUserDepartment(string id)
++        {
++            var user = await _userManager.FindByIdAsync(id);
++            if (user == null)
++                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой пользователь не найден. Обновите страницу." });
++
++            if (!(user is DepartmentManagerUser))
++                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Данный пользователь не может иметь подконтрольное отделение. Обновите страницу" });
++
++            EditManagerUserDepartmentViewModel model = new EditManagerUserDepartmentViewModel();
++            model.UserId = id;
++            return View(model);
++        }
++
++
++        [HttpPost]
++        public async Task<IActionResult> EditManagerUserDepartment([FromBody] EditManagerUserDepartmentViewModel model)
++        {
++            try
++            {
++                var user = await _userManager.FindByIdAsync(model.UserId);
++                if (user == null)
++                    return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой пользователь не найден. Обновите страницу." });
++                if (!(user is DepartmentManagerUser))
++                    return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Данный пользователь не может иметь подконтрольное отделение. Обновите страницу" });
++                if(model.DepartmentsId != null && model.DepartmentsId.Count > 1)
++                {
++                    ModelState.AddModelError("", "Выберите не больше одного отделения");
++                    return View(model);
++                }
++                var result = await _departmentService.EditManagerDepartmentAsync(model.UserId, model.DepartmentsId);
++                if (result.IsSucceed)
++                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
++                else
++                {
++                    AddOperationResultErrorsToModelState(result);
++                }
++                return View(model);
++            }
++            catch(Exception e)
++            {
++                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
++            }
++
++        }
+ 
+         [HttpPost]
+         [ValidateAntiForgeryToken]
+@@ -216,6 +276,26 @@ namespace MedicalCertificates.Web.Controllers
+         }
+ 
+ 
++        private void AddOperationResultErrorsToModelState(OperationResult<BusinessLogicResultError> operationResult)
++        {
++            foreach (var identityError in operationResult.Errors)
++            {
++                switch (identityError)
++                {
++                    case BusinessLogicResultError.UserNotFound:
++                        ModelState.AddModelError("", " Такой пользователь не найден. Обновите страницу.");
++                        break;
++                    case BusinessLogicResultError.InvalidUserType:
++                        ModelState.AddModelError("", "Данный пользователь не может иметь подконтрольные отделения");
++                        break;
++                    default:
++                        ModelState.AddModelError("", "Неизвестная ошибка");
++                        break;
++                }
++            }
++        }
++
++
+         private void AddErrors(IdentityResult result)
+         {
+             foreach (var error in result.Errors)
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/ReportController.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/ReportController.cs
+index 3e68815..72be1ef 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/ReportController.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/ReportController.cs
+@@ -1,12 +1,14 @@
+ ﻿using System;
+ using System.Collections.Generic;
+ using System.Globalization;
++using System.Linq;
+ using System.Threading.Tasks;
+ using MedicalCertificates.DomainModel.Models;
+ using MedicalCertificates.Service.BusinessServices;
+ using MedicalCertificates.Service.Interfaces.Models;
+ using MedicalCertificates.Service.ReportModels;
+ using MedicalCertificates.Web.Models.ReportViewModels;
++using MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels;
+ using MedicalCertificates.Web.Models.SharedEntities;
+ using MedicalCertificates.Web.Models.SharedViewModels;
+ using Microsoft.AspNetCore.Authorization;
+@@ -627,6 +629,125 @@ namespace MedicalCertificates.Web.Controllers
+         }
+ 
+ 
++        //PE department report
++
++        public IActionResult ConfigurePEDepartmentReport()
++        {
++            ConfigurePEDepartmentReport model = new ConfigurePEDepartmentReport();
++            return View(model);
++        }
++
++        [HttpPost]
++        [ValidateAntiForgeryToken]
++        public async Task<IActionResult> ConfigurePEDepartmentReport(ConfigurePEDepartmentReport model)
++        {
++            try
++            {
++                if (ModelState.IsValid)
++                {
++                    if (model.DepartmentsId == null || model.DepartmentsId.Count == 0)
++                    {
++                        ModelState.AddModelError("", "Ошибка");
++                        ModelState.AddModelError("", "Выберите одно отделение");
++
++                        return View(model);
++                    }
++                    var departments = model.DepartmentsId;
++                    if (departments.Count > 1)
++                    {
++                        ModelState.AddModelError("", "Ошибка");
++                        ModelState.AddModelError("", "Выберите одно отделение");
++                        return View(model);
++                    }
++                    foreach (var departmentId in departments)
++                    {
++                        var department = await _departmentService.GetByIdAsync(departmentId);
++                        if (department == null)
++                        {
++                            ModelState.AddModelError("", "Ошибка");
++                            ModelState.AddModelError("", "Такое отделение не существует. Попробуйте ещё раз");
++                            return View(model);
++                        }
++
++                    }
++                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
++                }
++                return View(model);
++
++            }
++            catch
++            {
++                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
++            }
++        }
++
++        [HttpPost]
++        public async Task<IActionResult> PEDepartmentReport(ConfigurePEDepartmentReport model)
++        {
++            try
++            {
++                if (ModelState.IsValid)
++                {
++                    List<Department> departments = new List<Department>();
++                    DateTime date = DateTime.Now;
++                    GroupOfStudentsReport groupOfStudentsReport = new GroupOfStudentsReport();
++                    foreach (var departmentId in model.DepartmentsId)
++                    {
++                        var department = await _departmentService.GetByIdAsync(departmentId);
++                        if (department != null)
++                            departments.Add(department);
++
++                    }
++                    groupOfStudentsReport = await _departmentReportService.GetAllFromOnDateAsync(departments, date);
++                    groupOfStudentsReport.SortBySurnameName();
++                    groupOfStudentsReport.SortByGroup();
++
++                    foreach (var department in departments)
++                    {
++                        groupOfStudentsReport.FromWhatContainers.Add(department.Name);
++                    }
++
++                    var reportModel = new PEDepartmentReportModel<StudentReport>();
++                    reportModel.DepartmentName = departments[0].Name;
++
++                    var PeGroups = new List<PEDepartmentReportPhysicalEducationGroups<StudentReport>>();
++                    foreach (var PEGroup in groupOfStudentsReport.PhysicalEducationStat.PhysicalEducationStatistics)
++                    {
++
++                        var availableCourses = PEGroup.EntityList.Select(student => student.Course).Distinct().ToList();
++                        var PEGroupReport = new PEDepartmentReportPhysicalEducationGroups<StudentReport>();
++
++                        PEGroupReport.PhysicalEducationName = PEGroup.RelatedEntity.Name;
++                        var groupedCourses = new List<PEDepartmentReportPhusicalEducationGroupCourses<StudentReport>>();
++
++                        foreach (int course in availableCourses)
++                        {
++                            var selectedStudents = PEGroup.EntityList.Where(student => student.Course == course).ToList();
++                            var groupedCourse = new PEDepartmentReportPhusicalEducationGroupCourses<StudentReport>();
++                            groupedCourse.CourseNumber = course;
++                            groupedCourse.EntityList = selectedStudents;
++                            groupedCourses.Add(groupedCourse);
++                        }
++
++                        groupedCourses = groupedCourses.OrderBy(course => course.CourseNumber).ToList();
++
++                        PEGroupReport.GroupedCourses = groupedCourses;
++                        PeGroups.Add(PEGroupReport);
++                    }
++
++                    reportModel.PhysicalEducationGroups = PeGroups;
++
++                    return View(reportModel);
++                }
++                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
++            }
++            catch (Exception e)
++            {
++                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
++            }
++        }
++
++
+ 
+     }
+ }
+\ No newline at end of file
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/TreeController.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/TreeController.cs
+index 32ee935..25f8bcb 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/TreeController.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Controllers/TreeController.cs
+@@ -39,15 +39,23 @@ namespace MedicalCertificates.Web.Controllers
+         public async Task<JsonResult> GetUserGroupsId(string id)
+         {
+             var user = await _userManager.FindByIdAsync(id);
+-            List<int> groupsId = user.Groups.Select(p => p.Id).ToList();
++            List<int> groupsId = new List<int>();
++
++            if (user is DefaultUser)
++            {
++                var defaultUser = user as DefaultUser;
++                groupsId = defaultUser.Groups.Select(p => p.Id).ToList();
++            }
+             return Json(groupsId);
+         }
+ 
+         public async Task<JsonResult> GetManagementHierarchy()
+         {
+             var curUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+-            bool isAdmin = await _userManager.IsInRoleAsync(curUser, "Admin");
+             IReadOnlyList<Department> departments = new List<Department>();
++                    
++            //if(curUser is someType )
++            bool isAdmin = await _userManager.IsInRoleAsync(curUser, "Admin");
+             if ( await _userManager.IsInRoleAsync(curUser, "Admin"))
+             {
+                  departments = await _departmentService.GetAllAsync();
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/AccountViewModels/RegisterViewModel.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/AccountViewModels/RegisterViewModel.cs
+index 9c9be57..5263520 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/AccountViewModels/RegisterViewModel.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/AccountViewModels/RegisterViewModel.cs
+@@ -24,5 +24,9 @@ namespace MedicalCertificates.Web.Models.AccountViewModels
+         [Display(Name = "Подтвердите пароль")]
+         [Compare("Password", ErrorMessage = "Поля пароля и подтвержденного пароля не совпадают")]
+         public string ConfirmPassword { get; set; }
++
++        [Required]
++        [Display(Name = "Заведующий отделением?")]
++        public bool IsDepartmentManager { get; set; }
+     }
+ }
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/AdminViewModels/EditManagerUserDepartmentViewModel.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/AdminViewModels/EditManagerUserDepartmentViewModel.cs
+new file mode 100644
+index 0000000..28fec15
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/AdminViewModels/EditManagerUserDepartmentViewModel.cs
+@@ -0,0 +1,13 @@
++﻿using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Threading.Tasks;
++
++namespace MedicalCertificates.Web.Models.AdminViewModels
++{
++    public class EditManagerUserDepartmentViewModel
++    {
++        public string UserId { get; set; }
++        public List<int> DepartmentsId { get; set; }
++    }
++}
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigureCourseReportViewModel.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigureCourseReportViewModel.cs
+index b7f2df6..aaf572b 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigureCourseReportViewModel.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigureCourseReportViewModel.cs
+@@ -8,7 +8,6 @@ namespace MedicalCertificates.Web.Models.ReportViewModels
+ {
+     public class ConfigureCourseReportViewModel : DefaultReportModel
+     {
+-        [Required]
+         public IReadOnlyList<int> CoursesId { get; set; }
+ 
+         public ConfigureCourseReportViewModel()
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigureDepartmentReportViewModel.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigureDepartmentReportViewModel.cs
+index ff1ce27..bce48be 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigureDepartmentReportViewModel.cs
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigureDepartmentReportViewModel.cs
+@@ -8,7 +8,6 @@ namespace MedicalCertificates.Web.Models.ReportViewModels
+ {
+     public class ConfigureDepartmentReportViewModel : DefaultReportModel
+     {
+-        [Required]
+         public IReadOnlyList<int> DepartmentsId { get; set; }
+ 
+         public ConfigureDepartmentReportViewModel()
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigurePEDepartmentReport.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigurePEDepartmentReport.cs
+new file mode 100644
+index 0000000..e94eca4
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/ConfigurePEDepartmentReport.cs
+@@ -0,0 +1,10 @@
++﻿using System.Collections.Generic;
++using System.ComponentModel.DataAnnotations;
++
++namespace MedicalCertificates.Web.Models.ReportViewModels
++{
++    public class ConfigurePEDepartmentReport
++    {
++        public IReadOnlyList<int> DepartmentsId { get; set; }
++    }
++}
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportModel.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportModel.cs
+new file mode 100644
+index 0000000..5e8da81
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportModel.cs
+@@ -0,0 +1,16 @@
++﻿using System;
++using System.Collections.Generic;
++using System.ComponentModel.DataAnnotations;
++using System.Linq;
++using System.Threading.Tasks;
++
++namespace MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels
++{
++    public class PEDepartmentReportModel<TEntity> where TEntity : class
++    {
++        [Required]
++        public string DepartmentName { get; set; }
++
++        public IReadOnlyCollection<PEDepartmentReportPhysicalEducationGroups<TEntity>> PhysicalEducationGroups { get; set; }
++    }
++}
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportPhusicalEducationGroupCourses.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportPhusicalEducationGroupCourses.cs
+new file mode 100644
+index 0000000..27445bf
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportPhusicalEducationGroupCourses.cs
+@@ -0,0 +1,10 @@
++﻿using System.Collections.Generic;
++
++namespace MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels
++{
++    public class PEDepartmentReportPhusicalEducationGroupCourses<TEntity> where TEntity: class
++    {
++        public int CourseNumber { get; set; }
++        public IReadOnlyCollection<TEntity> EntityList { get; set; }
++    }
++}
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportPhysicalEducationGroups.cs b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportPhysicalEducationGroups.cs
+new file mode 100644
+index 0000000..0ddfebe
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Models/ReportViewModels/PEDepartmentReportModels/PEDepartmentReportPhysicalEducationGroups.cs
+@@ -0,0 +1,14 @@
++﻿using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Threading.Tasks;
++
++namespace MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels
++{
++    public class PEDepartmentReportPhysicalEducationGroups<TEntity> where TEntity : class
++    {
++        public string PhysicalEducationName { get; set; }
++        public IReadOnlyCollection<PEDepartmentReportPhusicalEducationGroupCourses<TEntity>> GroupedCourses { get; set; }
++        
++    }
++}
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Account/Login.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Account/Login.cshtml
+index 4d2e0c9..c8c2d48 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Account/Login.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Account/Login.cshtml
+@@ -8,7 +8,7 @@
+ 
+ 
+ <div class="row">
+-    <div class=" col-md-offset-4 col-md-4" style="margin-top:50px; border: solid 1px black;">
++    <div class=" col-md-offset-3 col-md-6"style="margin-top:50px; border: solid 1px black;">
+         <section>
+             <form method="post">
+                 <h4>Войдите в свой аккаунт</h4>
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/EditManagerUserDepartment.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/EditManagerUserDepartment.cshtml
+new file mode 100644
+index 0000000..eaa76b8
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/EditManagerUserDepartment.cshtml
+@@ -0,0 +1,31 @@
++@model MedicalCertificates.Web.Models.AdminViewModels.EditManagerUserDepartmentViewModel
++
++
++<div class="modal-dialog">
++    <div class="modal-content">
++        <div class="modal-header">
++            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
++            <h3 class="modal-title" id="lineModalLabel">Изменение разрешения на управление отделением</h3>
++        </div>
++        <div class="modal-body">
++            <form asp-action="Edit" id="editManagerUserDepartmentForm">
++                <div class="form-group" hidden>
++                    <label asp-for="UserId" class="control-label"></label>
++                    <input id="userIdEditDepartment" asp-for="UserId" class="form-control" />
++                    <span asp-validation-for="UserId" class="text-danger"></span>
++                </div>
++                <div id="formTree">
++
++                </div>
++            </form>
++        </div>
++        <div class="modal-footer">
++            <div class="btn-group btn-group-justified" role="group" aria-label="group button">
++                <div class="btn-group" role="group">
++                    <button type="button" onclick="SendEditManagerUserDepartmentRequest()" class="btn btn-default btn-info">Изменить</button>
++                    <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Закрыть</button>
++                </div>
++            </div>
++        </div>
++    </div>
++</div>
+\ No newline at end of file
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/Register.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/Register.cshtml
+index 3f8725e..3c91b32 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/Register.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/Register.cshtml
+@@ -16,6 +16,10 @@
+                     <input asp-for="Username" class="form-control" />
+                     <span asp-validation-for="Username" class="text-danger"></span>
+                 </div>
++                <div class="form-check">
++                    <input type="checkbox" asp-for="IsDepartmentManager" class="form-check-input" id="exampleCheck1">
++                    <label asp-for="IsDepartmentManager"></label>
++                </div>
+                 <div class="form-group">
+                     <label asp-for="Password"></label>
+                     <input asp-for="Password" class="form-control" />
+@@ -26,6 +30,7 @@
+                     <input asp-for="ConfirmPassword" class="form-control" />
+                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                 </div>
++
+             </form>
+         </div>
+         <div class="modal-footer">
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/Users.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/Users.cshtml
+index ff0649c..2f9eb25 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/Users.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Admin/Users.cshtml
+@@ -8,7 +8,7 @@
+     <thead>
+         <tr>
+             <th>Имя пользователя</th>
+-            <th>Количество групп в управлении</th>
++            <th>В управлении</th>
+             <th></th>
+         </tr>
+     </thead>
+@@ -21,18 +21,41 @@
+                 </td>
+                 <td>
+                     @{
+-                        var count = default(int);
+-                        var id = @item.Id;
+-                        if (item.Groups != null)
++                        var count = default(string);
++                        var isDefaultUser = item is DefaultUser;
++                        var isDepartmentManager = item is DepartmentManagerUser;
++
++                        if (isDefaultUser)
++                        {
++                            var groupsCount = (item as DefaultUser).Groups.Count;
++                            count =  groupsCount + " групп(ы)";
++                        }
++                        else if(isDepartmentManager)
+                         {
+-                            count = item.Groups.Count;
++                            if((item as DepartmentManagerUser).Department != null)
++                            {
++                                count = "Отделение " + (item as DepartmentManagerUser).Department.Name;
++                            }
++                            else
++                            {
++                                count = "Без отделения";
++                            }
+                         }
+                     }
+                     @count
+                 </td>
+                 <td>
+                     <button onclick="GetEditUserNameRequest('@item.Id')" class="btn btn-default">Изменить имя</button>
+-                    <button onclick="GetEditUserGroupsRequest('@item.Id');" class="btn btn-default">Изменить список доступных групп</button>
++                    @if (isDefaultUser)
++                    {
++                        <button onclick="GetEditUserGroupsRequest('@item.Id');" class="btn btn-default">Изменить список доступных групп</button>
++                    }
++                    else if (isDepartmentManager)
++                    {
++                        var department = (item as DepartmentManagerUser).Department;
++                        var onClickDirective = (department != null) ? $"GetEditManagerDepartmentRequest('{item.Id}', {department.Id});" : $"GetEditManagerDepartmentRequest('{item.Id}');";
++                        <button onclick="@onClickDirective" class="btn btn-default">Изменить отделение</button>
++                    }
+                     <button onclick="GetDeleteUserRequest('@item.Id')" class="btn btn-default">Удалить</button>
+                 </td>
+             </tr>
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/MedicalCertificate/Create.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/MedicalCertificate/Create.cshtml
+index 15d9d42..36d1132 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/MedicalCertificate/Create.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/MedicalCertificate/Create.cshtml
+@@ -50,7 +50,7 @@
+                 </div>
+                 <div class="form-group" id="certificateTermBlock" hidden>
+                     <label class="control-label">Срок действия справки</label>
+-                    @{ 
++                    @{
+                         var listTerms = new SelectList(new List<MedicalCertificates.Web.Models.MedicalCertificatesViewModels.CertificateTerm>(), "Months", "Text");
+                         if (Model.Terms != null)
+                         {
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/ConfigurePEDepartmentReport.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/ConfigurePEDepartmentReport.cshtml
+new file mode 100644
+index 0000000..f419ed2
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/ConfigurePEDepartmentReport.cshtml
+@@ -0,0 +1,29 @@
++@model MedicalCertificates.Web.Models.ReportViewModels.ConfigurePEDepartmentReport
++
++<div class="modal-dialog">
++    <div class="modal-content">
++        <div class="modal-header">
++            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
++            <h3 class="modal-title" id="lineModalLabel">Генерация отчета по группам по физкультуре</h3>
++        </div>
++        <div class="modal-body">
++            <form asp-action="ConfigurePEDepartmentReport" id="configurePEDepartmentReport">
++                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
++
++                <label class="control-label">Выберите отделение</label>
++                <div id="formTree">
++                </div>
++                <span id="validationformTree" class="text-danger"></span>
++            </form>
++        </div>
++        <div class="modal-footer">
++            <div class="btn-group btn-group-justified" role="group" aria-label="group button">
++                <div class="btn-group" role="group">
++                    <button onclick="SendConfigurePEDepartmentReportRequest();" class="btn btn-success">Сгенерировать</button>
++                    <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Закрыть</button>
++                </div>
++            </div>
++        </div>
++    </div>
++</div>
++
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/CourseReport.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/CourseReport.cshtml
+index 60ae849..83e93b4 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/CourseReport.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/CourseReport.cshtml
+@@ -1,8 +1,6 @@
+ @model MedicalCertificates.Service.ReportModels.GroupOfStudentsReport
+ 
+-<h1>Отчет по студентам курсов на @Model.OnDate.ToString("dd.MM.yyyy") число</h1>
+-<hr />
+-<h2>Все описанные данные о сроках и действительности справок составлены на эту дату!</h2>
++<h2>Отчет по студентам курсов на @Model.OnDate.ToString("dd.MM.yyyy") число</h2>
+ <hr />
+ @if (Model.All > 0)
+ {
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/DepartmentReport.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/DepartmentReport.cshtml
+index d8d2016..2a5e34e 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/DepartmentReport.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/DepartmentReport.cshtml
+@@ -1,8 +1,6 @@
+ @model MedicalCertificates.Service.ReportModels.GroupOfStudentsReport
+ 
+-<h1>Отчет по студентам отделений на @Model.OnDate.ToString("dd.MM.yyyy") число</h1>
+-<hr />
+-<h2>Все описанные данные о сроках и действительности справок составлены на эту дату!</h2>
++<h2>Отчет по студентам отделений на @Model.OnDate.ToString("dd.MM.yyyy") число</h2>
+ <hr />
+ @if (Model.All > 0)
+ {
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/GroupReport.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/GroupReport.cshtml
+index 411db03..9c1c121 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/GroupReport.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/GroupReport.cshtml
+@@ -1,8 +1,6 @@
+ @model MedicalCertificates.Service.ReportModels.GroupOfStudentsReport
+ 
+-<h1>Отчет по студентам груп на @Model.OnDate.ToString("dd.MM.yyyy") число</h1>
+-<hr />
+-<h2>Все описанные данные о сроках и действительности справок составлены на эту дату!</h2>
++<h2>Отчет по студентам групп на @Model.OnDate.ToString("dd.MM.yyyy") число</h2>
+ <hr />
+ @if (Model.All > 0)
+ {
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/HealthSheetReport.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/HealthSheetReport.cshtml
+index f07b20b..61bf5c1 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/HealthSheetReport.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/HealthSheetReport.cshtml
+@@ -31,6 +31,9 @@
+         }
+     }
+ }
++
++<h5 style="display: none; font-weight: 600" class="text-center">Листок здоровья группы <u>@fromWhat</u> (@course курс)</h5>
++
+ <br />
+ <h5 class="text-center">Частное учреждение образования</h5>
+ <h5 class="text-center">"Колледж бизнеса и права"</h5>
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/PEDepartmentReport.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/PEDepartmentReport.cshtml
+new file mode 100644
+index 0000000..9884bef
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Report/PEDepartmentReport.cshtml
+@@ -0,0 +1,13 @@
++@model MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels.PEDepartmentReportModel<StudentReport>
++
++<h4 class="text-center">Отделение @Model.DepartmentName </h4>
++<br />
++@if (Model.PhysicalEducationGroups.Count == 0)
++{
++    <h5>Ни один студент не попал под выбранные критерии</h5>
++
++}
++@foreach (var PEGroup in Model.PhysicalEducationGroups)
++{
++    @Html.Partial("~/Views/Shared/PEDepartmentReportTable.cshtml", PEGroup);
++}
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/HealthSheetTable.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/HealthSheetTable.cshtml
+index 40aa607..57c1c1c 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/HealthSheetTable.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/HealthSheetTable.cshtml
+@@ -1,6 +1,6 @@
+ @model IReadOnlyList<MedicalCertificates.Service.ReportModels.StudentReport>
+ 
+-<table class="table table-striped table-bordered table-condensed table-hover">
++<table style="width: 100%;" class="table table-striped table-bordered table-condensed table-hover">
+ 
+     <!--Table head-->
+     <thead>
+@@ -41,7 +41,7 @@
+                 healthName = student.HealthGroup.Name;
+             }
+ 
+-            <tr onclick="GetDetailsStudentRequest(@student.Id)" class="cursor-pointer">
++            <tr style="padding: 10px;" onclick="GetDetailsStudentRequest(@student.Id)" class="cursor-pointer">
+                 <td>@currentStringCounter</td>
+                 <td>@nameSurname</td>
+                 <td>@birthDay</td>
+@@ -55,3 +55,4 @@
+     </tbody>
+ 
+ </table>
++
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/PEDepartmentReportTable.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/PEDepartmentReportTable.cshtml
+new file mode 100644
+index 0000000..d7aa604
+--- /dev/null
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/PEDepartmentReportTable.cshtml
+@@ -0,0 +1,38 @@
++@model MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels.PEDepartmentReportPhysicalEducationGroups<StudentReport>
++
++@foreach (var PECourse in Model.GroupedCourses)
++{
++    var title = Model.PhysicalEducationName + " группа: курс " + PECourse.CourseNumber;
++    <strong><i>@title</i></strong>
++    <table class="table table-striped table-bordered table-hover table-condensed">
++        <thead>
++            <tr>
++                <th class="text-center"><i>№</i></th>
++                <th class="text-center"><i>Фамилия, имя, отчество учащегося</i></th>
++                <th class="text-center"><i>Группа</i></th>
++            </tr>
++        </thead>
++
++        <tbody>
++            @{ 
++                var count = 1;
++            }
++            @foreach(var student in PECourse.EntityList)
++            {
++                var nameSurname = student.Surname + " " + student.Name.First() + ".";
++                if (student.SecondName != null && student.SecondName.Trim() != "")
++                {
++                    nameSurname += student.SecondName.First() + ".";
++                }
++                <tr onclick="GetDetailsStudentRequest(@student.Id)" class="cursor-pointer">
++                    <td class="text-center">@count</td>
++                    <td>@nameSurname</td>
++                    <td class="text-center">@student.Group</td>
++                </tr>
++                    count++;
++            }
++        </tbody>
++
++    </table>
++    <br />
++}
+\ No newline at end of file
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/StudentsReportsTable.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/StudentsReportsTable.cshtml
+index f5b256d..48a74d6 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/StudentsReportsTable.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/StudentsReportsTable.cshtml
+@@ -6,7 +6,6 @@
+         <thead>
+             <tr>
+                 <th>Студент</th>
+-                <th>Дата рождения</th>
+                 <th>Группа</th>
+                 <th>Курс</th>
+                 <th>Отделение</th>
+@@ -27,14 +26,13 @@
+                 {
+                     nameSurname += student.SecondName.First() + ".";
+                 }
+-                var start = "n/a";
+-                var finish = "n/a";
++                var start = "н/д";
++                var finish = "н/д";
+                 var active = "Нет";
+                 var tagClass = "danger";
+                 var physName = "н/д";
+                 var healthName = "н/д";
+                 var daysBeforeEnd = 0;
+-                var birthDay = student.BirthDate.ToString("dd.MM.yyyy");
+ 
+ 
+                 if (student.CertificatePeriod!=0.0)
+@@ -57,7 +55,6 @@
+ 
+             <tr onclick="GetDetailsStudentRequest(@student.Id)" class="@tagClass cursor-pointer">
+                 <td>@nameSurname</td>
+-                <td>@birthDay</td>
+                 <td>@student.Group</td>
+                 <td>@student.Course</td>
+                 <td>@student.Department</td>
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/_Layout.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/_Layout.cshtml
+index 71cb209..d4d8927 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/_Layout.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/_Layout.cshtml
+@@ -94,6 +94,25 @@
+         ul:focus {
+             outline: none;
+         }
++
++        .non-selectable {
++            user-select: none;
++        }
++
++        @@media print {
++            
++            table {
++                font-size: 14px;
++                white-space: normal;
++                word-wrap: break-word;
++            }
++
++            table tr td {
++                padding: 5px 3px;
++            }
++
++
++        }
+     </style>
+     @RenderSection("Scripts", required: false)
+ 
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/_LoginPartial.cshtml b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/_LoginPartial.cshtml
+index feb0325..b29280f 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/_LoginPartial.cshtml
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/Views/Shared/_LoginPartial.cshtml
+@@ -13,7 +13,7 @@
+         <li>
+             @if (await UserManager.IsInRoleAsync(user, "Admin"))
+             {
+-                <button id="createBtn" onclick="ExecCreateAction();" class="btn btn-link navbar-btn navbar-link" >Создать</button>
++                <button id="createBtn" onclick="ExecCreateAction();" class="btn btn-link navbar-btn navbar-link">Создать</button>
+ 
+             }
+             else
+@@ -32,30 +32,32 @@
+             <button onclick="ExecUpdateActionAction()" class="btn btn-link navbar-btn navbar-link">Обновить</button>
+         </li>
+         <li class="dropdown">
+-                <a id="drop2" href="#" class="dropdown-toggle" data-toggle="dropdown">
+-                    Отчеты
+-                    <span class="caret"></span>
+-                </a>
+-                <ul class="dropdown-menu">
+-                    <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureGroupReportRequest()">Отчет по группам</a></li>
+-                    @if (await UserManager.IsInRoleAsync(user, "Admin"))
+-                    {
+-                        <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureDepartmentReportRequest()">Отчет по отделениям</a></li>
+-                        <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureCourseReportRequest()">Отчет по курсам</a></li>
+-                    }
+-                    <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureHealthSheetReportRequest()">Листок здоровья для группы</a></li>
+-                </ul>
+-            </li>
+-          <li>
++            <a id="drop2" href="#" class="dropdown-toggle" data-toggle="dropdown">
++                Отчеты
++                <span class="caret"></span>
++            </a>
++            <ul class="dropdown-menu">
++                <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureGroupReportRequest()">Отчет по группам</a></li>
++                @if (await UserManager.IsInRoleAsync(user, "Admin") || user is DepartmentManagerUser)
++                {
++                    <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureDepartmentReportRequest()">Отчет по отделениям</a></li>
++                    <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureCourseReportRequest()">Отчет по курсам</a></li>
++                    <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigurePEDepartmentReportRequest()">Отчет по группам здоровья для отделения</a></li>
++                }
++                <li><a style="width:100%;" class="cursor-pointer" onclick="GetConfigureHealthSheetReportRequest()">Листок здоровья для группы</a></li>
++
++            </ul>
++        </li>
++        <li>
+             <button onclick="print()" class="btn btn-link navbar-btn navbar-link">PDF</button>
+-          </li>
++        </li>
+ 
+     </ul>
+ 
+ 
+     <ul class="nav navbar-nav navbar-right" style="margin-right:20px;">
+         <li>
+-            <a onclick="GetEditPasswordRequest();" class="cursor-pointer" >@pseudonim</a>
++            <a onclick="GetEditPasswordRequest();" class="cursor-pointer">@pseudonim</a>
+         </li>
+         @if (await UserManager.IsInRoleAsync(user, "Admin"))
+         {
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/css/main-content.css b/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/css/main-content.css
+index 72608e5..1bc90d2 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/css/main-content.css
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/css/main-content.css
+@@ -39,6 +39,7 @@
+ .main-content__body {
+     display: inline-block;
+     grid-column: 2;
++    width: 100%;
+     padding-left: 20px;
+     overflow-y: scroll;
+ }
+\ No newline at end of file
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/js/medicalCertificates.js b/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/js/medicalCertificates.js
+index dc70924..3d94ded 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/js/medicalCertificates.js
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/js/medicalCertificates.js
+@@ -441,7 +441,7 @@ function GetDeleteDepartmentRequest(id) {
+ 
+ function SendDeleteDepartmentRequest() {
+     var funcs = new Array();
+-    funcs.push(ExecDeleteDepartmentAction);
++    funcs.push(ExecDeleteNodeAction);
+     sendFormRequest('/Department/Delete', '#deleteDepartmentForm', 'POST', "#formModal", funcs);
+ };
+ 
+@@ -551,6 +551,55 @@ function SendEditUserGroupsRequest() {
+ };
+ 
+ 
++function GetEditManagerDepartmentRequest(id, selectedDepartmentId) {
++    var funcs = new Array();
++    funcs.push(BindFormTreeEditManagerDepartment);
++    funcs.push(toggleFormModal);
++    var parameters = [];
++    if (selectedDepartmentId) {
++        parameters.push(selectedDepartmentId);
++    }
++    sendIdRequest('/Admin/EditManagerUserDepartment', id, "GET", "#formModal", funcs, parameters);
++}
++
++function SendEditManagerUserDepartmentRequest() {
++    //var funcs = new Array();
++    //funcs.push(GetIndexUsersRequest)
++    //sendFormRequest('/Admin/EditUserGroups', '#editUserGroupsForm', 'POST', "#formModal", funcs);
++
++    var result = {};
++    var value = $('#userIdEditDepartment').val();
++    result['UserId'] = value;
++    result['DepartmentsId'] = [];
++
++    var formTree = $('#formTree').fancytree('getTree');
++
++    formTree.visit(function (n) {
++        if (n.type == 'department') {
++            if (n.selected == true) {
++                result['DepartmentsId'].push(n.data.modelId);
++            }
++        }
++    });
++    var jsonResult = JSON.stringify(result);
++    $.ajax({
++        type: "POST",
++        cache: false,
++        url: '/Admin/EditManagerUserDepartment',
++        contentType: "application/json; charset=utf-8",
++        data: jsonResult,
++        success: function (data) {
++            SetHtml("#formModal", data);
++            GetIndexUsersRequest();
++        },
++        error: function (data) {
++            console.log("error")
++        }
++    });
++
++};
++
++
+ //Reports
+ function GetConfigureGroupReportRequest() {
+     var funcs = new Array();
+@@ -797,6 +846,67 @@ function GetHealthSheetReportRequest(data) {
+     });
+ }
+ 
++//PEDepartmentReport 
++
++function GetConfigurePEDepartmentReportRequest() {
++    var funcs = new Array();
++    funcs.push(BindFormTreeReportPEDepartment)
++    funcs.push(toggleFormModal);
++    sendRequest('/Report/ConfigurePEDepartmentReport', "GET", "#formModal", funcs);
++}
++
++async function SendConfigurePEDepartmentReportRequest() {
++    var dataArray = $('#configurePEDepartmentReport').serialize();
++    var formTree = $('#formTree').fancytree('getTree');
++
++    var counter = 0;
++    formTree.visit(function (n) {
++
++        if (n.type == 'department') {
++            if (n.selected == true) {
++                dataArray += '&DepartmentsId[' + counter + ']=' + n.data.modelId;
++                counter++;
++            }
++        }
++    });
++    $.ajax({
++        type: 'POST',
++        cache: false,
++        url: '/Report/ConfigurePEDepartmentReport',
++        data: dataArray,
++        success: function (data) {
++            var substring = '&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430';
++            if (data.indexOf(substring) != -1) {
++                var funcs = [];
++                funcs.push(BindFormTreeReportPEDepartment);
++                SetHtml('#formModal', data, funcs);
++            }
++            else {
++                SetHtml('#formModal', data);
++                GetPEDepartmentReportRequest(dataArray)
++            }
++        },
++        error: function (data) {
++            console.log(data)
++        }
++    });
++}
++
++function GetPEDepartmentReportRequest(data) {
++    $.ajax({
++        type: 'POST',
++        cache: false,
++        url: '/Report/PEDepartmentReport',
++        data: data,
++        success: function (data) {
++            SetHtml(undefined, data);
++        },
++        error: function (data) {
++            console.log(data);
++        }
++    });
++}
++
+ 
+ function ChangeReportType() {
+     var value = $('#reportType').val();
+@@ -829,6 +939,16 @@ function BindFormTreeEditGroups(id) {
+     LoadFormTree(funcs, parameters);
+ }
+ 
++function BindFormTreeEditManagerDepartment(selectedDepartmentId) {
++    var funcs = [];
++    funcs.push(SetCheckboxesOnDepartments);
++    funcs.push(CheckSelectedDepartment);
++
++    var parameters = [];
++    parameters[1] = selectedDepartmentId;
++    LoadFormTree(funcs, parameters, clickSelectableOnlyOne('#formTree', 'department'));
++}
++
+ function BindFormTreeReportGroups() {
+     var funcs = [];
+     funcs.push(SetCheckboxesOnGroups);
+@@ -841,8 +961,36 @@ function BindFormTreeReportGroups() {
+ function BindFormTreeReportHealthSheet() {
+     var funcs = [];
+     funcs.push(SetCheckboxesOnGroups);
++    funcs.push(SetOnlyOneClickable);
+     var parameters = [];
+-    LoadFormTree(funcs, parameters);
++    LoadFormTree(funcs, parameters, clickSelectableOnlyOne('#formTree', 'group' ));
++}
++
++function BindFormTreeReportPEDepartment() {
++    var funcs = [];
++    funcs.push(SetCheckboxesOnDepartments);
++    funcs.push(SetOnlyOneClickable);
++    var parameters = [];
++    LoadFormTree(funcs, parameters, clickSelectableOnlyOne('#formTree', 'department'));
++}
++
++function clickSelectableOnlyOne(treeId, type) {
++    return (event, data) => {
++        var node = data.node;
++        
++
++        if (node.type === type) {
++            var formTree = $(treeId).fancytree('getTree');
++
++            formTree.visit(function (n) {
++                if (n.type == type && n !== node) {
++                    n.setActive(false);
++                    n.setSelected(false);
++                }
++            });
++        }
++
++    }
+ }
+ 
+ function BindFormTreeReportDepartments() {
+@@ -872,6 +1020,13 @@ function SetCheckboxesOnGroups() {
+     });
+ }
+ 
++function SetOnlyOneClickable() {
++    var formTree = $('#formTree').fancytree('getTree');
++
++}
++
++
++
+ function SetCheckboxesOnDepartments() {
+     var formTree = $('#formTree').fancytree('getTree');
+     formTree.visit(function (n) {
+@@ -892,7 +1047,7 @@ function SetCheckboxesOnCourses() {
+     });
+ }
+ 
+-function LoadFormTree(functionsArray, parametersArray) {
++function LoadFormTree(functionsArray, parametersArray, clickEvent) {
+     $("#formTree").fancytree({
+         source: $.ajax({
+             url: '/Tree/GetManagementFormHierarchy',
+@@ -903,7 +1058,7 @@ function LoadFormTree(functionsArray, parametersArray) {
+         }),
+         cache: false,
+         clickFolderMode: 1,
+-        click: function (event, data) {
++        click: clickEvent || function (event, data) {
+             var node = data.node;
+             if (node.isActive()) {
+                 node.setFocus(false);
+@@ -932,6 +1087,7 @@ function LoadFormTree(functionsArray, parametersArray) {
+ 
+         }
+     });
++    $("#formTree").addClass('non-selectable');
+ }
+ 
+ function CheckSelectedGroups(id) {
+@@ -963,6 +1119,20 @@ function CheckSelectedGroups(id) {
+     });
+ }
+ 
++function CheckSelectedDepartment(departmentId) {
++    var formTree = $('#formTree').fancytree('getTree');
++    if (departmentId !== undefined) {
++        formTree.visit(function (n) {
++            if (n.type == 'department') {
++                if (departmentId == n.data.modelId) {
++                    n.setSelected(true);
++                }
++            }
++        });
++    }   
++    
++}
++
+ function ExpandAllNodes(id) {
+     var formTree = $(id).fancytree('getTree');
+     formTree.visit(function (n) {
+@@ -1352,28 +1522,27 @@ function print() {
+         title = element;
+     }
+     title = transliterate(title);
+-    var size = Math.floor(($('#main-content').width() * 0.26458333333719))
++    var size = Math.floor(($('#main-content').width() * 0.26458333333719));
+     if (+size < 210) {
+         size = '210mm';
+     } else {
+         size = size + 'mm';
+     }
+     return xepOnline.Formatter.Format('main-content',
+-        { pageWidth: size, pageHeight: '297mm', render: 'download', pageMargin: '0in', filename: title }
+-        //{render:'download'}
+-    );
+-}
++        { pageWidth: '210mm', pageHeight: '297mm', render: 'download', pageMargin: '0.2in', filename: title });
++ }
++      
+ 
+ function transliterate(word) {
+     var answer = ""
+         , a = {};
+ 
+-    a["Ё"] = "YO"; a["Й"] = "I"; a["Ц"] = "TS"; a["У"] = "U"; a["К"] = "K"; a["Е"] = "E"; a["Н"] = "N"; a["Г"] = "G"; a["Ш"] = "SH"; a["Щ"] = "SCH"; a["З"] = "Z"; a["Х"] = "H"; a["Ъ"] = "'";
+-    a["ё"] = "yo"; a["й"] = "i"; a["ц"] = "ts"; a["у"] = "u"; a["к"] = "k"; a["е"] = "e"; a["н"] = "n"; a["г"] = "g"; a["ш"] = "sh"; a["щ"] = "sch"; a["з"] = "z"; a["х"] = "h"; a["ъ"] = "'";
++    a["Ё"] = "YO"; a["Й"] = "I"; a["Ц"] = "TS"; a["У"] = "U"; a["К"] = "K"; a["Е"] = "E"; a["Н"] = "N"; a["Г"] = "G"; a["Ш"] = "SH"; a["Щ"] = "SCH"; a["З"] = "Z"; a["Х"] = "H"; a["Ъ"] = "\'";
++    a["ё"] = "yo"; a["й"] = "i"; a["ц"] = "ts"; a["у"] = "u"; a["к"] = "k"; a["е"] = "e"; a["н"] = "n"; a["г"] = "g"; a["ш"] = "sh"; a["щ"] = "sch"; a["з"] = "z"; a["х"] = "h"; a["ъ"] = "\'";
+     a["Ф"] = "F"; a["Ы"] = "I"; a["В"] = "V"; a["А"] = "a"; a["П"] = "P"; a["Р"] = "R"; a["О"] = "O"; a["Л"] = "L"; a["Д"] = "D"; a["Ж"] = "ZH"; a["Э"] = "E";
+     a["ф"] = "f"; a["ы"] = "i"; a["в"] = "v"; a["а"] = "a"; a["п"] = "p"; a["р"] = "r"; a["о"] = "o"; a["л"] = "l"; a["д"] = "d"; a["ж"] = "zh"; a["э"] = "e";
+-    a["Я"] = "Ya"; a["Ч"] = "CH"; a["С"] = "S"; a["М"] = "M"; a["И"] = "I"; a["Т"] = "T"; a["Ь"] = "'"; a["Б"] = "B"; a["Ю"] = "YU";
+-    a["я"] = "ya"; a["ч"] = "ch"; a["с"] = "s"; a["м"] = "m"; a["и"] = "i"; a["т"] = "t"; a["ь"] = "'"; a["б"] = "b"; a["ю"] = "yu";
++    a["Я"] = "Ya"; a["Ч"] = "CH"; a["С"] = "S"; a["М"] = "M"; a["И"] = "I"; a["Т"] = "T"; a["Ь"] = "\'"; a["Б"] = "B"; a["Ю"] = "YU";
++    a["я"] = "ya"; a["ч"] = "ch"; a["с"] = "s"; a["м"] = "m"; a["и"] = "i"; a["т"] = "t"; a["ь"] = "\'"; a["б"] = "b"; a["ю"] = "yu";
+ 
+     for (i in word) {
+         if (word.hasOwnProperty(i)) {
+@@ -1381,7 +1550,7 @@ function transliterate(word) {
+                 answer += word[i];
+             } else {
+                 answer += a[word[i]];
+-            }
++            }            
+         }
+     }
+     return answer;
+diff --git a/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/js/treeLoader.js b/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/js/treeLoader.js
+index 9f1210a..e9f87fc 100644
+--- a/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/js/treeLoader.js
++++ b/MedicalCertificatesInformation/MedicalCertificates.Web/wwwroot/js/treeLoader.js
+@@ -1,5 +1,6 @@
+ ﻿$(function () {
+-    $("#tree").fancytree({
++    let treeElement = $("#tree"); 
++    treeElement.fancytree({
+         extensions: ["edit", "filter"],
+         source: {
+             url: "/Tree/GetManagementHierarchy",
+@@ -68,4 +69,5 @@
+ 
+         }
+     });
++    treeElement.addClass('non-selectable');
+ });
+\ No newline at end of file
+-- 
+2.20.0.windows.1
+

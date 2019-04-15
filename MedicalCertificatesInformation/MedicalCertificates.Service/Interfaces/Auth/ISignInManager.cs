@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Auth
 {
-    public interface ISignInManager<TUser> where TUser : class
+    public interface ISignInManager<TUser> where TUser : IdentityUser
     {
        
         Task<SignInResult> PasswordSignInAsync(TUser user, string password, bool isPersistent, bool lockoutOnFailure);

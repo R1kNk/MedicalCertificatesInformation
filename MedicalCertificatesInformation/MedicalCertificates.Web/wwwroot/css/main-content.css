@@ -39,6 +39,7 @@
 .main-content__body {
     display: inline-block;
     grid-column: 2;
+    width: 100%;
     padding-left: 20px;
     overflow-y: scroll;
 }

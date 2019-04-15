@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Auth
 {
-    public interface IUserManager<TUser> where TUser : class
+    public interface IUserManager<TUser> where TUser : IdentityUser
     {
         IQueryable<TUser> Users { get; }
 

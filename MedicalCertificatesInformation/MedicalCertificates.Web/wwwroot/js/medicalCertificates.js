@@ -441,7 +441,7 @@ function GetDeleteDepartmentRequest(id) {
 
 function SendDeleteDepartmentRequest() {
     var funcs = new Array();
-    funcs.push(ExecDeleteDepartmentAction);
+    funcs.push(ExecDeleteNodeAction);
     sendFormRequest('/Department/Delete', '#deleteDepartmentForm', 'POST', "#formModal", funcs);
 };
 
@@ -537,6 +537,55 @@ function SendEditUserGroupsRequest() {
         type: "POST",
         cache: false,
         url: '/Admin/EditUserGroups',
+        contentType: "application/json; charset=utf-8",
+        data: jsonResult,
+        success: function (data) {
+            SetHtml("#formModal", data);
+            GetIndexUsersRequest();
+        },
+        error: function (data) {
+            console.log("error")
+        }
+    });
+
+};
+
+
+function GetEditManagerDepartmentRequest(id, selectedDepartmentId) {
+    var funcs = new Array();
+    funcs.push(BindFormTreeEditManagerDepartment);
+    funcs.push(toggleFormModal);
+    var parameters = [];
+    if (selectedDepartmentId) {
+        parameters.push(selectedDepartmentId);
+    }
+    sendIdRequest('/Admin/EditManagerUserDepartment', id, "GET", "#formModal", funcs, parameters);
+}
+
+function SendEditManagerUserDepartmentRequest() {
+    //var funcs = new Array();
+    //funcs.push(GetIndexUsersRequest)
+    //sendFormRequest('/Admin/EditUserGroups', '#editUserGroupsForm', 'POST', "#formModal", funcs);
+
+    var result = {};
+    var value = $('#userIdEditDepartment').val();
+    result['UserId'] = value;
+    result['DepartmentsId'] = [];
+
+    var formTree = $('#formTree').fancytree('getTree');
+
+    formTree.visit(function (n) {
+        if (n.type == 'department') {
+            if (n.selected == true) {
+                result['DepartmentsId'].push(n.data.modelId);
+            }
+        }
+    });
+    var jsonResult = JSON.stringify(result);
+    $.ajax({
+        type: "POST",
+        cache: false,
+        url: '/Admin/EditManagerUserDepartment',
         contentType: "application/json; charset=utf-8",
         data: jsonResult,
         success: function (data) {
@@ -797,6 +846,67 @@ function GetHealthSheetReportRequest(data) {
     });
 }
 
+//PEDepartmentReport 
+
+function GetConfigurePEDepartmentReportRequest() {
+    var funcs = new Array();
+    funcs.push(BindFormTreeReportPEDepartment)
+    funcs.push(toggleFormModal);
+    sendRequest('/Report/ConfigurePEDepartmentReport', "GET", "#formModal", funcs);
+}
+
+async function SendConfigurePEDepartmentReportRequest() {
+    var dataArray = $('#configurePEDepartmentReport').serialize();
+    var formTree = $('#formTree').fancytree('getTree');
+
+    var counter = 0;
+    formTree.visit(function (n) {
+
+        if (n.type == 'department') {
+            if (n.selected == true) {
+                dataArray += '&DepartmentsId[' + counter + ']=' + n.data.modelId;
+                counter++;
+            }
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/ConfigurePEDepartmentReport',
+        data: dataArray,
+        success: function (data) {
+            var substring = '&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430';
+            if (data.indexOf(substring) != -1) {
+                var funcs = [];
+                funcs.push(BindFormTreeReportPEDepartment);
+                SetHtml('#formModal', data, funcs);
+            }
+            else {
+                SetHtml('#formModal', data);
+                GetPEDepartmentReportRequest(dataArray)
+            }
+        },
+        error: function (data) {
+            console.log(data)
+        }
+    });
+}
+
+function GetPEDepartmentReportRequest(data) {
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        url: '/Report/PEDepartmentReport',
+        data: data,
+        success: function (data) {
+            SetHtml(undefined, data);
+        },
+        error: function (data) {
+            console.log(data);
+        }
+    });
+}
+
 
 function ChangeReportType() {
     var value = $('#reportType').val();
@@ -829,6 +939,16 @@ function BindFormTreeEditGroups(id) {
     LoadFormTree(funcs, parameters);
 }
 
+function BindFormTreeEditManagerDepartment(selectedDepartmentId) {
+    var funcs = [];
+    funcs.push(SetCheckboxesOnDepartments);
+    funcs.push(CheckSelectedDepartment);
+
+    var parameters = [];
+    parameters[1] = selectedDepartmentId;
+    LoadFormTree(funcs, parameters, clickSelectableOnlyOne('#formTree', 'department'));
+}
+
 function BindFormTreeReportGroups() {
     var funcs = [];
     funcs.push(SetCheckboxesOnGroups);
@@ -841,8 +961,36 @@ function BindFormTreeReportGroups() {
 function BindFormTreeReportHealthSheet() {
     var funcs = [];
     funcs.push(SetCheckboxesOnGroups);
+    funcs.push(SetOnlyOneClickable);
     var parameters = [];
-    LoadFormTree(funcs, parameters);
+    LoadFormTree(funcs, parameters, clickSelectableOnlyOne('#formTree', 'group' ));
+}
+
+function BindFormTreeReportPEDepartment() {
+    var funcs = [];
+    funcs.push(SetCheckboxesOnDepartments);
+    funcs.push(SetOnlyOneClickable);
+    var parameters = [];
+    LoadFormTree(funcs, parameters, clickSelectableOnlyOne('#formTree', 'department'));
+}
+
+function clickSelectableOnlyOne(treeId, type) {
+    return (event, data) => {
+        var node = data.node;
+        
+
+        if (node.type === type) {
+            var formTree = $(treeId).fancytree('getTree');
+
+            formTree.visit(function (n) {
+                if (n.type == type && n !== node) {
+                    n.setActive(false);
+                    n.setSelected(false);
+                }
+            });
+        }
+
+    }
 }
 
 function BindFormTreeReportDepartments() {
@@ -872,6 +1020,13 @@ function SetCheckboxesOnGroups() {
     });
 }
 
+function SetOnlyOneClickable() {
+    var formTree = $('#formTree').fancytree('getTree');
+
+}
+
+
+
 function SetCheckboxesOnDepartments() {
     var formTree = $('#formTree').fancytree('getTree');
     formTree.visit(function (n) {
@@ -892,7 +1047,7 @@ function SetCheckboxesOnCourses() {
     });
 }
 
-function LoadFormTree(functionsArray, parametersArray) {
+function LoadFormTree(functionsArray, parametersArray, clickEvent) {
     $("#formTree").fancytree({
         source: $.ajax({
             url: '/Tree/GetManagementFormHierarchy',
@@ -903,7 +1058,7 @@ function LoadFormTree(functionsArray, parametersArray) {
         }),
         cache: false,
         clickFolderMode: 1,
-        click: function (event, data) {
+        click: clickEvent || function (event, data) {
             var node = data.node;
             if (node.isActive()) {
                 node.setFocus(false);
@@ -932,6 +1087,7 @@ function LoadFormTree(functionsArray, parametersArray) {
 
         }
     });
+    $("#formTree").addClass('non-selectable');
 }
 
 function CheckSelectedGroups(id) {
@@ -961,6 +1117,20 @@ function CheckSelectedGroups(id) {
             console.log(data)
         }
     });
+}
+
+function CheckSelectedDepartment(departmentId) {
+    var formTree = $('#formTree').fancytree('getTree');
+    if (departmentId !== undefined) {
+        formTree.visit(function (n) {
+            if (n.type == 'department') {
+                if (departmentId == n.data.modelId) {
+                    n.setSelected(true);
+                }
+            }
+        });
+    }   
+    
 }
 
 function ExpandAllNodes(id) {
@@ -1352,28 +1522,27 @@ function print() {
         title = element;
     }
     title = transliterate(title);
-    var size = Math.floor(($('#main-content').width() * 0.26458333333719))
+    var size = Math.floor(($('#main-content').width() * 0.26458333333719));
     if (+size < 210) {
         size = '210mm';
     } else {
         size = size + 'mm';
     }
     return xepOnline.Formatter.Format('main-content',
-        { pageWidth: size, pageHeight: '297mm', render: 'download', pageMargin: '0in', filename: title }
-        //{render:'download'}
-    );
-}
+        { pageWidth: '210mm', pageHeight: '297mm', render: 'download', pageMargin: '0.2in', filename: title });
+ }
+      
 
 function transliterate(word) {
     var answer = ""
         , a = {};
 
-    a["Ё"] = "YO"; a["Й"] = "I"; a["Ц"] = "TS"; a["У"] = "U"; a["К"] = "K"; a["Е"] = "E"; a["Н"] = "N"; a["Г"] = "G"; a["Ш"] = "SH"; a["Щ"] = "SCH"; a["З"] = "Z"; a["Х"] = "H"; a["Ъ"] = "'";
-    a["ё"] = "yo"; a["й"] = "i"; a["ц"] = "ts"; a["у"] = "u"; a["к"] = "k"; a["е"] = "e"; a["н"] = "n"; a["г"] = "g"; a["ш"] = "sh"; a["щ"] = "sch"; a["з"] = "z"; a["х"] = "h"; a["ъ"] = "'";
+    a["Ё"] = "YO"; a["Й"] = "I"; a["Ц"] = "TS"; a["У"] = "U"; a["К"] = "K"; a["Е"] = "E"; a["Н"] = "N"; a["Г"] = "G"; a["Ш"] = "SH"; a["Щ"] = "SCH"; a["З"] = "Z"; a["Х"] = "H"; a["Ъ"] = "\'";
+    a["ё"] = "yo"; a["й"] = "i"; a["ц"] = "ts"; a["у"] = "u"; a["к"] = "k"; a["е"] = "e"; a["н"] = "n"; a["г"] = "g"; a["ш"] = "sh"; a["щ"] = "sch"; a["з"] = "z"; a["х"] = "h"; a["ъ"] = "\'";
     a["Ф"] = "F"; a["Ы"] = "I"; a["В"] = "V"; a["А"] = "a"; a["П"] = "P"; a["Р"] = "R"; a["О"] = "O"; a["Л"] = "L"; a["Д"] = "D"; a["Ж"] = "ZH"; a["Э"] = "E";
     a["ф"] = "f"; a["ы"] = "i"; a["в"] = "v"; a["а"] = "a"; a["п"] = "p"; a["р"] = "r"; a["о"] = "o"; a["л"] = "l"; a["д"] = "d"; a["ж"] = "zh"; a["э"] = "e";
-    a["Я"] = "Ya"; a["Ч"] = "CH"; a["С"] = "S"; a["М"] = "M"; a["И"] = "I"; a["Т"] = "T"; a["Ь"] = "'"; a["Б"] = "B"; a["Ю"] = "YU";
-    a["я"] = "ya"; a["ч"] = "ch"; a["с"] = "s"; a["м"] = "m"; a["и"] = "i"; a["т"] = "t"; a["ь"] = "'"; a["б"] = "b"; a["ю"] = "yu";
+    a["Я"] = "Ya"; a["Ч"] = "CH"; a["С"] = "S"; a["М"] = "M"; a["И"] = "I"; a["Т"] = "T"; a["Ь"] = "\'"; a["Б"] = "B"; a["Ю"] = "YU";
+    a["я"] = "ya"; a["ч"] = "ch"; a["с"] = "s"; a["м"] = "m"; a["и"] = "i"; a["т"] = "t"; a["ь"] = "\'"; a["б"] = "b"; a["ю"] = "yu";
 
     for (i in word) {
         if (word.hasOwnProperty(i)) {
@@ -1381,7 +1550,7 @@ function transliterate(word) {
                 answer += word[i];
             } else {
                 answer += a[word[i]];
-            }
+            }            
         }
     }
     return answer;

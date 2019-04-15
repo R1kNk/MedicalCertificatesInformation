@@ -6,7 +6,6 @@
         <thead>
             <tr>
                 <th>Студент</th>
-                <th>Дата рождения</th>
                 <th>Группа</th>
                 <th>Курс</th>
                 <th>Отделение</th>
@@ -27,14 +26,13 @@
                 {
                     nameSurname += student.SecondName.First() + ".";
                 }
-                var start = "n/a";
-                var finish = "n/a";
+                var start = "н/д";
+                var finish = "н/д";
                 var active = "Нет";
                 var tagClass = "danger";
                 var physName = "н/д";
                 var healthName = "н/д";
                 var daysBeforeEnd = 0;
-                var birthDay = student.BirthDate.ToString("dd.MM.yyyy");
 
 
                 if (student.CertificatePeriod!=0.0)
@@ -57,7 +55,6 @@
 
             <tr onclick="GetDetailsStudentRequest(@student.Id)" class="@tagClass cursor-pointer">
                 <td>@nameSurname</td>
-                <td>@birthDay</td>
                 <td>@student.Group</td>
                 <td>@student.Course</td>
                 <td>@student.Department</td>

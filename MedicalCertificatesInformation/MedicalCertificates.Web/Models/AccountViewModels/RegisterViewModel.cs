@@ -24,5 +24,9 @@ namespace MedicalCertificates.Web.Models.AccountViewModels
         [Display(Name = "Подтвердите пароль")]
         [Compare("Password", ErrorMessage = "Поля пароля и подтвержденного пароля не совпадают")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Заведующий отделением?")]
+        public bool IsDepartmentManager { get; set; }
     }
 }

@@ -1,0 +1,38 @@
+@model MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels.PEDepartmentReportPhysicalEducationGroups<StudentReport>
+
+@foreach (var PECourse in Model.GroupedCourses)
+{
+    var title = Model.PhysicalEducationName + " группа: курс " + PECourse.CourseNumber;
+    <strong><i>@title</i></strong>
+    <table class="table table-striped table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th class="text-center"><i>№</i></th>
+                <th class="text-center"><i>Фамилия, имя, отчество учащегося</i></th>
+                <th class="text-center"><i>Группа</i></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @{ 
+                var count = 1;
+            }
+            @foreach(var student in PECourse.EntityList)
+            {
+                var nameSurname = student.Surname + " " + student.Name.First() + ".";
+                if (student.SecondName != null && student.SecondName.Trim() != "")
+                {
+                    nameSurname += student.SecondName.First() + ".";
+                }
+                <tr onclick="GetDetailsStudentRequest(@student.Id)" class="cursor-pointer">
+                    <td class="text-center">@count</td>
+                    <td>@nameSurname</td>
+                    <td class="text-center">@student.Group</td>
+                </tr>
+                    count++;
+            }
+        </tbody>
+
+    </table>
+    <br />
+}

@@ -31,6 +31,7 @@ namespace MedicalCertificates.Web.Controllers
         private readonly IUserService<ApplicationUser> _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IGroupService _groupService;
+        private readonly IDepartmentService _departmentService;
 
 
         public AdminController(
@@ -40,7 +41,8 @@ namespace MedicalCertificates.Web.Controllers
             IStringConverterService converter,
             IUserService<ApplicationUser> userService,
             IHttpContextAccessor httpContextAccessor,
-            IGroupService groupService)
+            IGroupService groupService,
+            IDepartmentService departmentService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -49,6 +51,7 @@ namespace MedicalCertificates.Web.Controllers
             _converter = converter;
             _httpContextAccessor = httpContextAccessor;
             _groupService = groupService;
+            _departmentService = departmentService;
         }
 
 
@@ -64,7 +67,15 @@ namespace MedicalCertificates.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish(model.Username)), Pseudonim = model.Username, Email = "office@kbp.by" };
+                ApplicationUser user = null;
+                if(model.IsDepartmentManager)
+                {
+                    user = new DepartmentManagerUser { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish(model.Username)), Pseudonim = model.Username, Email = "office@kbp.by" };
+                }
+                else
+                {
+                    user = new DefaultUser { UserName = _converter.ConvertToUsername(_converter.ConvertFromRussianToEnglish(model.Username)), Pseudonim = model.Username, Email = "office@kbp.by" };
+                }
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -134,6 +145,9 @@ namespace MedicalCertificates.Web.Controllers
             if (user == null)
                 return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой пользователь не найден. Обновите страницу." });
 
+            if (!(user is DefaultUser))
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Данный пользователь не может иметь подконтролных групп. Обновите страницу" });
+
             EditUserGroupsViewModel model = new EditUserGroupsViewModel();
             model.UserId = id;
             return View(model);
@@ -148,7 +162,9 @@ namespace MedicalCertificates.Web.Controllers
                 var user = await _userManager.FindByIdAsync(model.UserId);
                 if (user == null)
                     return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой пользователь не найден. Обновите страницу." });
-
+                if (!(user is DefaultUser))
+                    return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Данный пользователь не может иметь подконтролных групп. Обновите страницу" });
+     
                 var result = await _groupService.EditUserGroupsAsync(model.UserId, model.ActiveGroupsId, model.InactiveGroupId);
                 if(result.IsSucceed)
                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
@@ -168,7 +184,51 @@ namespace MedicalCertificates.Web.Controllers
 
         }
 
-       
+        public async Task<IActionResult> EditManagerUserDepartment(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой пользователь не найден. Обновите страницу." });
+
+            if (!(user is DepartmentManagerUser))
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Данный пользователь не может иметь подконтрольное отделение. Обновите страницу" });
+
+            EditManagerUserDepartmentViewModel model = new EditManagerUserDepartmentViewModel();
+            model.UserId = id;
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditManagerUserDepartment([FromBody] EditManagerUserDepartmentViewModel model)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(model.UserId);
+                if (user == null)
+                    return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой пользователь не найден. Обновите страницу." });
+                if (!(user is DepartmentManagerUser))
+                    return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Данный пользователь не может иметь подконтрольное отделение. Обновите страницу" });
+                if(model.DepartmentsId != null && model.DepartmentsId.Count > 1)
+                {
+                    ModelState.AddModelError("", "Выберите не больше одного отделения");
+                    return View(model);
+                }
+                var result = await _departmentService.EditManagerDepartmentAsync(model.UserId, model.DepartmentsId);
+                if (result.IsSucceed)
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Edit));
+                else
+                {
+                    AddOperationResultErrorsToModelState(result);
+                }
+                return View(model);
+            }
+            catch(Exception e)
+            {
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Edit, "Произошла неизвестная ошибка"));
+            }
+
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -207,6 +267,26 @@ namespace MedicalCertificates.Web.Controllers
                         break;
                     case IdentityResultError.DuplicateUserName:
                         ModelState.AddModelError("", "Пользователь с таким именем уже существует.");
+                        break;
+                    default:
+                        ModelState.AddModelError("", "Неизвестная ошибка");
+                        break;
+                }
+            }
+        }
+
+
+        private void AddOperationResultErrorsToModelState(OperationResult<BusinessLogicResultError> operationResult)
+        {
+            foreach (var identityError in operationResult.Errors)
+            {
+                switch (identityError)
+                {
+                    case BusinessLogicResultError.UserNotFound:
+                        ModelState.AddModelError("", " Такой пользователь не найден. Обновите страницу.");
+                        break;
+                    case BusinessLogicResultError.InvalidUserType:
+                        ModelState.AddModelError("", "Данный пользователь не может иметь подконтрольные отделения");
                         break;
                     default:
                         ModelState.AddModelError("", "Неизвестная ошибка");

@@ -169,78 +169,96 @@ namespace MedicalCertificates.Service.AuthServices
         {
             if (user == null)
                 return null;
-
-            List<Department> departmentsResult = new List<Department>();
-            List<Group> groups = user.Groups;
-            foreach (var group in groups)
+            if(user is DefaultUser)
             {
-                var department = group.Course.Department;
-                Department findedDep = departmentsResult.Where(p => p.Id == department.Id).SingleOrDefault();
-                if (findedDep == null)
+                var defaultUser = user as DefaultUser;
+                List<Department> departmentsResult = new List<Department>();
+                List<Group> groups = defaultUser.Groups;
+                foreach (var group in groups)
                 {
-                    findedDep = new Department()
+                    var department = group.Course.Department;
+                    Department findedDep = departmentsResult.Where(p => p.Id == department.Id).SingleOrDefault();
+                    if (findedDep == null)
                     {
-                        Id = department.Id,
-                        Name = department.Name,
-                        Courses = new List<Course>()
-                    };
-                    departmentsResult.Add(findedDep);
-                }
-                Course findedCourse = findedDep.Courses.Where(p => p.Id == group.CourseId).SingleOrDefault();
-                if (findedCourse == null)
-                {
-                    findedCourse = new Course()
-                    {
-                        Id = group.CourseId,
-                        Number = group.Course.Number,
-                        Department = findedDep,
-                        DepartmentId = findedDep.Id,
-                        Groups = new List<Group>()
-                    };
-                    findedDep.Courses.Add(findedCourse);
-                }
-                Group findedGroup = findedCourse.Groups.Where(p => p.Id == group.Id).SingleOrDefault();
-                if (findedGroup == null)
-                {
-                    findedGroup = new Group()
-                    {
-                        Id = group.Id,
-                        Name = group.Name,
-                        GoogleDriveFolderId = "",
-                        CourseId = findedCourse.Id,
-                        Course = findedCourse,
-                        Students = new List<Student>()
-                    };
-
-                    foreach (var student in group.Students)
-                    {
-                        Student newStudent = new Student()
+                        findedDep = new Department()
                         {
-                            Id = student.Id,
-                            Name = student.Name,
-                            Surname = student.Surname,
+                            Id = department.Id,
+                            Name = department.Name,
+                            Courses = new List<Course>()
+                        };
+                        departmentsResult.Add(findedDep);
+                    }
+                    Course findedCourse = findedDep.Courses.Where(p => p.Id == group.CourseId).SingleOrDefault();
+                    if (findedCourse == null)
+                    {
+                        findedCourse = new Course()
+                        {
+                            Id = group.CourseId,
+                            Number = group.Course.Number,
+                            Department = findedDep,
+                            DepartmentId = findedDep.Id,
+                            Groups = new List<Group>()
+                        };
+                        findedDep.Courses.Add(findedCourse);
+                    }
+                    Group findedGroup = findedCourse.Groups.Where(p => p.Id == group.Id).SingleOrDefault();
+                    if (findedGroup == null)
+                    {
+                        findedGroup = new Group()
+                        {
+                            Id = group.Id,
+                            Name = group.Name,
                             GoogleDriveFolderId = "",
-                            GroupId = findedGroup.Id,
-                            Group = findedGroup,
-                            MedicalCertificates = new List<MedicalCertificate>()
+                            CourseId = findedCourse.Id,
+                            Course = findedCourse,
+                            Students = new List<Student>()
                         };
 
-                        foreach (var certificate in student.MedicalCertificates)
+                        foreach (var student in group.Students)
                         {
-                            MedicalCertificate newMedicalCertificate = new MedicalCertificate()
+                            Student newStudent = new Student()
                             {
-                                Id = certificate.Id,
-                                StudentId = newStudent.Id,
-                                Student = newStudent
+                                Id = student.Id,
+                                Name = student.Name,
+                                Surname = student.Surname,
+                                GoogleDriveFolderId = "",
+                                GroupId = findedGroup.Id,
+                                Group = findedGroup,
+                                MedicalCertificates = new List<MedicalCertificate>()
                             };
-                            newStudent.MedicalCertificates.Add(newMedicalCertificate);
+
+                            foreach (var certificate in student.MedicalCertificates)
+                            {
+                                MedicalCertificate newMedicalCertificate = new MedicalCertificate()
+                                {
+                                    Id = certificate.Id,
+                                    StudentId = newStudent.Id,
+                                    Student = newStudent
+                                };
+                                newStudent.MedicalCertificates.Add(newMedicalCertificate);
+                            }
+                            findedGroup.Students.Add(newStudent);
                         }
-                        findedGroup.Students.Add(newStudent);
+                        findedCourse.Groups.Add(findedGroup);
                     }
-                    findedCourse.Groups.Add(findedGroup);
                 }
+                return new UserManagementHierarchy(departmentsResult);
             }
-            return new UserManagementHierarchy(departmentsResult);
+            else if(user is DepartmentManagerUser)
+            {
+                var departmentManagerUser = user as DepartmentManagerUser;
+                var departmentsList = new List<Department>();
+                if (departmentManagerUser.Department != null)
+                {
+                    departmentsList.Add(departmentManagerUser.Department);
+                }
+                return new UserManagementHierarchy(departmentsList);
+            }
+            else
+            {
+                return new UserManagementHierarchy(new List<Department>());
+            }
+            
         }
 
         public async Task<IReadOnlyList<ApplicationUser>> GetAllUsersAsync()

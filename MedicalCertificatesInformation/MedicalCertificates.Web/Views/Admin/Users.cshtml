@@ -8,7 +8,7 @@
     <thead>
         <tr>
             <th>Имя пользователя</th>
-            <th>Количество групп в управлении</th>
+            <th>В управлении</th>
             <th></th>
         </tr>
     </thead>
@@ -21,18 +21,41 @@
                 </td>
                 <td>
                     @{
-                        var count = default(int);
-                        var id = @item.Id;
-                        if (item.Groups != null)
+                        var count = default(string);
+                        var isDefaultUser = item is DefaultUser;
+                        var isDepartmentManager = item is DepartmentManagerUser;
+
+                        if (isDefaultUser)
                         {
-                            count = item.Groups.Count;
+                            var groupsCount = (item as DefaultUser).Groups.Count;
+                            count =  groupsCount + " групп(ы)";
+                        }
+                        else if(isDepartmentManager)
+                        {
+                            if((item as DepartmentManagerUser).Department != null)
+                            {
+                                count = "Отделение " + (item as DepartmentManagerUser).Department.Name;
+                            }
+                            else
+                            {
+                                count = "Без отделения";
+                            }
                         }
                     }
                     @count
                 </td>
                 <td>
                     <button onclick="GetEditUserNameRequest('@item.Id')" class="btn btn-default">Изменить имя</button>
-                    <button onclick="GetEditUserGroupsRequest('@item.Id');" class="btn btn-default">Изменить список доступных групп</button>
+                    @if (isDefaultUser)
+                    {
+                        <button onclick="GetEditUserGroupsRequest('@item.Id');" class="btn btn-default">Изменить список доступных групп</button>
+                    }
+                    else if (isDepartmentManager)
+                    {
+                        var department = (item as DepartmentManagerUser).Department;
+                        var onClickDirective = (department != null) ? $"GetEditManagerDepartmentRequest('{item.Id}', {department.Id});" : $"GetEditManagerDepartmentRequest('{item.Id}');";
+                        <button onclick="@onClickDirective" class="btn btn-default">Изменить отделение</button>
+                    }
                     <button onclick="GetDeleteUserRequest('@item.Id')" class="btn btn-default">Удалить</button>
                 </td>
             </tr>

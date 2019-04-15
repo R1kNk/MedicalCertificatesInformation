@@ -12,6 +12,9 @@ namespace MedicalCertificates.Service.Interfaces.Models
         Task<OperationResult<BusinessLogicResultError>> AddDepartmentAsync(Department newDepartment);
 
         Task<OperationResult<BusinessLogicResultError>> EditDepartmentAsync(Department updateDepartment);
+
+        Task<OperationResult<BusinessLogicResultError>> EditManagerDepartmentAsync(string userId, IReadOnlyList<int> DepartmentsId);
+
     }
 }
 

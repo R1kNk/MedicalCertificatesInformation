@@ -1,5 +1,6 @@
 ﻿$(function () {
-    $("#tree").fancytree({
+    let treeElement = $("#tree"); 
+    treeElement.fancytree({
         extensions: ["edit", "filter"],
         source: {
             url: "/Tree/GetManagementHierarchy",
@@ -68,4 +69,5 @@
 
         }
     });
+    treeElement.addClass('non-selectable');
 });

@@ -13,6 +13,8 @@ namespace MedicalCertificates.Service.ErrorsFetch
         StudentNotFound,
         GroupNotFound,
         CourseNotFound,
+        UserNotFound,
+        InvalidUserType,
         DepartmentNotFound,
         ExpiredCertificate,
         AlreadyInThisGroup,

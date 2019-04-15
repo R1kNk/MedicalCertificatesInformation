@@ -1,0 +1,13 @@
+@model MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels.PEDepartmentReportModel<StudentReport>
+
+<h4 class="text-center">Отделение @Model.DepartmentName </h4>
+<br />
+@if (Model.PhysicalEducationGroups.Count == 0)
+{
+    <h5>Ни один студент не попал под выбранные критерии</h5>
+
+}
+@foreach (var PEGroup in Model.PhysicalEducationGroups)
+{
+    @Html.Partial("~/Views/Shared/PEDepartmentReportTable.cshtml", PEGroup);
+}

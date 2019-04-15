@@ -18,6 +18,9 @@ namespace MedicalCertificates.Repositories
             
         }
 
+        public DbSet<DefaultUser> DefaultUsers { get; set; }
+        public DbSet<DepartmentManagerUser> DepartmentManagerUsers { get; set; }
+
         public DbSet<HealthGroup> HealthGroups { get; set; }
         public DbSet<PhysicalEducation> PhysicalEducations { get; set; }
         public DbSet<Student> Students { get; set; }
@@ -35,7 +38,8 @@ namespace MedicalCertificates.Repositories
             modelBuilder.ApplyConfiguration(new GroupConfiguration());
             modelBuilder.ApplyConfiguration(new CourseConfiguration());
             modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
-            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new DefaultUserConfiguration());
+            modelBuilder.ApplyConfiguration(new DepartmentManagerUserConfiguration());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -46,21 +50,23 @@ namespace MedicalCertificates.Repositories
             base.OnConfiguring(optionsBuilder);
         }
 
-        public static DbContextOptionsBuilder<MedicalCertificatesDbContext> GetOptionsBuilder()
-        {
-            var builder = new DbContextOptionsBuilder<MedicalCertificatesDbContext>();
-            builder.UseSqlServer(connectionString);
-            builder.UseLazyLoadingProxies();
-            return builder;
-        }
+
     }
 
     internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MedicalCertificatesDbContext>
     {
         public MedicalCertificatesDbContext CreateDbContext(string[] args)
         {
-            var context = new MedicalCertificatesDbContext(MedicalCertificatesDbContext.GetOptionsBuilder().Options);
+            var context = new MedicalCertificatesDbContext(GetOptionsBuilder().Options);
             return context;
+        }
+
+        static DbContextOptionsBuilder<MedicalCertificatesDbContext> GetOptionsBuilder()
+        {
+            var builder = new DbContextOptionsBuilder<MedicalCertificatesDbContext>();
+            builder.UseSqlServer(MedicalCertificatesDbContext.connectionString);
+            builder.UseLazyLoadingProxies();
+            return builder;
         }
     }
 }

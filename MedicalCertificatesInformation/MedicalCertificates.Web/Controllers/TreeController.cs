@@ -39,15 +39,23 @@ namespace MedicalCertificates.Web.Controllers
         public async Task<JsonResult> GetUserGroupsId(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            List<int> groupsId = user.Groups.Select(p => p.Id).ToList();
+            List<int> groupsId = new List<int>();
+
+            if (user is DefaultUser)
+            {
+                var defaultUser = user as DefaultUser;
+                groupsId = defaultUser.Groups.Select(p => p.Id).ToList();
+            }
             return Json(groupsId);
         }
 
         public async Task<JsonResult> GetManagementHierarchy()
         {
             var curUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-            bool isAdmin = await _userManager.IsInRoleAsync(curUser, "Admin");
             IReadOnlyList<Department> departments = new List<Department>();
+                    
+            //if(curUser is someType )
+            bool isAdmin = await _userManager.IsInRoleAsync(curUser, "Admin");
             if ( await _userManager.IsInRoleAsync(curUser, "Admin"))
             {
                  departments = await _departmentService.GetAllAsync();

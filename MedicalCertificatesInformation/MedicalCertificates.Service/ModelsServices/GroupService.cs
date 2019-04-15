@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MedicalCertificates.Common;
@@ -56,51 +57,69 @@ namespace MedicalCertificates.Service.ModelsServices
 
         public async Task<OperationResult<string>> SwitchGroupAsync(string userId, int groupId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() {"Такой пользователь не найден. Обновите страницу."});
-
-            var group = await GetByIdAsync(groupId);
-            if(group == null)
-                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Одна или несколько групп не найдено. Обновите страницу." });
-
-            if (!user.Groups.Contains(group))
+            try
             {
-                user.Groups.Add(group);
+                DefaultUser user = await _userManager.FindByIdAsync(userId) as DefaultUser;
+                if (user == null)
+                    return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Такой пользователь не найден. Обновите страницу." });
+
+                var group = await GetByIdAsync(groupId);
+                if (group == null)
+                    return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Одна или несколько групп не найдены. Обновите страницу." });
+
+                if (!user.Groups.Contains(group))
+                {
+                    user.Groups.Add(group);
+                }
+                else
+                {
+                    user.Groups.Remove(group);
+                }
+                await _unitOfWork.SaveAsync();
+                return OperationResult<string>.CreateSuccessfulResult();
             }
-            else
+            catch (InvalidCastException e)
             {
-                user.Groups.Remove(group);
+                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Этот пользователь не может иметь подконтрольные группы. Обновите страницу." });
             }
-            await _unitOfWork.SaveAsync();
-            return OperationResult<string>.CreateSuccessfulResult();
+           
         }
 
         public async Task<OperationResult<string>> EditUserGroupsAsync(string userId, IReadOnlyList<int> activeGroupsId, IReadOnlyList<int> inactiveGroupsId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "UserNotFound" });
+            try
+            {
+                DefaultUser user = await _userManager.FindByIdAsync(userId) as DefaultUser;
+                if (user == null)
+                    return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "UserNotFound" });
 
-            for (int i = 0; i < activeGroupsId.Count; i++)
-            {
-                if (user.Groups.Where(p=>p.Id == activeGroupsId[i]).SingleOrDefault() == null)
+                for (int i = 0; i < activeGroupsId.Count; i++)
                 {
-                    var group = await GetByIdAsync(activeGroupsId[i]);
-                    if (group == null)
-                        return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "GroupNotFound" });
-                    user.Groups.Add(group);
+                    if (user.Groups.Where(p => p.Id == activeGroupsId[i]).SingleOrDefault() == null)
+                    {
+                        var group = await GetByIdAsync(activeGroupsId[i]);
+                        if (group == null)
+                            return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "GroupNotFound" });
+                        user.Groups.Add(group);
+                    }
                 }
-            }
-            for (int i = inactiveGroupsId.Count - 1; i >= 0; i--)
-            {
-                var group = user.Groups.Where(p => p.Id == inactiveGroupsId[i]).SingleOrDefault();
-                if (group != null)
+                for (int i = inactiveGroupsId.Count - 1; i >= 0; i--)
                 {
-                   
-                    user.Groups.Remove(group);
+                    var group = user.Groups.Where(p => p.Id == inactiveGroupsId[i]).SingleOrDefault();
+                    if (group != null)
+                    {
+
+                        user.Groups.Remove(group);
+                    }
                 }
+                await _unitOfWork.SaveAsync();
+                return OperationResult<string>.CreateSuccessfulResult();
             }
+            catch(InvalidCastException e)
+            {
+                return OperationResult<string>.CreateUnsuccessfulResult(new List<string>() { "Этот пользователь не может иметь подконтрольные группы. Обновите страницу." });
+            }
+            
             //foreach (var groupId in activeGroupsId)
             //{
             //    var group = await GetByIdAsync(groupId);
@@ -116,8 +135,7 @@ namespace MedicalCertificates.Service.ModelsServices
             //        user.Groups.Remove(group);
             //    }
             //}
-            await _unitOfWork.SaveAsync();
-            return OperationResult<string>.CreateSuccessfulResult();
+            
         }
 
         public IReadOnlyList<Student> GetAllStudents(Group group)

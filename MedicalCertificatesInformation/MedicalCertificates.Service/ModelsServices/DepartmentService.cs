@@ -3,8 +3,9 @@ using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Repositories.Interfaces;
 using MedicalCertificates.Service.CommonServices;
 using MedicalCertificates.Service.ErrorsFetch;
-using MedicalCertificates.Service.Interfaces.Common;
+using MedicalCertificates.Service.Interfaces.Auth;
 using MedicalCertificates.Service.Interfaces.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,8 +14,11 @@ namespace MedicalCertificates.Service.ModelsServices
 {
     class DepartmentService : CRUDService<Department>, IDepartmentService
     {
-        public DepartmentService(IMedicalCertificatesUnitOfWork unitOfWork) : base(unitOfWork)
+        private readonly IUserManager<ApplicationUser> _userManager;
+
+        public DepartmentService(IMedicalCertificatesUnitOfWork unitOfWork, IUserManager<ApplicationUser> userManager) : base(unitOfWork)
         {
+            _userManager = userManager;
         }
 
         public async Task<OperationResult<BusinessLogicResultError>> AddDepartmentAsync(Department newDepartment)
@@ -41,6 +45,40 @@ namespace MedicalCertificates.Service.ModelsServices
 
             var result = await UpdateAsync(department);
             return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
+        }
+
+        public async Task<OperationResult<BusinessLogicResultError>> EditManagerDepartmentAsync(string userId, IReadOnlyList<int> DepartmentsId)
+        {
+            try
+            {
+                DepartmentManagerUser user = await _userManager.FindByIdAsync(userId) as DepartmentManagerUser;
+                if (user == null)
+                    return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.UserNotFound });
+                if(DepartmentsId == null || DepartmentsId.Count == 0)
+                {
+                    if(user.Department !=null)
+                    {
+                        user.Department.DepartmentManager = null;
+                        user.Department = null;
+                        await _unitOfWork.SaveAsync();
+                    }
+                    return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
+                }
+                var department = await GetByIdAsync(DepartmentsId.First());
+                if (department == null)
+                    return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.DepartmentNotFound });
+                if(user.Department !=null)
+                {
+                    user.Department.DepartmentManager = null;
+                }
+                user.Department = department;
+                await _unitOfWork.SaveAsync();
+                return OperationResult<BusinessLogicResultError>.CreateSuccessfulResult();
+            }
+            catch (InvalidCastException e)
+            {
+                return OperationResult<BusinessLogicResultError>.CreateUnsuccessfulResult(new List<BusinessLogicResultError>() { BusinessLogicResultError.InvalidUserType });
+            }
         }
 
         public IReadOnlyList<Student> GetAllStudents(Department department)

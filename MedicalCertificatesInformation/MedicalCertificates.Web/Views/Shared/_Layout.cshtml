@@ -94,6 +94,25 @@
         ul:focus {
             outline: none;
         }
+
+        .non-selectable {
+            user-select: none;
+        }
+
+        @@media print {
+            
+            table {
+                font-size: 14px;
+                white-space: normal;
+                word-wrap: break-word;
+            }
+
+            table tr td {
+                padding: 5px 3px;
+            }
+
+
+        }
     </style>
     @RenderSection("Scripts", required: false)
 

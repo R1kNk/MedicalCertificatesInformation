@@ -8,7 +8,6 @@ namespace MedicalCertificates.Web.Models.ReportViewModels
 {
     public class ConfigureCourseReportViewModel : DefaultReportModel
     {
-        [Required]
         public IReadOnlyList<int> CoursesId { get; set; }
 
         public ConfigureCourseReportViewModel()

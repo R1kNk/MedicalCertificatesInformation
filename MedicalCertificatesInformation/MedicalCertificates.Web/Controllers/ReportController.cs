@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.BusinessServices;
 using MedicalCertificates.Service.Interfaces.Models;
 using MedicalCertificates.Service.ReportModels;
 using MedicalCertificates.Web.Models.ReportViewModels;
+using MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels;
 using MedicalCertificates.Web.Models.SharedEntities;
 using MedicalCertificates.Web.Models.SharedViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -617,6 +619,125 @@ namespace MedicalCertificates.Web.Controllers
                         groupOfStudentsReport.FromWhatContainers.Add(group.Name);
                     }
                     return View(groupOfStudentsReport);
+                }
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
+            }
+            catch (Exception e)
+            {
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
+            }
+        }
+
+
+        //PE department report
+
+        public IActionResult ConfigurePEDepartmentReport()
+        {
+            ConfigurePEDepartmentReport model = new ConfigurePEDepartmentReport();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfigurePEDepartmentReport(ConfigurePEDepartmentReport model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (model.DepartmentsId == null || model.DepartmentsId.Count == 0)
+                    {
+                        ModelState.AddModelError("", "Ошибка");
+                        ModelState.AddModelError("", "Выберите одно отделение");
+
+                        return View(model);
+                    }
+                    var departments = model.DepartmentsId;
+                    if (departments.Count > 1)
+                    {
+                        ModelState.AddModelError("", "Ошибка");
+                        ModelState.AddModelError("", "Выберите одно отделение");
+                        return View(model);
+                    }
+                    foreach (var departmentId in departments)
+                    {
+                        var department = await _departmentService.GetByIdAsync(departmentId);
+                        if (department == null)
+                        {
+                            ModelState.AddModelError("", "Ошибка");
+                            ModelState.AddModelError("", "Такое отделение не существует. Попробуйте ещё раз");
+                            return View(model);
+                        }
+
+                    }
+                    return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(true, OperationResultEnum.Create));
+                }
+                return View(model);
+
+            }
+            catch
+            {
+                return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PEDepartmentReport(ConfigurePEDepartmentReport model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    List<Department> departments = new List<Department>();
+                    DateTime date = DateTime.Now;
+                    GroupOfStudentsReport groupOfStudentsReport = new GroupOfStudentsReport();
+                    foreach (var departmentId in model.DepartmentsId)
+                    {
+                        var department = await _departmentService.GetByIdAsync(departmentId);
+                        if (department != null)
+                            departments.Add(department);
+
+                    }
+                    groupOfStudentsReport = await _departmentReportService.GetAllFromOnDateAsync(departments, date);
+                    groupOfStudentsReport.SortBySurnameName();
+                    groupOfStudentsReport.SortByGroup();
+
+                    foreach (var department in departments)
+                    {
+                        groupOfStudentsReport.FromWhatContainers.Add(department.Name);
+                    }
+
+                    var reportModel = new PEDepartmentReportModel<StudentReport>();
+                    reportModel.DepartmentName = departments[0].Name;
+
+                    var PeGroups = new List<PEDepartmentReportPhysicalEducationGroups<StudentReport>>();
+                    foreach (var PEGroup in groupOfStudentsReport.PhysicalEducationStat.PhysicalEducationStatistics)
+                    {
+
+                        var availableCourses = PEGroup.EntityList.Select(student => student.Course).Distinct().ToList();
+                        var PEGroupReport = new PEDepartmentReportPhysicalEducationGroups<StudentReport>();
+
+                        PEGroupReport.PhysicalEducationName = PEGroup.RelatedEntity.Name;
+                        var groupedCourses = new List<PEDepartmentReportPhusicalEducationGroupCourses<StudentReport>>();
+
+                        foreach (int course in availableCourses)
+                        {
+                            var selectedStudents = PEGroup.EntityList.Where(student => student.Course == course).ToList();
+                            var groupedCourse = new PEDepartmentReportPhusicalEducationGroupCourses<StudentReport>();
+                            groupedCourse.CourseNumber = course;
+                            groupedCourse.EntityList = selectedStudents;
+                            groupedCourses.Add(groupedCourse);
+                        }
+
+                        groupedCourses = groupedCourses.OrderBy(course => course.CourseNumber).ToList();
+
+                        PEGroupReport.GroupedCourses = groupedCourses;
+                        PeGroups.Add(PEGroupReport);
+                    }
+
+                    reportModel.PhysicalEducationGroups = PeGroups;
+
+                    return View(reportModel);
                 }
                 return View("~/Views/Shared/OperationResult.cshtml", new OperationResultViewModel(false, OperationResultEnum.Create, "Произошла неизвестная ошибка"));
             }

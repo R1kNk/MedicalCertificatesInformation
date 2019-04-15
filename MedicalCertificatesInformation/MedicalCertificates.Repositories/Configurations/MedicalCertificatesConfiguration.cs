@@ -61,12 +61,22 @@ namespace MedicalCertificates.Repositories.Configurations
             }
         }
 
-        public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
+        public class DefaultUserConfiguration : IEntityTypeConfiguration<DefaultUser>
         {
-            public void Configure(EntityTypeBuilder<ApplicationUser> builder)
+            public void Configure(EntityTypeBuilder<DefaultUser> builder)
             {
 
                builder.HasMany(b => b.Groups).WithOne(p => p.ApplicationUser).HasForeignKey(p => p.ApplicationUserId).OnDelete(DeleteBehavior.SetNull);
+                //builder.HasOne(p => p.Curator).WithMany(p => p.Groups).HasForeignKey(p => p.CuratorId);
+            }
+        }
+
+        public class DepartmentManagerUserConfiguration : IEntityTypeConfiguration<DepartmentManagerUser>
+        {
+            public void Configure(EntityTypeBuilder<DepartmentManagerUser> builder)
+            {
+
+                builder.HasOne(b => b.Department).WithOne(p => p.DepartmentManager).HasForeignKey<Department>(p => p.DepartmentManagerId).OnDelete(DeleteBehavior.SetNull);
                 //builder.HasOne(p => p.Curator).WithMany(p => p.Groups).HasForeignKey(p => p.CuratorId);
             }
         }

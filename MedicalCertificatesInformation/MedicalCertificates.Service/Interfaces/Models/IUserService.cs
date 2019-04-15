@@ -2,13 +2,14 @@
 using MedicalCertificates.DomainModel.Models;
 using MedicalCertificates.Service.ErrorsFetch;
 using MedicalCertificates.Service.ReportModels;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MedicalCertificates.Service.Interfaces.Models
 {
-    public interface IUserService<TUser> where TUser : class
+    public interface IUserService<TUser> where TUser : IdentityUser
     {
         Task<IList<string>> GetRolesAsync(TUser user);
 
