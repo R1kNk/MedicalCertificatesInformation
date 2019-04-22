@@ -1,5 +1,7 @@
 @model MedicalCertificates.Web.Models.ReportViewModels.PEDepartmentReportModels.PEDepartmentReportModel<StudentReport>
 
+<h5 style="display: none;">Отчет по группам здоровья по отделению @Model.DepartmentName</h5>
+
 <h4 class="text-center">Отделение @Model.DepartmentName </h4>
 <br />
 @if (Model.PhysicalEducationGroups.Count == 0)

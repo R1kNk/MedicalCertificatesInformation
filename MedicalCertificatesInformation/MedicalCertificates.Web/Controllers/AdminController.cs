@@ -230,6 +230,19 @@ namespace MedicalCertificates.Web.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditUserName(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel() { MessageDescription = "Такой пользователь не найден. Обновите страницу." });
+
+            EditUserNameViewModel model = new EditUserNameViewModel();
+            model.UserId = id;
+            return View(model);
+
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUserName(EditUserNameViewModel model)
